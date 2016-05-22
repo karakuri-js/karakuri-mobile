@@ -10,15 +10,11 @@ export class HomeTabs extends Component {
     url: PropTypes.string.isRequired,
   }
 
+  static defaultProps = { contents: [] }
+
   constructor(props) {
     super(props)
     this.addToPlaylist = this.addToPlaylist.bind(this)
-  }
-
-  getDefaultProps() {
-    return {
-      contents: [],
-    }
   }
 
   componentWillMount() {
@@ -26,6 +22,7 @@ export class HomeTabs extends Component {
   }
 
   componentWillReceiveProps() {
+    // TODO check if the contents have changed before doing this
     this.setState({ formattedContents: contentsFormatter(this.props.contents) })
   }
 
@@ -40,19 +37,18 @@ export class HomeTabs extends Component {
     })
   }
 
-  // addToPlaylist(id) {
-  //   fetch(`${this.props.url}/request/${id}`)
-  // }
-
   render() {
     return (
       <ScrollableTabView>
-        {Object.keys(this.state.formattedContents).map(dirName => (
-          <ScrollView tabLabel={dirName}>
+        {Object.keys(this.state.formattedContents).map((dirName, dirNameKey) => (
+          <ScrollView
+            key={dirNameKey}
+            tabLabel={dirName}
+          >
             {this.state.formattedContents[dirName].map(
-              (content, key) => (
+              (content, contentKey) => (
                 <ContentRow
-                  key={key}
+                  key={contentKey}
                   content={content}
                   addToPlaylist={this.addToPlaylist}
                 />
