@@ -25,10 +25,16 @@ const styles = StyleSheet.create({
     margin: 10,
     color: '#000',
   },
+  button: {
+    padding: 10,
+    backgroundColor: '#99c9f4',
+  },
   buttonText: {
-    padding: 30,
     textAlign: 'center',
     fontSize: 30,
+  },
+  errorMessage: {
+    color: 'red',
   },
 })
 
@@ -60,8 +66,8 @@ export class Connection extends Component {
         </View>
 
         <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
           onChangeText={text => this.setState({ text })}
+          placeholder="Enter a hostname"
           value={this.state.text}
         />
 
@@ -69,14 +75,14 @@ export class Connection extends Component {
           onPress={() => this.connect()}
           underlayColor="#99d9f4"
         >
-          <View>
+          <View style={styles.button}>
             <Text style={styles.buttonText}>
               Connect
             </Text>
           </View>
         </TouchableHighlight>
 
-        <Text>{this.state.message}</Text>
+        <Text style={styles.errorMessage}>{this.state.message}</Text>
       </View>
     )
   }
