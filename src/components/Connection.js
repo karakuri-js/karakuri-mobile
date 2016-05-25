@@ -25,10 +25,20 @@ const styles = StyleSheet.create({
     margin: 10,
     color: '#000',
   },
+  label: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  button: {
+    padding: 10,
+    backgroundColor: '#99c9f4',
+  },
   buttonText: {
-    padding: 30,
     textAlign: 'center',
     fontSize: 30,
+  },
+  errorMessage: {
+    color: 'red',
   },
 })
 
@@ -39,13 +49,13 @@ export class Connection extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { text: '' }
+    this.state = { hostname: '', port: '3000' }
   }
 
   connect() {
-    const host = this.state.text.trim()
-    if (!host) return this.setState({ message: 'Gimme an host' })
-    const url = `http://${host}:3000`
+    const { hostname, port = '80' } = this.state
+    if (!hostname) return this.setState({ message: 'Gimme an hostname' })
+    const url = `http://${hostname.trim()}:${port.trim()}`
     fetch(url.concat('/contents'))
       .then(response => response.json())
       .then(contents => this.props.onConnect({ contents, url }))
@@ -59,24 +69,32 @@ export class Connection extends Component {
           <Text style={styles.title}>Karakuri</Text>
         </View>
 
+        <Text style={styles.label}>Hostname:</Text>
         <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+          onChangeText={hostname => this.setState({ hostname })}
+          placeholder="Enter a hostname"
+          value={this.state.hostname}
+        />
+
+        <Text style={styles.label}>Port:</Text>
+        <TextInput
           onChangeText={text => this.setState({ text })}
-          value={this.state.text}
+          placeholder="Enter a port"
+          value={this.state.port}
         />
 
         <TouchableHighlight
           onPress={() => this.connect()}
           underlayColor="#99d9f4"
         >
-          <View>
+          <View style={styles.button}>
             <Text style={styles.buttonText}>
               Connect
             </Text>
           </View>
         </TouchableHighlight>
 
-        <Text>{this.state.message}</Text>
+        <Text style={styles.errorMessage}>{this.state.message}</Text>
       </View>
     )
   }
