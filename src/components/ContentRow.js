@@ -3,9 +3,9 @@ import { PixelRatio, StyleSheet, Text, TouchableHighlight, View } from 'react-na
 
 const styles = StyleSheet.create({
   row: {
-    padding: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
+    padding: 10,
+    flexDirection: 'column',
+    alignItems: 'stretch',
     borderBottomWidth: 1 / PixelRatio.get(),
   },
   main: {
@@ -14,18 +14,16 @@ const styles = StyleSheet.create({
   mainText: {
     fontSize: 16,
   },
-  plus: {
-    paddingLeft: 5,
-  },
+  plus: {},
   plusText: {
-    fontSize: 48,
+    fontSize: 36,
   },
 })
 
 export class ContentRow extends Component {
   static propTypes = {
     addToPlaylist: PropTypes.func.isRequired,
-    content: PropTypes.shape({ id: PropTypes.number }),
+    item: PropTypes.shape({ id: PropTypes.number }),
   }
 
   constructor(props) {
@@ -34,11 +32,11 @@ export class ContentRow extends Component {
   }
 
   onPress() {
-    this.props.addToPlaylist(this.props.content.id)
+    this.props.addToPlaylist(this.props.item.id)
   }
 
   render() {
-    const { content } = this.props
+    const { item: content } = this.props
     return (
       <View style={styles.row}>
         <View style={styles.main}>

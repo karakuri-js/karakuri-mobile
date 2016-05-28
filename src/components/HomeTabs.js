@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react'
-import { ListView } from 'react-native'
+import { ToastAndroid } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
-import { getContentsPerDirectories } from '../lib/contentsFormatter'
+import AlphabetListView from 'react-native-alphabetlistview'
+import { getContentsPerDirectories, getContentsPerFirstLetters } from '../lib/contentsFormatter'
 import { ContentRow } from './ContentRow'
 
 export class HomeTabs extends Component {
@@ -19,12 +20,12 @@ export class HomeTabs extends Component {
   }
 
   componentWillMount() {
-    this.prepareContentsListViews({ contents: this.props.contents, isInitial: true })
+    this.prepareContentsListViews(this.props.contents)
   }
 
   componentWillReceiveProps(nextProps) {
     // TODO check if the contents have changed before doing this
-    this.prepareContentsListViews({ contents: nextProps.contents, isInitial: false })
+    this.prepareContentsListViews(nextProps.contents)
   }
 
   addToPlaylist(id) {
@@ -38,16 +39,13 @@ export class HomeTabs extends Component {
     })
   }
 
-  prepareContentsListViews({ contents, isInitial }) {
+  prepareContentsListViews(contents) {
     // Group contents per directory, then create listview datasources
     const contentsPerDirectories = getContentsPerDirectories(contents)
     const listViewsPerDirectories = Object.keys(contentsPerDirectories).reduce((obj, dirName) => {
-      const dataSource = isInitial ?
-        new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }) :
-        this.state.listViewsPerDirectories[dirName]
       return {
         ...obj,
-        [dirName]: dataSource.cloneWithRows(contentsPerDirectories[dirName]),
+        [dirName]: getContentsPerFirstLetters(contentsPerDirectories[dirName]),
       }
     }, {})
     this.setState({ listViewsPerDirectories })
@@ -66,10 +64,16 @@ export class HomeTabs extends Component {
     return (
       <ScrollableTabView>
         {Object.keys(this.state.listViewsPerDirectories).map((dirName, dirNameKey) => (
-          <ListView
+          <AlphabetListView
             key={dirNameKey}
-            dataSource={this.state.listViewsPerDirectories[dirName]}
-            renderRow={this.renderRow}
+            data={this.state.listViewsPerDirectories[dirName]}
+            cell={ContentRow}
+            cellHeight={100}
+            cellProps={{ addToPlaylist: this.addToPlaylist }}
+            onEndReached={() => ToastAndroid.show('End reached', ToastAndroid.SHORT)}
+            pageSize={500}
+            initialListSize={500}
+            sectionHeaderHeight={22.5}
             tabLabel={dirName}
           />
         ))}

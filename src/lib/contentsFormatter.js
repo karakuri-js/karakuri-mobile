@@ -6,3 +6,8 @@ export const getContentsPerDirectories = contents => contents.reduce((obj, conte
     [dirName]: directoryContents.concat(content),
   }
 }, {})
+
+export const getContentsPerFirstLetters = contents => contents.reduce((obj, content) => ({
+  ...obj,
+  [content.fileName[0].toUpperCase()]: (obj[content.fileName[0]] || []).concat(content)
+}), {})
