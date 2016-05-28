@@ -1,4 +1,4 @@
-export default contents => contents.reduce((obj, content) => {
+export const getContentsPerDirectories = contents => contents.reduce((obj, content) => {
   const { dirName } = content
   const directoryContents = obj[content.dirName] || []
   return {
