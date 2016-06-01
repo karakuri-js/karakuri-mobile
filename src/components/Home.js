@@ -6,6 +6,7 @@ import { getContentsPerDirectories, getContentsPerFirstLetters } from '../lib/co
 
 import { ContentRow } from './ContentRow'
 import { Menu } from './Menu'
+import { HomeHeader } from './HomeHeader'
 
 export class Home extends Component {
   static propTypes = {
@@ -19,6 +20,7 @@ export class Home extends Component {
     super(props)
     this.addToPlaylist = this.addToPlaylist.bind(this)
     this.onDirectorySelect = this.onDirectorySelect.bind(this)
+    this.openMenu = this.openMenu.bind(this)
   }
 
   componentWillMount() {
@@ -44,6 +46,10 @@ export class Home extends Component {
   onDirectorySelect(selectedDirectoryName) {
     this.drawer.close()
     this.setState({ selectedDirectoryName })
+  }
+
+  openMenu() {
+    this.drawer.open()
   }
 
   prepareContentsListViews(contents) {
@@ -86,6 +92,10 @@ export class Home extends Component {
           main: { paddingLeft: 3 },
         }}
       >
+        <HomeHeader
+          openMenu={this.openMenu}
+          title={selectedDirectoryName}
+        />
         <AlphabetListView
           data={this.state.listViewsPerDirectories[selectedDirectoryName]}
           cell={ContentRow}
