@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Connection } from './components/Connection'
-import { HomeTabs } from './components/HomeTabs'
+import { Home } from './components/Home'
 
 export default class Karakuri extends Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class Karakuri extends Component {
   render() {
     return (
       this.state.isConnected ?
-        <HomeTabs {...this.state} /> :
+        <Home {...this.state} /> :
         <Connection onConnect={params => this.setState({ ...params, isConnected: true })} />
     )
   }
