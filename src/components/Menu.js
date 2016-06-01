@@ -11,13 +11,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFF',
     flex: 1,
-    elevation: 10,
   },
   directoriesContainer: {
     padding: 10,
   },
   header: {
-    height: 50,
+    height: 55,
     backgroundColor: '#000',
     flexDirection: 'row',
     justifyContent: 'space-between',

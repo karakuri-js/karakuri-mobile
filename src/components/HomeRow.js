@@ -16,34 +16,32 @@ const styles = StyleSheet.create({
   },
 })
 
-export class ContentRow extends Component {
+export class HomeRow extends Component {
   static propTypes = {
-    addToPlaylist: PropTypes.func.isRequired,
-    id: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired,
-    songName: PropTypes.string.isRequired,
+    onPress: PropTypes.func.isRequired,
+    item: PropTypes.string,
   }
 
   constructor(props) {
     super(props)
-    this.addToPlaylist = this.onPress.bind(this)
+    this.onPress = this.onPress.bind(this)
   }
 
   onPress() {
-    this.props.addToPlaylist(this.props.id)
+    this.props.onPress(this.props.item)
   }
 
   render() {
-    const { type, songName } = this.props
+    const { item } = this.props
     return (
       <View style={styles.row}>
         <TouchableHighlight
-          onPress={this.addToPlaylist}
+          onPress={this.onPress}
           underlayColor="#99d9f4"
         >
           <View style={styles.main}>
             <Text style={styles.mainText}>
-              {type} - {songName}
+              {item}
             </Text>
           </View>
         </TouchableHighlight>

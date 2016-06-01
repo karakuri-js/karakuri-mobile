@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import Drawer from 'react-native-drawer'
-import AlphabetListView from 'react-native-alphabetlistview'
+import { uniq } from 'lodash'
 
-import { getContentsPerDirectories, getContentsPerFirstLetters } from '../lib/contentsFormatter'
+import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
 
-import { ContentRow } from './ContentRow'
+import { ContentsList } from './ContentsList'
+import { HomeListView } from './HomeListView'
 import { Menu } from './Menu'
 import { HomeHeader } from './HomeHeader'
 
@@ -20,6 +21,7 @@ export class Home extends Component {
     super(props)
     this.addToPlaylist = this.addToPlaylist.bind(this)
     this.onDirectorySelect = this.onDirectorySelect.bind(this)
+    this.onGroupSelect = this.onGroupSelect.bind(this)
     this.openMenu = this.openMenu.bind(this)
   }
 
@@ -44,28 +46,50 @@ export class Home extends Component {
   }
 
   onDirectorySelect(selectedDirectoryName) {
-    this.drawer.close()
+    this.menuDrawer.close()
     this.setState({ selectedDirectoryName })
   }
 
+  onGroupSelect(selectedGroupName) {
+    this.setState({ selectedGroupName })
+    this.songDrawer.open()
+  }
+
   openMenu() {
-    this.drawer.open()
+    this.menuDrawer.open()
   }
 
   prepareContentsListViews(contents) {
-    // Group contents per directory, then create listview datasources
+    // Group contents per directory & groups, then create listview datasources
     const contentsPerDirectories = getContentsPerDirectories(contents)
-    const listViewsPerDirectories = Object.keys(contentsPerDirectories).reduce((obj, dirName) => ({
-      ...obj,
-      [dirName]: getContentsPerFirstLetters(contentsPerDirectories[dirName]),
-    }), {})
-    this.setState({ listViewsPerDirectories })
+    const contentsPerGroups = getContentsPerGroups(contents)
+    const groupsPerLettersAndDirectories = Object.keys(contentsPerDirectories).reduce(
+      (directoriesObj, dirName) => ({
+        ...directoriesObj,
+        [dirName]: contentsPerDirectories[dirName].map(content => content.group).reduce(
+          (alphabetListObj, groupName) => {
+            const letter = groupName[0].toUpperCase()
+            return {
+              ...alphabetListObj,
+              [letter]: uniq((alphabetListObj[letter] || []).concat(groupName)),
+            }
+          },
+          {}
+        ),
+      }),
+      {}
+    )
+    this.setState({
+      contentsPerDirectories,
+      contentsPerGroups,
+      groupsPerLettersAndDirectories,
+    })
   }
 
   renderMenu() {
     return (
       <Menu
-        directories={Object.keys(this.state.listViewsPerDirectories)}
+        directories={Object.keys(this.state.contentsPerDirectories)}
         onDirectorySelect={this.onDirectorySelect}
       />
     )
@@ -73,11 +97,13 @@ export class Home extends Component {
 
   render() {
     const selectedDirectoryName = this.state.selectedDirectoryName ||
-      Object.keys(this.state.listViewsPerDirectories)[0]
+      Object.keys(this.state.contentsPerDirectories)[0]
+    const { contentsPerGroups, selectedGroupName } = this.state
 
     return (
       <Drawer
-        ref={ref => (this.drawer = ref)}
+        ref={ref => (this.menuDrawer = ref)}
+        side="left"
         type="overlay"
         content={this.renderMenu()}
         negotiatePan
@@ -96,15 +122,35 @@ export class Home extends Component {
           openMenu={this.openMenu}
           title={selectedDirectoryName}
         />
-        <AlphabetListView
-          data={this.state.listViewsPerDirectories[selectedDirectoryName]}
-          cell={ContentRow}
-          cellHeight={100}
-          cellProps={{ addToPlaylist: this.addToPlaylist }}
-          pageSize={500}
-          initialListSize={500}
-          sectionHeaderHeight={22.5}
-        />
+        <Drawer
+          ref={ref => (this.songDrawer = ref)}
+          side="right"
+          type="overlay"
+          content={
+            <ContentsList
+              addToPlaylist={this.addToPlaylist}
+              contents={contentsPerGroups[selectedGroupName]}
+              title={selectedGroupName}
+            />
+          }
+          acceptPan={false}
+          panOpenMask={0}
+          openDrawerOffset={0.5}
+          panCloseMask={0.5}
+          closedDrawerOffset={-3}
+          tapToClose
+          tweenHandler={ratio => ({ main: { opacity: (2 - ratio) / 2 } })}
+          styles={{
+            drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
+            main: { paddingLeft: 3 },
+          }}
+        >
+          <HomeListView
+            groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
+            directoryName={selectedDirectoryName}
+            onGroupSelect={this.onGroupSelect}
+          />
+        </Drawer>
       </Drawer>
     )
   }
