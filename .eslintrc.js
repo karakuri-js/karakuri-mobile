@@ -5,7 +5,6 @@ module.exports = {
     "parser": "babel-eslint",
     "extends": 'airbnb',
     "plugins": [
-        "standard",
         "react"
     ],
     rules: {
