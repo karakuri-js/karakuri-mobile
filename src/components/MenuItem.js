@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import {
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableNativeFeedback,
   View,
 } from 'react-native'
 
@@ -41,16 +41,15 @@ export class MenuItem extends Component {
 
   render() {
     return (
-      <TouchableHighlight
+      <TouchableNativeFeedback
         onPress={this.onDirectorySelect}
-        underlayColor="#b5b5b5"
       >
         <View style={styles.container}>
           <Text style={styles.item}>
             {this.props.directory}
           </Text>
         </View>
-      </TouchableHighlight>
+      </TouchableNativeFeedback>
     )
   }
 }

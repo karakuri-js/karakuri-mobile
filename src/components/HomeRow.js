@@ -1,17 +1,15 @@
 import React, { Component, PropTypes } from 'react'
-import { PixelRatio, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { PixelRatio, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 
 const styles = StyleSheet.create({
   row: {
     padding: 10,
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
     borderBottomWidth: 1 / PixelRatio.get(),
   },
-  main: {
-    flex: 1,
-  },
-  mainText: {
+  rowText: {
     fontSize: 16,
   },
 })
@@ -34,18 +32,15 @@ export class HomeRow extends Component {
   render() {
     const { item } = this.props
     return (
-      <View style={styles.row}>
-        <TouchableHighlight
-          onPress={this.onPress}
-          underlayColor="#99d9f4"
-        >
-          <View style={styles.main}>
-            <Text style={styles.mainText}>
-              {item}
-            </Text>
-          </View>
-        </TouchableHighlight>
-      </View>
+      <TouchableNativeFeedback
+        onPress={this.onPress}
+      >
+        <View style={styles.row}>
+          <Text style={styles.rowText}>
+            {item}
+          </Text>
+        </View>
+      </TouchableNativeFeedback>
     )
   }
 }
