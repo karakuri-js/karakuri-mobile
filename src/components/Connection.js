@@ -78,7 +78,7 @@ export class Connection extends Component {
 
         <Text style={styles.label}>Port:</Text>
         <TextInput
-          onChangeText={text => this.setState({ text })}
+          onChangeText={port => this.setState({ port })}
           placeholder="Enter a port"
           value={this.state.port}
         />
