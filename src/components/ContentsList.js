@@ -5,7 +5,7 @@ import { ContentRow } from './ContentRow'
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF',
+    backgroundColor: '#272822',
     flex: 1,
   },
   header: {

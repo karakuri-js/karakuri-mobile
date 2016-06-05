@@ -9,7 +9,7 @@ import { MenuItem } from './MenuItem'
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF',
+    backgroundColor: '#272822',
     flex: 1,
   },
   directoriesContainer: {
@@ -17,14 +17,14 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 55,
-    backgroundColor: '#000',
+    backgroundColor: '#0D1011',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: 10,
   },
   headerText: {
-    color: '#FFF',
+    color: '#D9E4D7',
     fontSize: 20,
     fontWeight: 'bold',
   },
