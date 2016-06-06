@@ -13,14 +13,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderColor: '#000',
-    backgroundColor: '#FFF',
   },
   item: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#D9E4D7',
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginLeft: 10,
   },
 })
 

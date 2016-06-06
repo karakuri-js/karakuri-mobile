@@ -1,5 +1,11 @@
 import React, { Component, PropTypes } from 'react'
-import { PixelRatio, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableNativeFeedback,
+  View,
+  Dimensions,
+} from 'react-native'
 
 const styles = StyleSheet.create({
   row: {
@@ -7,7 +13,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
-    borderBottomWidth: 1 / PixelRatio.get(),
+    width: Dimensions.get('window').width - 40,
   },
   rowText: {
     fontSize: 16,

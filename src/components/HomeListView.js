@@ -3,6 +3,10 @@ import AlphabetListView from 'react-native-alphabetlistview'
 
 import { HomeRow } from './HomeRow'
 
+const alphabetListStyles = {
+  width: 40,
+}
+
 export class HomeListView extends Component {
   static propTypes = {
     groups: PropTypes.object.isRequired,
@@ -32,7 +36,9 @@ export class HomeListView extends Component {
         cellHeight={100}
         cellProps={{ onPress: this.onGroupSelect }}
         pageSize={5}
-        sectionHeaderHeight={25}
+        sectionHeader={() => null}
+        sectionHeaderHeight={0}
+        sectionListStyle={alphabetListStyles}
       />
     )
   }

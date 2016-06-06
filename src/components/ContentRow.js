@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   },
   rowText: {
     fontSize: 16,
+    color: '#D9E4D7',
   },
 })
 
