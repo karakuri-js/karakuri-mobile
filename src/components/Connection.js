@@ -3,9 +3,9 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableHighlight,
   View,
 } from 'react-native'
+import Button from 'apsl-react-native-button'
 
 const styles = StyleSheet.create({
   container: {
@@ -30,12 +30,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    padding: 10,
-    backgroundColor: '#99c9f4',
+    backgroundColor: '#0D1011',
   },
   buttonText: {
-    textAlign: 'center',
-    fontSize: 30,
+    fontSize: 18, color: 'white',
   },
   errorMessage: {
     color: 'red',
@@ -49,17 +47,17 @@ export class Connection extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { hostname: '', port: '3000' }
+    this.state = { hostname: '', port: '3000', isLoading: false }
   }
 
   connect() {
     const { hostname, port = '80' } = this.state
-    if (!hostname) return this.setState({ message: 'Gimme an hostname' })
+    if (!hostname) return this.setState({ message: 'Gimme an hostname', isLoading: false })
     const url = `http://${hostname.trim()}:${port.trim()}`
     fetch(url.concat('/contents'))
       .then(response => response.json())
       .then(contents => this.props.onConnect({ contents, url }))
-      .catch(({ message }) => this.setState({ message }))
+      .catch(({ message }) => this.setState({ message, isLoading: false }))
   }
 
   render() {
@@ -83,16 +81,14 @@ export class Connection extends Component {
           value={this.state.port}
         />
 
-        <TouchableHighlight
-          onPress={() => this.connect()}
-          underlayColor="#99d9f4"
+        <Button
+          isLoading={this.state.isLoading}
+          onPress={() => this.setState({ isLoading: true }, () => this.connect())}
+          style={styles.button}
+          textStyle={styles.buttonText}
         >
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>
-              Connect
-            </Text>
-          </View>
-        </TouchableHighlight>
+          Connect
+        </Button>
 
         <Text style={styles.errorMessage}>{this.state.message}</Text>
       </View>
