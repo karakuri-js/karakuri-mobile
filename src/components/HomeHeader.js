@@ -26,16 +26,22 @@ const styles = StyleSheet.create({
 export class HomeHeader extends Component {
   static propTypes = {
     openMenu: PropTypes.func.isRequired,
+    openSearch: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
   }
 
   constructor(props) {
     super(props)
     this.openMenu = this.openMenu.bind(this)
+    this.openSearch = this.openSearch.bind(this)
   }
 
   openMenu() {
     this.props.openMenu()
+  }
+
+  openSearch() {
+    this.props.openSearch()
   }
 
   render() {
@@ -55,7 +61,7 @@ export class HomeHeader extends Component {
         <Text style={styles.headerText}>{this.props.title}</Text>
         <TouchableHighlight
           underlayColor="#333"
-          onPress={this.openMenu}
+          onPress={this.openSearch}
         >
           <Icon
             name="search"
