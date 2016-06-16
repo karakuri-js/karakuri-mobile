@@ -6,6 +6,7 @@ import { uniq } from 'lodash'
 import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
 
 import { ContentsList } from './ContentsList'
+import { FilterList } from './FilterList'
 import { HomeListView } from './HomeListView'
 import { Menu } from './Menu'
 import { HomeHeader } from './HomeHeader'
@@ -24,6 +25,9 @@ export class Home extends Component {
     this.onDirectorySelect = this.onDirectorySelect.bind(this)
     this.onGroupSelect = this.onGroupSelect.bind(this)
     this.openMenu = this.openMenu.bind(this)
+    this.openSearch = this.openSearch.bind(this)
+
+    this.state = { selectedGroupName: '', useFilterList: false, useGroupList: false }
   }
 
   componentWillMount() {
@@ -54,7 +58,12 @@ export class Home extends Component {
   }
 
   onGroupSelect(selectedGroupName) {
-    this.setState({ selectedGroupName })
+    this.setState({ selectedGroupName, useFilterList: false, useGroupList: true })
+    this.songDrawer.open()
+  }
+
+  openSearch() {
+    this.setState({ useFilterList: true, useGroupList: false })
     this.songDrawer.open()
   }
 
@@ -101,7 +110,8 @@ export class Home extends Component {
   render() {
     const selectedDirectoryName = this.state.selectedDirectoryName ||
       Object.keys(this.state.contentsPerDirectories)[0]
-    const { contentsPerGroups, selectedGroupName } = this.state
+    const { contentsPerGroups, useFilterList, selectedGroupName } = this.state
+    const { contents: allContents } = this.props
 
     return (
       <Drawer
@@ -123,6 +133,7 @@ export class Home extends Component {
       >
         <HomeHeader
           openMenu={this.openMenu}
+          openSearch={this.openSearch}
           title={selectedDirectoryName}
         />
         <Drawer
@@ -130,11 +141,16 @@ export class Home extends Component {
           side="right"
           type="overlay"
           content={
-            <ContentsList
-              addToPlaylist={this.addToPlaylist}
-              contents={contentsPerGroups[selectedGroupName]}
-              title={selectedGroupName}
-            />
+            useFilterList ?
+              <FilterList
+                addToPlaylist={this.addToPlaylist}
+                contents={allContents}
+              /> :
+              <ContentsList
+                addToPlaylist={this.addToPlaylist}
+                contents={contentsPerGroups[selectedGroupName]}
+                title={selectedGroupName}
+              />
           }
           acceptPan={false}
           panOpenMask={0}
