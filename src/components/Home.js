@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { uniq } from 'lodash'
 
@@ -42,7 +43,9 @@ export class Home extends Component {
       },
       method: 'post',
       body: JSON.stringify({ id }),
-    })
+    }).then(response => response.json())
+      .then(({ message }) => ToastAndroid.show(message, ToastAndroid.LONG))
+      .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
   }
 
   onDirectorySelect(selectedDirectoryName) {
