@@ -27,7 +27,7 @@ export class Home extends Component {
     this.openMenu = this.openMenu.bind(this)
     this.openSearch = this.openSearch.bind(this)
 
-    this.state = { selectedGroupName: '', useFilterList: false, useGroupList: false }
+    this.state = { selectedGroupName: '', isSearchMode: false, useGroupList: false }
   }
 
   componentWillMount() {
@@ -58,13 +58,17 @@ export class Home extends Component {
   }
 
   onGroupSelect(selectedGroupName) {
-    this.setState({ selectedGroupName, useFilterList: false, useGroupList: true })
-    this.songDrawer.open()
+    this.setState(
+      { selectedGroupName, isSearchMode: false, useGroupList: true },
+      () => this.songDrawer.open()
+    )
   }
 
   openSearch() {
-    this.setState({ useFilterList: true, useGroupList: false })
-    this.songDrawer.open()
+    this.setState(
+      { isSearchMode: true, useGroupList: false },
+      () => this.songDrawer.open()
+    )
   }
 
   openMenu() {
@@ -110,7 +114,7 @@ export class Home extends Component {
   render() {
     const selectedDirectoryName = this.state.selectedDirectoryName ||
       Object.keys(this.state.contentsPerDirectories)[0]
-    const { contentsPerGroups, useFilterList, selectedGroupName } = this.state
+    const { contentsPerGroups, isSearchMode, selectedGroupName } = this.state
     const { contents: allContents } = this.props
 
     return (
@@ -139,9 +143,9 @@ export class Home extends Component {
         <Drawer
           ref={ref => (this.songDrawer = ref)}
           side="right"
-          type="overlay"
+          type={isSearchMode ? 'displace' : 'overlay'}
           content={
-            useFilterList ?
+            isSearchMode ?
               <FilterList
                 addToPlaylist={this.addToPlaylist}
                 contents={allContents}
@@ -154,10 +158,10 @@ export class Home extends Component {
           }
           acceptPan={false}
           panOpenMask={0}
-          openDrawerOffset={0.5}
+          openDrawerOffset={isSearchMode ? 1 : 0.5}
           panCloseMask={0.5}
           closedDrawerOffset={-3}
-          tapToClose
+          tapToClose={!isSearchMode}
           tweenHandler={ratio => ({ main: { opacity: (2 - ratio) / 2 } })}
           styles={{
             drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },

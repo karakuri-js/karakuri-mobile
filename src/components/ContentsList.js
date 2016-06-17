@@ -57,7 +57,13 @@ export class ContentsList extends React.Component {
         <ListView
           dataSource={this.dataSource.cloneWithRows(this.props.contents)}
           renderRow={
-            content => <ContentRow {...content} addToPlaylist={this.props.addToPlaylist} />
+            content => (
+              <ContentRow
+                {...content}
+                addToPlaylist={this.props.addToPlaylist}
+                hideGroup
+              />
+            )
           }
         />
       </View>
