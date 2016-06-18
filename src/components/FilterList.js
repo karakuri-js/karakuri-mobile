@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { BackAndroid, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import { ContentRow } from './ContentRow'
+import fuzzySearch from '../lib/fuzzySearch'
 
 const styles = StyleSheet.create({
   container: {
@@ -64,11 +65,13 @@ export class FilterList extends Component {
   }
 
   render() {
-    const textFilterRegExp = new RegExp(this.state.textFilter, 'i')
+    const { contents } = this.props
     const isLongEnoughFilter = this.state.textFilter.length >= 1
-    const filteredContents = isLongEnoughFilter ? this.props.contents.filter(
-      ({ fileName }) => fileName.toLowerCase().match(textFilterRegExp)
-    ) : []
+    let filteredContents = []
+    if (isLongEnoughFilter) {
+      const { result } = fuzzySearch(contents, this.state.textFilter, 'fileName')
+      filteredContents = result
+    }
     const foundResults = filteredContents.length !== 0
 
     return (
