@@ -18,9 +18,15 @@ const styles = StyleSheet.create({
 export class ContentRow extends Component {
   static propTypes = {
     addToPlaylist: PropTypes.func.isRequired,
+    group: PropTypes.string.isRequired,
+    hideGroup: PropTypes.bool,
     id: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
     songName: PropTypes.string.isRequired,
+  }
+
+  static defaultProps = {
+    hideGroup: false,
   }
 
   constructor(props) {
@@ -33,13 +39,14 @@ export class ContentRow extends Component {
   }
 
   render() {
-    const { type, songName } = this.props
+    const { group, hideGroup, songName, type } = this.props
     return (
       <TouchableNativeFeedback
         onPress={this.addToPlaylist}
       >
         <View style={styles.row}>
           <Text style={styles.rowText}>
+            {!hideGroup && `${group} - `}
             {type} - {songName}
           </Text>
         </View>

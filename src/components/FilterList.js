@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { ListView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { BackAndroid, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import { ContentRow } from './ContentRow'
 
@@ -33,6 +33,7 @@ export class FilterList extends Component {
   static propTypes = {
     addToPlaylist: PropTypes.func.isRequired,
     contents: PropTypes.array,
+    close: PropTypes.func.isRequired,
     title: PropTypes.string,
   }
 
@@ -41,15 +42,25 @@ export class FilterList extends Component {
   constructor(props) {
     super(props)
     this.addToPlaylist = this.addToPlaylist.bind(this)
+    this.close = this.close.bind(this)
     this.state = { textFilter: '', filteredContents: [] }
   }
 
   componentWillMount() {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+    BackAndroid.addEventListener('hardwareBackPress', this.close)
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.close)
   }
 
   addToPlaylist() {
     this.props.addToPlaylist()
+  }
+
+  close() {
+    this.props.close()
   }
 
   render() {
@@ -71,6 +82,7 @@ export class FilterList extends Component {
           </View>
           <View style={styles.searchInputContainer}>
             <TextInput
+              autoFocus
               onChangeText={textFilter => this.setState({ textFilter })}
               placeholder="Search..."
               value={this.state.text}

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { ToastAndroid } from 'react-native'
+import { Alert, BackAndroid, ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { uniq } from 'lodash'
 
@@ -22,21 +22,33 @@ export class Home extends Component {
   constructor(props) {
     super(props)
     this.addToPlaylist = this.addToPlaylist.bind(this)
+    this.closeSongDrawer = this.closeSongDrawer.bind(this)
+    this.handleBack = this.handleBack.bind(this)
     this.onDirectorySelect = this.onDirectorySelect.bind(this)
     this.onGroupSelect = this.onGroupSelect.bind(this)
     this.openMenu = this.openMenu.bind(this)
     this.openSearch = this.openSearch.bind(this)
+    this.onSongDrawerClose = this.onSongDrawerClose.bind(this)
 
-    this.state = { selectedGroupName: '', useFilterList: false, useGroupList: false }
+    this.state = {
+      selectedGroupName: '',
+      isSearchMode: false,
+      isSongDrawerOpened: false,
+    }
   }
 
   componentWillMount() {
     this.prepareContentsListViews(this.props.contents)
+    BackAndroid.addEventListener('hardwareBackPress', this.handleBack)
   }
 
   componentWillReceiveProps(nextProps) {
     // TODO check if the contents have changed before doing this
     this.prepareContentsListViews(nextProps.contents)
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.handleBack)
   }
 
   addToPlaylist(id) {
@@ -52,23 +64,55 @@ export class Home extends Component {
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
   }
 
+  closeSongDrawer() {
+    this.songDrawer.close()
+  }
+
+  handleBack() {
+    if (this.state.isSongDrawerOpened && this.state.isSearchMode) return true // handled by it
+    Alert.alert(
+      'Warning',
+      'This will exit.',
+      [
+        { text: 'Cancel', onPress: () => {} },
+        { text: 'OK', onPress: () => BackAndroid.exitApp() },
+      ]
+    )
+    return true
+  }
+
   onDirectorySelect(selectedDirectoryName) {
     this.menuDrawer.close()
-    this.setState({ selectedDirectoryName })
+    this.setState({ selectedDirectoryName, isSongDrawerOpened: false })
   }
 
   onGroupSelect(selectedGroupName) {
-    this.setState({ selectedGroupName, useFilterList: false, useGroupList: true })
-    this.songDrawer.open()
+    this.setState(
+      { selectedGroupName, isSearchMode: false, isSongDrawerOpened: true },
+      () => {
+        this.menuDrawer.close()
+        this.songDrawer.open()
+      }
+    )
   }
 
   openSearch() {
-    this.setState({ useFilterList: true, useGroupList: false })
-    this.songDrawer.open()
+    this.setState(
+      { isSearchMode: true, isSongDrawerOpened: true },
+      () => {
+        this.menuDrawer.close()
+        this.songDrawer.open()
+      }
+    )
   }
 
   openMenu() {
+    this.songDrawer.close()
     this.menuDrawer.open()
+  }
+
+  onSongDrawerClose() {
+    this.setState({ isSongDrawerOpened: false, isSearchMode: false })
   }
 
   prepareContentsListViews(contents) {
@@ -110,7 +154,7 @@ export class Home extends Component {
   render() {
     const selectedDirectoryName = this.state.selectedDirectoryName ||
       Object.keys(this.state.contentsPerDirectories)[0]
-    const { contentsPerGroups, useFilterList, selectedGroupName } = this.state
+    const { contentsPerGroups, isSearchMode, isSongDrawerOpened, selectedGroupName } = this.state
     const { contents: allContents } = this.props
 
     return (
@@ -139,25 +183,30 @@ export class Home extends Component {
         <Drawer
           ref={ref => (this.songDrawer = ref)}
           side="right"
-          type="overlay"
+          type={isSearchMode ? 'displace' : 'overlay'}
           content={
-            useFilterList ?
+            isSongDrawerOpened && (isSearchMode ?
               <FilterList
                 addToPlaylist={this.addToPlaylist}
                 contents={allContents}
+                close={this.closeSongDrawer}
               /> :
               <ContentsList
                 addToPlaylist={this.addToPlaylist}
+                close={this.closeSongDrawer}
                 contents={contentsPerGroups[selectedGroupName]}
                 title={selectedGroupName}
               />
+            )
           }
+          onClose={this.onSongDrawerClose}
           acceptPan={false}
+          captureGestures={isSearchMode ? false : 'open'}
           panOpenMask={0}
-          openDrawerOffset={0.5}
+          openDrawerOffset={isSearchMode ? 1 : 0.5}
           panCloseMask={0.5}
           closedDrawerOffset={-3}
-          tapToClose
+          tapToClose={!isSearchMode}
           tweenHandler={ratio => ({ main: { opacity: (2 - ratio) / 2 } })}
           styles={{
             drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
