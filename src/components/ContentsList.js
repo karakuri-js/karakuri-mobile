@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
 export class ContentsList extends React.Component {
   static propTypes = {
     addToPlaylist: PropTypes.func.isRequired,
+    close: PropTypes.func.isRequired,
     contents: PropTypes.array,
     title: PropTypes.string,
   }
@@ -39,8 +40,9 @@ export class ContentsList extends React.Component {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  addToPlaylist() {
-    this.props.addToPlaylist()
+  addToPlaylist(id) {
+    this.props.addToPlaylist(id)
+    this.props.close()
   }
 
   render() {
@@ -60,7 +62,7 @@ export class ContentsList extends React.Component {
             content => (
               <ContentRow
                 {...content}
-                addToPlaylist={this.props.addToPlaylist}
+                addToPlaylist={this.addToPlaylist}
                 hideGroup
               />
             )

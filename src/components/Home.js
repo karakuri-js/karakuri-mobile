@@ -193,6 +193,7 @@ export class Home extends Component {
               /> :
               <ContentsList
                 addToPlaylist={this.addToPlaylist}
+                close={this.closeSongDrawer}
                 contents={contentsPerGroups[selectedGroupName]}
                 title={selectedGroupName}
               />
