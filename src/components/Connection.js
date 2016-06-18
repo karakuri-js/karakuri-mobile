@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import {
+  AsyncStorage,
   StyleSheet,
   Text,
   TextInput,
@@ -50,10 +51,17 @@ export class Connection extends Component {
     this.state = { hostname: '', port: '3000', isLoading: false }
   }
 
+  componentWillMount() {
+    AsyncStorage.getItem('hostname').then(hostname => hostname && this.setState({ hostname }))
+    AsyncStorage.getItem('port').then(port => port && this.setState({ port }))
+  }
+
   connect() {
     const { hostname, port = '80' } = this.state
     if (!hostname) return this.setState({ message: 'Gimme an hostname', isLoading: false })
     const url = `http://${hostname.trim()}:${port.trim()}`
+    AsyncStorage.setItem('hostname', hostname)
+    AsyncStorage.setItem('port', port)
     fetch(url.concat('/contents'))
       .then(response => response.json())
       .then(contents => this.props.onConnect({ contents, url }))
