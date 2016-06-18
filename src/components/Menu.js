@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import {
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -38,7 +39,7 @@ export const Menu = ({ directories, onDirectorySelect }) => (
       </Text>
     </View>
 
-    <View style={styles.directoriesContainer}>
+    <ScrollView style={styles.directoriesContainer}>
       {directories.map((directory, key) => (
         <MenuItem
           key={key}
@@ -46,7 +47,7 @@ export const Menu = ({ directories, onDirectorySelect }) => (
           onDirectorySelect={onDirectorySelect}
         />
       ))}
-    </View>
+    </ScrollView>
   </View>
 )
 
