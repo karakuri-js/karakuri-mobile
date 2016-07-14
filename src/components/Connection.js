@@ -57,14 +57,16 @@ export class Connection extends Component {
   }
 
   connect() {
-    const { hostname, port = '80' } = this.state
+    let { hostname, port = '80' } = this.state
+    hostname = hostname.trim()
+    port = port.trim()
     if (!hostname) return this.setState({ message: 'Gimme an hostname', isLoading: false })
-    const url = `http://${hostname.trim()}:${port.trim()}`
+    const url = `http://${hostname}:${port}`
     AsyncStorage.setItem('hostname', hostname)
     AsyncStorage.setItem('port', port)
     fetch(url.concat('/contents'))
       .then(response => response.json())
-      .then(contents => this.props.onConnect({ contents, url }))
+      .then(contents => this.props.onConnect({ contents, hostname, port, url }))
       .catch(({ message }) => this.setState({ message, isLoading: false }))
   }
 

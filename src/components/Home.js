@@ -10,10 +10,13 @@ import { FilterList } from './FilterList'
 import { HomeListView } from './HomeListView'
 import { Menu } from './Menu'
 import { HomeHeader } from './HomeHeader'
+import { PlaylistStatusBar } from './PlaylistStatusBar'
 
 export class Home extends Component {
   static propTypes = {
     contents: PropTypes.array,
+    hostname: PropTypes.string.isRequired,
+    port: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }
 
@@ -40,6 +43,7 @@ export class Home extends Component {
   componentWillMount() {
     this.prepareContentsListViews(this.props.contents)
     BackAndroid.addEventListener('hardwareBackPress', this.handleBack)
+    this.webSocketConnect()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -142,6 +146,25 @@ export class Home extends Component {
     })
   }
 
+  webSocketConnect() {
+    const { hostname, port } = this.props
+    const ws = new WebSocket(`ws://${hostname}:${port}`)
+    ws.onopen = () => {
+      console.log('bouhbouh')
+    }
+    ws.onmessage = ({ data }) => {
+      if (!data) return
+      const { type, payload } = JSON.parse(data)
+      if (type === 'playlist') return this.setState({ contentsCount: payload.length })
+      if (type === 'playingContent') return this.setState({ playingContent: payload })
+    }
+    // Always try to reconnect if we've lost the connection
+    ws.onclose = () => setTimeout(
+      () => this.webSocketConnect(),
+      10000
+    )
+  }
+
   renderMenu() {
     return (
       <Menu
@@ -154,7 +177,14 @@ export class Home extends Component {
   render() {
     const selectedDirectoryName = this.state.selectedDirectoryName ||
       Object.keys(this.state.contentsPerDirectories)[0]
-    const { contentsPerGroups, isSearchMode, isSongDrawerOpened, selectedGroupName } = this.state
+    const {
+      contentsPerGroups,
+      contentsCount,
+      isSearchMode,
+      isSongDrawerOpened,
+      playingContent,
+      selectedGroupName,
+    } = this.state
     const { contents: allContents } = this.props
 
     return (
@@ -219,6 +249,12 @@ export class Home extends Component {
             onGroupSelect={this.onGroupSelect}
           />
         </Drawer>
+        {playingContent && (
+          <PlaylistStatusBar
+            {...playingContent}
+            contentsCount={contentsCount}
+          />
+        )}
       </Drawer>
     )
   }
