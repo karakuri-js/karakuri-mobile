@@ -221,11 +221,11 @@ export class Home extends Component {
           content={
             isSongDrawerOpened && (isSearchMode ?
               <FilterList
-                addToPlaylist={this.addToPlaylist}
+                onSelect={this.addToPlaylist}
                 contents={allContents}
               /> :
               <ContentsList
-                addToPlaylist={this.addToPlaylist}
+                onSelect={this.addToPlaylist}
                 contents={contentsPerGroups[selectedGroupName]}
                 title={selectedGroupName}
               />
