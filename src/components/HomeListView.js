@@ -33,7 +33,7 @@ export class HomeListView extends Component {
       <AlphabetListView
         data={this.props.groups}
         cell={HomeRow}
-        cellHeight={100}
+        cellHeight={50}
         cellProps={{ onPress: this.onGroupSelect }}
         pageSize={5}
         sectionHeader={() => null}

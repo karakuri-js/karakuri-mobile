@@ -20,7 +20,10 @@ export class Home extends Component {
     url: PropTypes.string.isRequired,
   }
 
-  static defaultProps = { contents: [] }
+  static defaultProps = {
+    contents: [],
+    playlistContents: [],
+  }
 
   constructor(props) {
     super(props)
@@ -32,11 +35,13 @@ export class Home extends Component {
     this.openMenu = this.openMenu.bind(this)
     this.openSearch = this.openSearch.bind(this)
     this.onSongDrawerClose = this.onSongDrawerClose.bind(this)
+    this.toggleShowPlaylist = this.toggleShowPlaylist.bind(this)
 
     this.state = {
       selectedGroupName: '',
       isSearchMode: false,
       isSongDrawerOpened: false,
+      showPlaylist: false,
     }
   }
 
@@ -150,6 +155,10 @@ export class Home extends Component {
     })
   }
 
+  toggleShowPlaylist() {
+    this.setState({ showPlaylist: !this.state.showPlaylist })
+  }
+
   webSocketConnect() {
     const { hostname, port } = this.props
     const ws = new WebSocket(`ws://${hostname}:${port}`)
@@ -159,7 +168,7 @@ export class Home extends Component {
     ws.onmessage = ({ data }) => {
       if (!data) return
       const { type, payload } = JSON.parse(data)
-      if (type === 'playlist') return this.setState({ contentsCount: payload.length })
+      if (type === 'playlist') return this.setState({ playlistContents: payload })
       if (type === 'playingContent') return this.setState({ playingContent: payload })
     }
     // Always try to reconnect if we've lost the connection
@@ -183,10 +192,10 @@ export class Home extends Component {
       Object.keys(this.state.contentsPerDirectories)[0]
     const {
       contentsPerGroups,
-      contentsCount,
       isSearchMode,
       isSongDrawerOpened,
       playingContent,
+      playlistContents,
       selectedGroupName,
     } = this.state
     const { contents: allContents } = this.props
@@ -245,16 +254,24 @@ export class Home extends Component {
             main: { paddingLeft: 3 },
           }}
         >
-          <HomeListView
-            groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
-            directoryName={selectedDirectoryName}
-            onGroupSelect={this.onGroupSelect}
-          />
+          {!this.state.showPlaylist ? (
+            <HomeListView
+              groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
+              directoryName={selectedDirectoryName}
+              onGroupSelect={this.onGroupSelect}
+            />
+          ) : (
+            <ContentsList
+              contents={playlistContents}
+              title="Playlist"
+            />
+          )}
         </Drawer>
         {playingContent && (
           <PlaylistStatusBar
             {...playingContent}
-            contentsCount={contentsCount}
+            contentsCount={playlistContents.length}
+            onPress={this.toggleShowPlaylist}
           />
         )}
       </Drawer>
