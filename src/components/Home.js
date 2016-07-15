@@ -169,7 +169,13 @@ export class Home extends Component {
       if (!data) return
       const { type, payload } = JSON.parse(data)
       if (type === 'playlist') return this.setState({ playlistContents: payload })
-      if (type === 'playingContent') return this.setState({ playingContent: payload })
+      if (type === 'playingContent') {
+        return this.setState({
+          playingContent: payload,
+          // Stop showing playlist if we do not have a playingContent
+          showPlaylist: payload ? this.state.showPlaylist : false,
+        })
+      }
     }
     // Always try to reconnect if we've lost the connection
     ws.onclose = () => setTimeout(
