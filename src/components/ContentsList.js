@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
 export class ContentsList extends React.Component {
   static propTypes = {
     addToPlaylist: PropTypes.func.isRequired,
-    close: PropTypes.func.isRequired,
     contents: PropTypes.array,
     title: PropTypes.string,
   }
@@ -42,7 +41,6 @@ export class ContentsList extends React.Component {
 
   addToPlaylist(id) {
     this.props.addToPlaylist(id)
-    this.props.close()
   }
 
   render() {

@@ -56,6 +56,7 @@ export class Home extends Component {
   }
 
   addToPlaylist(id) {
+    if (!this.state.isSearchMode) this.closeSongDrawer()
     fetch(`${this.props.url}/request`, {
       headers: {
         Accept: 'application/json',
@@ -73,7 +74,10 @@ export class Home extends Component {
   }
 
   handleBack() {
-    if (this.state.isSongDrawerOpened && this.state.isSearchMode) return true // handled by it
+    if (this.state.isSongDrawerOpened) {
+      this.closeSongDrawer()
+      return true
+    }
     Alert.alert(
       'Warning',
       'This will exit.',
@@ -219,11 +223,9 @@ export class Home extends Component {
               <FilterList
                 addToPlaylist={this.addToPlaylist}
                 contents={allContents}
-                close={this.closeSongDrawer}
               /> :
               <ContentsList
                 addToPlaylist={this.addToPlaylist}
-                close={this.closeSongDrawer}
                 contents={contentsPerGroups[selectedGroupName]}
                 title={selectedGroupName}
               />
