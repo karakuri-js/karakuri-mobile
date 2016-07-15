@@ -234,8 +234,9 @@ export class Home extends Component {
                 contents={allContents}
               /> :
               <ContentsList
-                onSelect={this.addToPlaylist}
                 contents={contentsPerGroups[selectedGroupName]}
+                hideGroups
+                onSelect={this.addToPlaylist}
                 title={selectedGroupName}
               />
             )

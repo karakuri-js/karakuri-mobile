@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
 export class ContentsList extends React.Component {
   static propTypes = {
     contents: PropTypes.array,
+    hideGroups: PropTypes.bool,
     onSelect: PropTypes.func,
     title: PropTypes.string,
   }
@@ -52,7 +53,7 @@ export class ContentsList extends React.Component {
               <ContentRow
                 {...content}
                 onSelect={this.props.onSelect}
-                hideGroup
+                hideGroup={this.props.hideGroups}
               />
             )
           }
