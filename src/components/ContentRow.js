@@ -17,32 +17,33 @@ const styles = StyleSheet.create({
 
 export class ContentRow extends Component {
   static propTypes = {
-    addToPlaylist: PropTypes.func.isRequired,
     group: PropTypes.string.isRequired,
     hideGroup: PropTypes.bool,
     id: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired,
+    onSelect: PropTypes.func,
     songName: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
   }
 
   static defaultProps = {
     hideGroup: false,
+    onSelect: () => {},
   }
 
   constructor(props) {
     super(props)
-    this.addToPlaylist = this.onPress.bind(this)
+    this.onPress = this.onPress.bind(this)
   }
 
   onPress() {
-    this.props.addToPlaylist(this.props.id)
+    this.props.onSelect(this.props.id)
   }
 
   render() {
     const { group, hideGroup, songName, type } = this.props
     return (
       <TouchableNativeFeedback
-        onPress={this.addToPlaylist}
+        onPress={this.onPress}
       >
         <View style={styles.row}>
           <Text style={styles.rowText}>

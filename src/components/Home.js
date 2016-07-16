@@ -18,9 +18,13 @@ export class Home extends Component {
     hostname: PropTypes.string.isRequired,
     port: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
   }
 
-  static defaultProps = { contents: [] }
+  static defaultProps = {
+    contents: [],
+    playlistContents: [],
+  }
 
   constructor(props) {
     super(props)
@@ -32,11 +36,13 @@ export class Home extends Component {
     this.openMenu = this.openMenu.bind(this)
     this.openSearch = this.openSearch.bind(this)
     this.onSongDrawerClose = this.onSongDrawerClose.bind(this)
+    this.toggleShowPlaylist = this.toggleShowPlaylist.bind(this)
 
     this.state = {
       selectedGroupName: '',
       isSearchMode: false,
       isSongDrawerOpened: false,
+      showPlaylist: false,
     }
   }
 
@@ -56,13 +62,15 @@ export class Home extends Component {
   }
 
   addToPlaylist(id) {
+    if (!this.state.isSearchMode) this.closeSongDrawer()
+    const { username } = this.props
     fetch(`${this.props.url}/request`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       method: 'post',
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id, username }),
     }).then(response => response.json())
       .then(({ message }) => ToastAndroid.show(message, ToastAndroid.LONG))
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
@@ -73,7 +81,10 @@ export class Home extends Component {
   }
 
   handleBack() {
-    if (this.state.isSongDrawerOpened && this.state.isSearchMode) return true // handled by it
+    if (this.state.isSongDrawerOpened) {
+      this.closeSongDrawer()
+      return true
+    }
     Alert.alert(
       'Warning',
       'This will exit.',
@@ -146,6 +157,10 @@ export class Home extends Component {
     })
   }
 
+  toggleShowPlaylist() {
+    this.setState({ showPlaylist: !this.state.showPlaylist })
+  }
+
   webSocketConnect() {
     const { hostname, port } = this.props
     const ws = new WebSocket(`ws://${hostname}:${port}`)
@@ -155,8 +170,14 @@ export class Home extends Component {
     ws.onmessage = ({ data }) => {
       if (!data) return
       const { type, payload } = JSON.parse(data)
-      if (type === 'playlist') return this.setState({ contentsCount: payload.length })
-      if (type === 'playingContent') return this.setState({ playingContent: payload })
+      if (type === 'playlist') return this.setState({ playlistContents: payload })
+      if (type === 'playingContent') {
+        return this.setState({
+          playingContent: payload,
+          // Stop showing playlist if we do not have a playingContent
+          showPlaylist: payload ? this.state.showPlaylist : false,
+        })
+      }
     }
     // Always try to reconnect if we've lost the connection
     ws.onclose = () => setTimeout(
@@ -179,10 +200,10 @@ export class Home extends Component {
       Object.keys(this.state.contentsPerDirectories)[0]
     const {
       contentsPerGroups,
-      contentsCount,
       isSearchMode,
       isSongDrawerOpened,
       playingContent,
+      playlistContents,
       selectedGroupName,
     } = this.state
     const { contents: allContents } = this.props
@@ -217,14 +238,13 @@ export class Home extends Component {
           content={
             isSongDrawerOpened && (isSearchMode ?
               <FilterList
-                addToPlaylist={this.addToPlaylist}
+                onSelect={this.addToPlaylist}
                 contents={allContents}
-                close={this.closeSongDrawer}
               /> :
               <ContentsList
-                addToPlaylist={this.addToPlaylist}
-                close={this.closeSongDrawer}
                 contents={contentsPerGroups[selectedGroupName]}
+                hideGroups
+                onSelect={this.addToPlaylist}
                 title={selectedGroupName}
               />
             )
@@ -243,16 +263,24 @@ export class Home extends Component {
             main: { paddingLeft: 3 },
           }}
         >
-          <HomeListView
-            groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
-            directoryName={selectedDirectoryName}
-            onGroupSelect={this.onGroupSelect}
-          />
+          {!this.state.showPlaylist ? (
+            <HomeListView
+              groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
+              directoryName={selectedDirectoryName}
+              onGroupSelect={this.onGroupSelect}
+            />
+          ) : (
+            <ContentsList
+              contents={playlistContents}
+              title="Playlist"
+            />
+          )}
         </Drawer>
         {playingContent && (
           <PlaylistStatusBar
             {...playingContent}
-            contentsCount={contentsCount}
+            contentsCount={playlistContents.length}
+            onPress={this.toggleShowPlaylist}
           />
         )}
       </Drawer>

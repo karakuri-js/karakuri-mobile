@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { BackAndroid, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import { ContentRow } from './ContentRow'
 import fuzzySearch from '../lib/fuzzySearch'
@@ -32,9 +32,8 @@ const styles = StyleSheet.create({
 
 export class FilterList extends Component {
   static propTypes = {
-    addToPlaylist: PropTypes.func.isRequired,
     contents: PropTypes.array,
-    close: PropTypes.func.isRequired,
+    onSelect: PropTypes.func,
     title: PropTypes.string,
   }
 
@@ -42,26 +41,11 @@ export class FilterList extends Component {
 
   constructor(props) {
     super(props)
-    this.addToPlaylist = this.addToPlaylist.bind(this)
-    this.close = this.close.bind(this)
     this.state = { textFilter: '', filteredContents: [] }
   }
 
   componentWillMount() {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    BackAndroid.addEventListener('hardwareBackPress', this.close)
-  }
-
-  componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.close)
-  }
-
-  addToPlaylist() {
-    this.props.addToPlaylist()
-  }
-
-  close() {
-    this.props.close()
   }
 
   render() {
@@ -101,7 +85,7 @@ export class FilterList extends Component {
           <ListView
             dataSource={this.dataSource.cloneWithRows(filteredContents)}
             renderRow={
-              content => <ContentRow {...content} addToPlaylist={this.props.addToPlaylist} />
+              content => <ContentRow {...content} onSelect={this.props.onSelect} />
             }
           />
         )}
