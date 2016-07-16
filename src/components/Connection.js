@@ -70,6 +70,7 @@ export class Connection extends Component {
     if (!username) return this.setState({ message: 'Gimme an username', isLoading: false })
     if (!hostname) return this.setState({ message: 'Gimme a hostname', isLoading: false })
     const url = `http://${hostname}:${port}`
+    AsyncStorage.setItem('username', username)
     AsyncStorage.setItem('hostname', hostname)
     AsyncStorage.setItem('port', port)
     fetch(url.concat('/contents'))
