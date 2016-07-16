@@ -30,12 +30,22 @@ const styles = StyleSheet.create({
   },
 })
 
-export const PlaylistStatusBar = ({ contentsCount, group, onPress, songName, type }) => (
+export const PlaylistStatusBar = ({
+  contentsCount,
+  group,
+  onPress,
+  songName,
+  type,
+  username,
+}) => (
   <TouchableNativeFeedback onPress={onPress}>
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.contentText}>
           {group} - {type} - {songName}
+        </Text>
+        <Text style={styles.contentText}>
+          Requested by {username}
         </Text>
       </View>
       <View style={styles.contentsCount}>
@@ -46,9 +56,10 @@ export const PlaylistStatusBar = ({ contentsCount, group, onPress, songName, typ
 )
 
 PlaylistStatusBar.propTypes = {
-  contentsCount: PropTypes.number,
+  contentsCount: PropTypes.number.isRequired,
   group: PropTypes.string.isRequired,
   onPress: PropTypes.func,
   songName: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
 }
