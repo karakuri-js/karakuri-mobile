@@ -48,25 +48,33 @@ export class Connection extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { hostname: '', port: '3000', isLoading: false }
+    this.state = {
+      isLoading: false,
+      hostname: '',
+      port: '3000',
+      username: '',
+    }
   }
 
   componentWillMount() {
+    AsyncStorage.getItem('username').then(username => username && this.setState({ username }))
     AsyncStorage.getItem('hostname').then(hostname => hostname && this.setState({ hostname }))
     AsyncStorage.getItem('port').then(port => port && this.setState({ port }))
   }
 
   connect() {
-    let { hostname, port = '80' } = this.state
+    let { hostname, port = '80', username } = this.state
     hostname = hostname.trim()
     port = port.trim()
-    if (!hostname) return this.setState({ message: 'Gimme an hostname', isLoading: false })
+    username = username.trim()
+    if (!username) return this.setState({ message: 'Gimme an username', isLoading: false })
+    if (!hostname) return this.setState({ message: 'Gimme a hostname', isLoading: false })
     const url = `http://${hostname}:${port}`
     AsyncStorage.setItem('hostname', hostname)
     AsyncStorage.setItem('port', port)
     fetch(url.concat('/contents'))
       .then(response => response.json())
-      .then(contents => this.props.onConnect({ contents, hostname, port, url }))
+      .then(contents => this.props.onConnect({ contents, hostname, port, url, username }))
       .catch(({ message }) => this.setState({ message, isLoading: false }))
   }
 
@@ -76,6 +84,13 @@ export class Connection extends Component {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Karakuri</Text>
         </View>
+
+        <Text style={styles.label}>Username:</Text>
+        <TextInput
+          onChangeText={username => this.setState({ username })}
+          placeholder="Enter a username"
+          value={this.state.username}
+        />
 
         <Text style={styles.label}>Hostname:</Text>
         <TextInput

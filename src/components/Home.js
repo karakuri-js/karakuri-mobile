@@ -18,6 +18,7 @@ export class Home extends Component {
     hostname: PropTypes.string.isRequired,
     port: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
   }
 
   static defaultProps = {
@@ -62,13 +63,14 @@ export class Home extends Component {
 
   addToPlaylist(id) {
     if (!this.state.isSearchMode) this.closeSongDrawer()
+    const { username } = this.props
     fetch(`${this.props.url}/request`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       method: 'post',
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id, username }),
     }).then(response => response.json())
       .then(({ message }) => ToastAndroid.show(message, ToastAndroid.LONG))
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
