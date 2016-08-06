@@ -85,6 +85,10 @@ export class Home extends Component {
       this.closeSongDrawer()
       return true
     }
+    if (this.state.showPlaylist) {
+      this.setState({ showPlaylist: false })
+      return true
+    }
     Alert.alert(
       'Warning',
       'This will exit.',
