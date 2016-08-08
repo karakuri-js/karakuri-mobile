@@ -83,6 +83,7 @@ export class FilterList extends Component {
         )}
         {foundResults && (
           <ListView
+            keyboardShouldPersistTaps
             dataSource={this.dataSource.cloneWithRows(filteredContents)}
             renderRow={
               content => <ContentRow {...content} onSelect={this.props.onSelect} />
