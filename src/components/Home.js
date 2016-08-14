@@ -10,6 +10,7 @@ import { FilterList } from './FilterList'
 import { HomeListView } from './HomeListView'
 import { Menu } from './Menu'
 import { HomeHeader } from './HomeHeader'
+import { Playlist } from './Playlist'
 import { PlaylistStatusBar } from './PlaylistStatusBar'
 
 export class Home extends Component {
@@ -23,7 +24,6 @@ export class Home extends Component {
 
   static defaultProps = {
     contents: [],
-    playlistContents: [],
   }
 
   constructor(props) {
@@ -31,6 +31,7 @@ export class Home extends Component {
     this.addToPlaylist = this.addToPlaylist.bind(this)
     this.closeSongDrawer = this.closeSongDrawer.bind(this)
     this.handleBack = this.handleBack.bind(this)
+    this.handleRandomize = this.handleRandomize.bind(this)
     this.onDirectorySelect = this.onDirectorySelect.bind(this)
     this.onGroupSelect = this.onGroupSelect.bind(this)
     this.openMenu = this.openMenu.bind(this)
@@ -43,6 +44,7 @@ export class Home extends Component {
       isSearchMode: false,
       isSongDrawerOpened: false,
       showPlaylist: false,
+      playlistContents: [],
     }
   }
 
@@ -98,6 +100,20 @@ export class Home extends Component {
       ]
     )
     return true
+  }
+
+  handleRandomize() {
+    const { username } = this.props
+    fetch(`${this.props.url}/randomize`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+      body: JSON.stringify({ username }),
+    }).then(response => response.json())
+      .then(({ message }) => ToastAndroid.show(message, ToastAndroid.SHORT))
+      .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
   }
 
   onDirectorySelect(selectedDirectoryName) {
@@ -168,9 +184,6 @@ export class Home extends Component {
   webSocketConnect() {
     const { hostname, port } = this.props
     const ws = new WebSocket(`ws://${hostname}:${port}`)
-    ws.onopen = () => {
-      console.log('bouhbouh')
-    }
     ws.onmessage = ({ data }) => {
       if (!data) return
       const { type, payload } = JSON.parse(data)
@@ -211,6 +224,9 @@ export class Home extends Component {
       selectedGroupName,
     } = this.state
     const { contents: allContents } = this.props
+    const myPlaylistContents = playlistContents
+      .filter(({ username }) => username === this.props.username)
+      .filter(({ id }) => id !== (playingContent || {}).id)
 
     return (
       <Drawer
@@ -274,9 +290,9 @@ export class Home extends Component {
               onGroupSelect={this.onGroupSelect}
             />
           ) : (
-            <ContentsList
-              contents={playlistContents}
-              title="Playlist"
+            <Playlist
+              contents={myPlaylistContents}
+              handleRandomize={this.handleRandomize}
             />
           )}
         </Drawer>
