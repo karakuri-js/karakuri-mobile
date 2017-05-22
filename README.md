@@ -1,18 +1,16 @@
 # Karakuri-mobile
 
-React-Native App connecting to a Karakuri server
+React-Native App connecting to a [Karakuri server](https://github.com/karakuri-js/karakuri-server)
 
 ## Setup
 
 ```sh
-npm install
-npm install -g rnpm
-rnpm link
+yarn
 ```
 
 ## Building & running
 ```sh
-npm start
+yarn start
 react-native run-android # In another terminal
 adb reverse tcp:8081 tcp:8081 # Necessary to run on a physical Android device
 adb logcat *:S ReactNative:V ReactNativeJS:V # Get app logs
