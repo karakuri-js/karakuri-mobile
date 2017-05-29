@@ -19,7 +19,7 @@ export class ContentRow extends Component {
   static propTypes = {
     group: PropTypes.string.isRequired,
     hideGroup: PropTypes.bool,
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     onSelect: PropTypes.func,
     songName: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
