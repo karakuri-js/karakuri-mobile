@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Alert, BackAndroid, ToastAndroid } from 'react-native'
+import { Alert, BackHandler, ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { uniq } from 'lodash'
 
@@ -50,7 +50,7 @@ export class Home extends Component {
 
   componentWillMount() {
     this.prepareContentsListViews(this.props.contents)
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBack)
+    BackHandler.addEventListener('hardwareBackPress', this.handleBack)
     this.webSocketConnect()
   }
 
@@ -60,7 +60,7 @@ export class Home extends Component {
   }
 
   componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBack)
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
   }
 
   addToPlaylist(id) {
@@ -96,7 +96,7 @@ export class Home extends Component {
       'This will exit.',
       [
         { text: 'Cancel', onPress: () => {} },
-        { text: 'OK', onPress: () => BackAndroid.exitApp() },
+        { text: 'OK', onPress: () => BackHandler.exitApp() },
       ]
     )
     return true
