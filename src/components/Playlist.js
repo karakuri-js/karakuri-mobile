@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { StyleSheet, View } from 'react-native'
 import Button from 'apsl-react-native-button'
 import { ContentsList } from './ContentsList'

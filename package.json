@@ -8,6 +8,7 @@
   "dependencies": {
     "apsl-react-native-button": "^3.0.2",
     "lodash": "^4.13.1",
+    "prop-types": "^15.5.10",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.44.0",
     "react-native-alphabetlistview": "^0.2.0",
