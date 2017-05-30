@@ -28,16 +28,6 @@ export class Home extends Component {
 
   constructor(props) {
     super(props)
-    this.addToPlaylist = this.addToPlaylist.bind(this)
-    this.closeSongDrawer = this.closeSongDrawer.bind(this)
-    this.handleBack = this.handleBack.bind(this)
-    this.handleRandomize = this.handleRandomize.bind(this)
-    this.onDirectorySelect = this.onDirectorySelect.bind(this)
-    this.onGroupSelect = this.onGroupSelect.bind(this)
-    this.openMenu = this.openMenu.bind(this)
-    this.openSearch = this.openSearch.bind(this)
-    this.onSongDrawerClose = this.onSongDrawerClose.bind(this)
-    this.toggleShowPlaylist = this.toggleShowPlaylist.bind(this)
 
     this.state = {
       selectedGroupName: '',
@@ -63,7 +53,7 @@ export class Home extends Component {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
   }
 
-  addToPlaylist(id) {
+  addToPlaylist = id => {
     if (!this.state.isSearchMode) this.closeSongDrawer()
     const { username } = this.props
     fetch(`${this.props.url}/request`, {
@@ -76,13 +66,13 @@ export class Home extends Component {
     }).then(response => response.json())
       .then(({ message }) => ToastAndroid.show(message, ToastAndroid.LONG))
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
-  }
+  };
 
-  closeSongDrawer() {
+  closeSongDrawer = () => {
     this.songDrawer.close()
-  }
+  };
 
-  handleBack() {
+  handleBack = () => {
     if (this.state.isSongDrawerOpened) {
       this.closeSongDrawer()
       return true
@@ -100,9 +90,9 @@ export class Home extends Component {
       ]
     )
     return true
-  }
+  };
 
-  handleRandomize() {
+  handleRandomize = () => {
     const { username } = this.props
     fetch(`${this.props.url}/randomize`, {
       headers: {
@@ -114,14 +104,14 @@ export class Home extends Component {
     }).then(response => response.json())
       .then(({ message }) => ToastAndroid.show(message, ToastAndroid.SHORT))
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
-  }
+  };
 
-  onDirectorySelect(selectedDirectoryName) {
+  onDirectorySelect = selectedDirectoryName => {
     this.menuDrawer.close()
     this.setState({ selectedDirectoryName, isSongDrawerOpened: false })
-  }
+  };
 
-  onGroupSelect(selectedGroupName) {
+  onGroupSelect = selectedGroupName => {
     this.setState(
       { selectedGroupName, isSearchMode: false, isSongDrawerOpened: true },
       () => {
@@ -129,9 +119,9 @@ export class Home extends Component {
         this.songDrawer.open()
       }
     )
-  }
+  };
 
-  openSearch() {
+  openSearch = () => {
     this.setState(
       { isSearchMode: true, isSongDrawerOpened: true },
       () => {
@@ -139,16 +129,16 @@ export class Home extends Component {
         this.songDrawer.open()
       }
     )
-  }
+  };
 
-  openMenu() {
+  openMenu = () => {
     this.songDrawer.close()
     this.menuDrawer.open()
-  }
+  };
 
-  onSongDrawerClose() {
+  onSongDrawerClose = () => {
     this.setState({ isSongDrawerOpened: false, isSearchMode: false })
-  }
+  };
 
   prepareContentsListViews(contents) {
     // Group contents per directory & groups, then create listview datasources
@@ -177,9 +167,9 @@ export class Home extends Component {
     })
   }
 
-  toggleShowPlaylist() {
+  toggleShowPlaylist = () => {
     this.setState({ showPlaylist: !this.state.showPlaylist })
-  }
+  };
 
   webSocketConnect() {
     const { hostname, port } = this.props

@@ -30,19 +30,13 @@ export class HomeHeader extends Component {
     title: PropTypes.string.isRequired,
   }
 
-  constructor(props) {
-    super(props)
-    this.openMenu = this.openMenu.bind(this)
-    this.openSearch = this.openSearch.bind(this)
-  }
-
-  openMenu() {
+  openMenu = () => {
     this.props.openMenu()
-  }
+  };
 
-  openSearch() {
+  openSearch = () => {
     this.props.openSearch()
-  }
+  };
 
   render() {
     return (

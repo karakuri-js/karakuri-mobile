@@ -30,14 +30,9 @@ export class ContentRow extends Component {
     onSelect: () => {},
   }
 
-  constructor(props) {
-    super(props)
-    this.onPress = this.onPress.bind(this)
-  }
-
-  onPress() {
+  onPress = () => {
     this.props.onSelect(this.props.id)
-  }
+  };
 
   render() {
     const { group, hideGroup, songName, type } = this.props
