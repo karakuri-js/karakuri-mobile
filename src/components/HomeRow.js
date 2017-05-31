@@ -27,14 +27,9 @@ export class HomeRow extends Component {
     item: PropTypes.string,
   }
 
-  constructor(props) {
-    super(props)
-    this.onPress = this.onPress.bind(this)
-  }
-
-  onPress() {
+  onPress = () => {
     this.props.onPress(this.props.item)
-  }
+  };
 
   render() {
     const { item } = this.props

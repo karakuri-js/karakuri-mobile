@@ -31,14 +31,9 @@ export class MenuItem extends Component {
     onDirectorySelect: PropTypes.func.isRequired,
   }
 
-  constructor(props) {
-    super(props)
-    this.onDirectorySelect = this.onDirectorySelect.bind(this)
-  }
-
-  onDirectorySelect() {
+  onDirectorySelect = () => {
     this.props.onDirectorySelect(this.props.directory)
-  }
+  };
 
   render() {
     return (

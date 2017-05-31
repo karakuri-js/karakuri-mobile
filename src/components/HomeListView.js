@@ -14,10 +14,6 @@ export class HomeListView extends Component {
     directoryName: PropTypes.string.isRequired,
     onGroupSelect: PropTypes.func.isRequired,
   }
-  constructor(props) {
-    super(props)
-    this.onGroupSelect = this.onGroupSelect.bind(this)
-  }
 
   shouldComponentUpdate(nextProps) {
     // Quick, but absolutely necessary performance win
@@ -25,9 +21,9 @@ export class HomeListView extends Component {
     return true
   }
 
-  onGroupSelect(group) {
+  onGroupSelect = group => {
     this.props.onGroupSelect(group)
-  }
+  };
 
   render() {
     return (
