@@ -36,6 +36,14 @@ export class ContentsList extends PureComponent {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
+  renderRow = (content) => (
+    <ContentRow
+      {...content}
+      onSelect={this.props.onSelect}
+      hideGroup={this.props.hideGroups}
+    />
+  )
+
   render() {
     return (
       <View style={styles.container}>
@@ -49,15 +57,7 @@ export class ContentsList extends PureComponent {
         </View>
         <ListView
           dataSource={this.dataSource.cloneWithRows(this.props.contents)}
-          renderRow={
-            content => (
-              <ContentRow
-                {...content}
-                onSelect={this.props.onSelect}
-                hideGroup={this.props.hideGroups}
-              />
-            )
-          }
+          renderRow={this.renderRow}
         />
       </View>
     )
