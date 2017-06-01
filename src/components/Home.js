@@ -168,9 +168,17 @@ export class Home extends Component {
     })
   }
 
+  setMenuDrawerRef = ref => (this.menuDrawer = ref)
+
+  setSongDrawerRef = ref => (this.songDrawer = ref)
+
   toggleShowPlaylist = () => {
     this.setState({ showPlaylist: !this.state.showPlaylist })
   };
+
+  handleTween(ratio) {
+    return { main: { opacity: (2 - ratio) / 2 } }
+  }
 
   webSocketConnect() {
     const { hostname, port } = this.props
@@ -221,7 +229,7 @@ export class Home extends Component {
 
     return (
       <Drawer
-        ref={ref => (this.menuDrawer = ref)}
+        ref={this.setMenuDrawerRef}
         side="left"
         type="overlay"
         content={this.renderMenu()}
@@ -231,7 +239,7 @@ export class Home extends Component {
         panCloseMask={0.5}
         closedDrawerOffset={-3}
         tapToClose
-        tweenHandler={ratio => ({ main: { opacity: (2 - ratio) / 2 } })}
+        tweenHandler={this.handleTween}
         styles={{
           drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
           main: { paddingLeft: 3 },
@@ -243,7 +251,7 @@ export class Home extends Component {
           title={selectedDirectoryName}
         />
         <Drawer
-          ref={ref => (this.songDrawer = ref)}
+          ref={this.setSongDrawerRef}
           side="right"
           type={isSearchMode ? 'displace' : 'overlay'}
           content={
@@ -268,7 +276,7 @@ export class Home extends Component {
           panCloseMask={0.5}
           closedDrawerOffset={-3}
           tapToClose={!isSearchMode}
-          tweenHandler={ratio => ({ main: { opacity: (2 - ratio) / 2 } })}
+          tweenHandler={this.handleTween}
           styles={{
             drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
             main: { paddingLeft: 3 },

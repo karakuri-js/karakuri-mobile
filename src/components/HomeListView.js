@@ -4,6 +4,8 @@ import AlphabetListView from 'react-native-alphabetlistview'
 
 import { HomeRow } from './HomeRow'
 
+const nullFn = () => null
+
 const alphabetListStyles = {
   width: 40,
 }
@@ -27,7 +29,7 @@ export class HomeListView extends PureComponent {
         cellHeight={50}
         cellProps={{ onPress: this.onGroupSelect }}
         pageSize={5}
-        sectionHeader={() => null}
+        sectionHeader={nullFn}
         sectionHeaderHeight={0}
         sectionListStyle={alphabetListStyles}
       />

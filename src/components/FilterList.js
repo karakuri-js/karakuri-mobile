@@ -49,6 +49,12 @@ export class FilterList extends Component {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
+  setTextFilter = (textFilter) => this.setState({ textFilter })
+
+  renderRow = (content) => (
+    <ContentRow {...content} onSelect={this.props.onSelect} />
+  )
+
   render() {
     const { contents } = this.props
     const isLongEnoughFilter = this.state.textFilter.length >= 1
@@ -71,7 +77,7 @@ export class FilterList extends Component {
           <View style={styles.searchInputContainer}>
             <TextInput
               autoFocus
-              onChangeText={textFilter => this.setState({ textFilter })}
+              onChangeText={this.setTextFilter}
               placeholder="Search..."
               value={this.state.text}
             />
@@ -86,9 +92,7 @@ export class FilterList extends Component {
           <ListView
             keyboardShouldPersistTaps="always"
             dataSource={this.dataSource.cloneWithRows(filteredContents)}
-            renderRow={
-              content => <ContentRow {...content} onSelect={this.props.onSelect} />
-            }
+            renderRow={this.renderRow}
           />
         )}
       </View>

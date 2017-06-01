@@ -63,22 +63,30 @@ export class Connection extends Component {
     AsyncStorage.getItem('port').then(port => port && this.setState({ port }))
   }
 
-  connect() {
-    let { hostname, port = '80', username } = this.state
-    hostname = hostname.trim()
-    port = port.trim()
-    username = username.trim()
-    if (!username) return this.setState({ message: 'Gimme an username', isLoading: false })
-    if (!hostname) return this.setState({ message: 'Gimme a hostname', isLoading: false })
-    const url = `http://${hostname}:${port}`
-    AsyncStorage.setItem('username', username)
-    AsyncStorage.setItem('hostname', hostname)
-    AsyncStorage.setItem('port', port)
-    fetch(url.concat('/contents'))
-      .then(response => response.json())
-      .then(contents => this.props.onConnect({ contents, hostname, port, url, username }))
-      .catch(({ message }) => this.setState({ message, isLoading: false }))
+  connect = () => {
+    this.setState({ isLoading: true }, () => {
+      let { hostname, port = '80', username } = this.state
+      hostname = hostname.trim()
+      port = port.trim()
+      username = username.trim()
+      if (!username) return this.setState({ message: 'Gimme an username', isLoading: false })
+      if (!hostname) return this.setState({ message: 'Gimme a hostname', isLoading: false })
+      const url = `http://${hostname}:${port}`
+      AsyncStorage.setItem('username', username)
+      AsyncStorage.setItem('hostname', hostname)
+      AsyncStorage.setItem('port', port)
+      fetch(url.concat('/contents'))
+        .then(response => response.json())
+        .then(contents => this.props.onConnect({ contents, hostname, port, url, username }))
+        .catch(({ message }) => this.setState({ message, isLoading: false }))
+    })
   }
+
+  setHostName = hostname => this.setState({ hostname })
+
+  setPort = port => this.setState({ port })
+
+  setUserName = username => this.setState({ username })
 
   render() {
     return (
@@ -89,28 +97,28 @@ export class Connection extends Component {
 
         <Text style={styles.label}>Username:</Text>
         <TextInput
-          onChangeText={username => this.setState({ username })}
+          onChangeText={this.setUserName}
           placeholder="Enter a username"
           value={this.state.username}
         />
 
         <Text style={styles.label}>Hostname:</Text>
         <TextInput
-          onChangeText={hostname => this.setState({ hostname })}
+          onChangeText={this.setHostName}
           placeholder="Enter a hostname"
           value={this.state.hostname}
         />
 
         <Text style={styles.label}>Port:</Text>
         <TextInput
-          onChangeText={port => this.setState({ port })}
+          onChangeText={this.setPort}
           placeholder="Enter a port"
           value={this.state.port}
         />
 
         <Button
           isLoading={this.state.isLoading}
-          onPress={() => this.setState({ isLoading: true }, () => this.connect())}
+          onPress={this.connect}
           style={styles.button}
           textStyle={styles.buttonText}
         >
