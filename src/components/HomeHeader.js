@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/EvilIcons'
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class HomeHeader extends Component {
+export class HomeHeader extends PureComponent {
   static propTypes = {
     openMenu: PropTypes.func.isRequired,
     openSearch: PropTypes.func.isRequired,

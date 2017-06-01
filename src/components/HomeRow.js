@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import {
   StyleSheet,
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class HomeRow extends Component {
+export class HomeRow extends PureComponent {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
     item: PropTypes.string,

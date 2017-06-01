@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, View } from 'react-native'
 import Button from 'apsl-react-native-button'
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class Playlist extends Component {
+export class Playlist extends PureComponent {
   static propTypes = {
     contents: PropTypes.array,
     handleRandomize: PropTypes.func,
