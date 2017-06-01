@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { ListView, StyleSheet, Text, View } from 'react-native'
 
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class ContentsList extends React.Component {
+export class ContentsList extends PureComponent {
   static propTypes = {
     contents: PropTypes.array,
     hideGroups: PropTypes.bool,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import {
   StyleSheet,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class MenuItem extends Component {
+export class MenuItem extends PureComponent {
   static propTypes = {
     directory: PropTypes.string.isRequired,
     onDirectorySelect: PropTypes.func.isRequired,

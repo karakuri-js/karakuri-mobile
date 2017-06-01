@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { PixelRatio, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class ContentRow extends Component {
+export class ContentRow extends PureComponent {
   static propTypes = {
     group: PropTypes.string.isRequired,
     hideGroup: PropTypes.bool,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import AlphabetListView from 'react-native-alphabetlistview'
 
@@ -8,17 +8,11 @@ const alphabetListStyles = {
   width: 40,
 }
 
-export class HomeListView extends Component {
+export class HomeListView extends PureComponent {
   static propTypes = {
     groups: PropTypes.object.isRequired,
     directoryName: PropTypes.string.isRequired,
     onGroupSelect: PropTypes.func.isRequired,
-  }
-
-  shouldComponentUpdate(nextProps) {
-    // Quick, but absolutely necessary performance win
-    if (nextProps.directoryName === this.props.directoryName) return false
-    return true
   }
 
   onGroupSelect = group => {
