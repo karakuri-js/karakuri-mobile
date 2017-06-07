@@ -6,15 +6,17 @@ import { uniq } from 'lodash'
 
 import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
 
-import { ContentsList } from './ContentsList'
-import { FilterList } from './FilterList'
-import { HomeListView } from './HomeListView'
-import { Menu } from './Menu'
-import { HomeHeader } from './HomeHeader'
-import { Playlist } from './Playlist'
-import { PlaylistStatusBar } from './PlaylistStatusBar'
+import ContentsList from './ContentsList'
+import FilterList from './FilterList'
+import HomeListView from './HomeListView'
+import Menu from './Menu'
+import HomeHeader from './HomeHeader'
+import Playlist from './Playlist'
+import PlaylistStatusBar from './PlaylistStatusBar'
 
-export class Home extends Component {
+const handleTween = ratio => ({ main: { opacity: (2 - ratio) / 2 } })
+
+export default class Home extends Component {
   static propTypes = {
     contents: PropTypes.array,
     hostname: PropTypes.string.isRequired,
@@ -176,10 +178,6 @@ export class Home extends Component {
     this.setState({ showPlaylist: !this.state.showPlaylist })
   };
 
-  handleTween(ratio) {
-    return { main: { opacity: (2 - ratio) / 2 } }
-  }
-
   webSocketConnect() {
     const { hostname, port } = this.props
     const ws = new WebSocket(`ws://${hostname}:${port}`)
@@ -239,7 +237,7 @@ export class Home extends Component {
         panCloseMask={0.5}
         closedDrawerOffset={-3}
         tapToClose
-        tweenHandler={this.handleTween}
+        tweenHandler={handleTween}
         styles={{
           drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
           main: { paddingLeft: 3 },
@@ -276,7 +274,7 @@ export class Home extends Component {
           panCloseMask={0.5}
           closedDrawerOffset={-3}
           tapToClose={!isSearchMode}
-          tweenHandler={this.handleTween}
+          tweenHandler={handleTween}
           styles={{
             drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
             main: { paddingLeft: 3 },

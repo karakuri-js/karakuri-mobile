@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class MenuItem extends PureComponent {
+export default class MenuItem extends PureComponent {
   static propTypes = {
     directory: PropTypes.string.isRequired,
     onDirectorySelect: PropTypes.func.isRequired,

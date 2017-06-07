@@ -1,4 +1,4 @@
-const escapeRegExp = (text) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+const escapeRegExp = text => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 
 const fuzzySearch = (array, string, lookedUpProperty = false) => {
   const words = string.split(' ')
@@ -8,7 +8,7 @@ const fuzzySearch = (array, string, lookedUpProperty = false) => {
       const itemValue = lookedUpProperty ? item[lookedUpProperty] : item
       return regexes.some(regex => !itemValue.match(regex)) ? acc : acc.concat(item)
     },
-    []
+    [],
   )
   return { result, regexes }
 }

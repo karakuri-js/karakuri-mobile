@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 
-import { MenuItem } from './MenuItem'
+import MenuItem from './MenuItem'
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const Menu = ({ directories, onDirectorySelect }) => (
+const Menu = ({ directories, onDirectorySelect }) => (
   <View style={styles.container}>
     <View style={styles.header} elevation={10}>
       <Text style={styles.headerText}>
@@ -43,7 +43,7 @@ export const Menu = ({ directories, onDirectorySelect }) => (
     <ScrollView style={styles.directoriesContainer}>
       {directories.map((directory, key) => (
         <MenuItem
-          key={key}
+          key={key} // eslint-disable-line react/no-array-index-key
           directory={directory}
           onDirectorySelect={onDirectorySelect}
         />
@@ -56,3 +56,5 @@ Menu.propTypes = {
   directories: PropTypes.arrayOf(PropTypes.string).isRequired,
   onDirectorySelect: PropTypes.func.isRequired,
 }
+
+export default Menu

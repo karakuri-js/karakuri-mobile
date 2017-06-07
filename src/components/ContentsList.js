@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { ListView, StyleSheet, Text, View } from 'react-native'
 
-import { ContentRow } from './ContentRow'
+import ContentRow from './ContentRow'
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class ContentsList extends PureComponent {
+export default class ContentsList extends PureComponent {
   static propTypes = {
     contents: PropTypes.array,
     hideGroups: PropTypes.bool,
@@ -30,7 +30,12 @@ export class ContentsList extends PureComponent {
     title: PropTypes.string,
   }
 
-  static defaultProps = { contents: [], title: '' }
+  static defaultProps = {
+    contents: [],
+    hideGroups: false,
+    onSelect: () => {},
+    title: '',
+  }
 
   componentWillMount() {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
