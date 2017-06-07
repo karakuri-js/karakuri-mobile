@@ -49,11 +49,9 @@ export class FilterList extends Component {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  setTextFilter = (textFilter) => this.setState({ textFilter })
+  setTextFilter = textFilter => this.setState({ textFilter })
 
-  renderRow = (content) => (
-    <ContentRow {...content} onSelect={this.props.onSelect} />
-  )
+  renderRow = content => <ContentRow {...content} onSelect={this.props.onSelect} />
 
   render() {
     const { contents } = this.props
