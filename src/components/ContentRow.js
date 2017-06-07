@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class ContentRow extends PureComponent {
+export default class ContentRow extends PureComponent {
   static propTypes = {
     group: PropTypes.string.isRequired,
     hideGroup: PropTypes.bool,

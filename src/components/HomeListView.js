@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import AlphabetListView from 'react-native-alphabetlistview'
 
-import { HomeRow } from './HomeRow'
+import HomeRow from './HomeRow'
 
 const nullFn = () => null
 
@@ -10,10 +10,9 @@ const alphabetListStyles = {
   width: 40,
 }
 
-export class HomeListView extends PureComponent {
+export default class HomeListView extends PureComponent {
   static propTypes = {
     groups: PropTypes.object.isRequired,
-    directoryName: PropTypes.string.isRequired,
     onGroupSelect: PropTypes.func.isRequired,
   }
 

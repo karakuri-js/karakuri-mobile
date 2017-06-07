@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class Connection extends Component {
+export default class Connection extends Component {
   static propTypes = {
     onConnect: PropTypes.func.isRequired,
   }

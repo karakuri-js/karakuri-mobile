@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class HomeHeader extends PureComponent {
+export default class HomeHeader extends PureComponent {
   static propTypes = {
     openMenu: PropTypes.func.isRequired,
     openSearch: PropTypes.func.isRequired,

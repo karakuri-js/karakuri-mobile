@@ -21,10 +21,10 @@ const styles = StyleSheet.create({
   },
 })
 
-export class HomeRow extends PureComponent {
+export default class HomeRow extends PureComponent {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
-    item: PropTypes.string,
+    item: PropTypes.string.isRequired,
   }
 
   onPress = () => {

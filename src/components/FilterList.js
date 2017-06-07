@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 
-import { ContentRow } from './ContentRow'
+import ContentRow from './ContentRow'
 import fuzzySearch from '../lib/fuzzySearch'
 
 const styles = StyleSheet.create({
@@ -31,14 +31,13 @@ const styles = StyleSheet.create({
   },
 })
 
-export class FilterList extends Component {
+export default class FilterList extends Component {
   static propTypes = {
     contents: PropTypes.array,
     onSelect: PropTypes.func,
-    title: PropTypes.string,
   }
 
-  static defaultProps = { contents: [], title: '' }
+  static defaultProps = { contents: [], onSelect: () => {} }
 
   constructor(props) {
     super(props)

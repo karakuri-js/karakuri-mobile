@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const PlaylistStatusBar = ({
+const PlaylistStatusBar = ({
   contentsCount,
   group,
   onPress,
@@ -59,8 +59,10 @@ export const PlaylistStatusBar = ({
 PlaylistStatusBar.propTypes = {
   contentsCount: PropTypes.number.isRequired,
   group: PropTypes.string.isRequired,
-  onPress: PropTypes.func,
+  onPress: PropTypes.func.isRequired,
   songName: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
 }
+
+export default PlaylistStatusBar
