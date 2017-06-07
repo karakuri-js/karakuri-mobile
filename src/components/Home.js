@@ -54,7 +54,7 @@ export class Home extends Component {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
   }
 
-  addToPlaylist = id => {
+  addToPlaylist = (id) => {
     if (!this.state.isSearchMode) this.closeSongDrawer()
     const { username } = this.props
     fetch(`${this.props.url}/request`, {
@@ -88,7 +88,7 @@ export class Home extends Component {
       [
         { text: 'Cancel', onPress: () => {} },
         { text: 'OK', onPress: () => BackHandler.exitApp() },
-      ]
+      ],
     )
     return true
   };
@@ -107,18 +107,18 @@ export class Home extends Component {
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
   };
 
-  onDirectorySelect = selectedDirectoryName => {
+  onDirectorySelect = (selectedDirectoryName) => {
     this.menuDrawer.close()
     this.setState({ selectedDirectoryName, isSongDrawerOpened: false })
   };
 
-  onGroupSelect = selectedGroupName => {
+  onGroupSelect = (selectedGroupName) => {
     this.setState(
       { selectedGroupName, isSearchMode: false, isSongDrawerOpened: true },
       () => {
         this.menuDrawer.close()
         this.songDrawer.open()
-      }
+      },
     )
   };
 
@@ -128,7 +128,7 @@ export class Home extends Component {
       () => {
         this.menuDrawer.close()
         this.songDrawer.open()
-      }
+      },
     )
   };
 
@@ -156,10 +156,10 @@ export class Home extends Component {
               [letter]: uniq((alphabetListObj[letter] || []).concat(groupName)),
             }
           },
-          {}
+          {},
         ),
       }),
-      {}
+      {},
     )
     this.setState({
       contentsPerDirectories,
@@ -198,7 +198,7 @@ export class Home extends Component {
     // Always try to reconnect if we've lost the connection
     ws.onclose = () => setTimeout(
       () => this.webSocketConnect(),
-      10000
+      10000,
     )
   }
 
