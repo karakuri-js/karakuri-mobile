@@ -44,7 +44,9 @@ const styles = StyleSheet.create({
 
 export default class Connection extends Component {
   static propTypes = {
-    onConnect: PropTypes.func.isRequired,
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func.isRequired,
+    }).isRequired,
   }
 
   constructor(props) {
@@ -77,7 +79,7 @@ export default class Connection extends Component {
       AsyncStorage.setItem('port', port)
       fetch(url.concat('/contents'))
         .then(response => response.json())
-        .then(contents => this.props.onConnect({ contents, hostname, port, url, username }))
+        .then(contents => this.props.navigation.navigate('Home', { contents, hostname, port, url, username }))
         .catch(({ message }) => this.setState({ message, isLoading: false }))
     })
   }
