@@ -36,7 +36,7 @@ export class ContentsList extends PureComponent {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  renderRow = (content) => (
+  renderRow = content => (
     <ContentRow
       {...content}
       onSelect={this.props.onSelect}

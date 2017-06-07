@@ -17,7 +17,7 @@ export class HomeListView extends PureComponent {
     onGroupSelect: PropTypes.func.isRequired,
   }
 
-  onGroupSelect = group => {
+  onGroupSelect = (group) => {
     this.props.onGroupSelect(group)
   };
 
