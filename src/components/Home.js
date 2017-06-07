@@ -18,15 +18,17 @@ const handleTween = ratio => ({ main: { opacity: (2 - ratio) / 2 } })
 
 export default class Home extends Component {
   static propTypes = {
-    contents: PropTypes.array,
-    hostname: PropTypes.string.isRequired,
-    port: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-  }
-
-  static defaultProps = {
-    contents: [],
+    navigation: PropTypes.shape({
+      state: PropTypes.shape({
+        params: PropTypes.shape({
+          contents: PropTypes.array,
+          hostname: PropTypes.string.isRequired,
+          port: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+          username: PropTypes.string.isRequired,
+        }),
+      }),
+    }),
   }
 
   constructor(props) {
@@ -42,14 +44,15 @@ export default class Home extends Component {
   }
 
   componentWillMount() {
-    this.prepareContentsListViews(this.props.contents)
+    const { contents } = this.props.navigation.state.params
+    this.prepareContentsListViews(contents)
     BackHandler.addEventListener('hardwareBackPress', this.handleBack)
     this.webSocketConnect()
   }
 
   componentWillReceiveProps(nextProps) {
     // TODO check if the contents have changed before doing this
-    this.prepareContentsListViews(nextProps.contents)
+    this.prepareContentsListViews(nextProps.navigation.state.params.contents)
   }
 
   componentWillUnmount() {
@@ -58,8 +61,8 @@ export default class Home extends Component {
 
   addToPlaylist = id => {
     if (!this.state.isSearchMode) this.closeSongDrawer()
-    const { username } = this.props
-    fetch(`${this.props.url}/request`, {
+    const { url, username } = this.props.navigation.state.params
+    fetch(`${url}/request`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -96,8 +99,8 @@ export default class Home extends Component {
   };
 
   handleRandomize = () => {
-    const { username } = this.props
-    fetch(`${this.props.url}/randomize`, {
+    const { url, username } = this.props.navigation.state.params
+    fetch(`${url}/randomize`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -179,7 +182,7 @@ export default class Home extends Component {
   };
 
   webSocketConnect() {
-    const { hostname, port } = this.props
+    const { hostname, port } = this.props.navigation.state.params
     const ws = new WebSocket(`ws://${hostname}:${port}`)
     ws.onmessage = ({ data }) => {
       if (!data) return
@@ -220,9 +223,9 @@ export default class Home extends Component {
       playlistContents,
       selectedGroupName,
     } = this.state
-    const { contents: allContents } = this.props
+    const { contents: allContents, username: myUsername } = this.props.navigation.state.params
     const myPlaylistContents = playlistContents
-      .filter(({ username }) => username === this.props.username)
+      .filter(({ username }) => username === myUsername)
       .filter(({ id }) => id !== (playingContent || {}).id)
 
     return (
