@@ -9,6 +9,7 @@ module.exports = {
     "react"
   ],
   rules: {
+    'arrow-parens': [2, 'as-needed'],
     'consistent-return': 0,
     'no-console': 0,
      // Look into this - forbidding object & array could be useful, but
