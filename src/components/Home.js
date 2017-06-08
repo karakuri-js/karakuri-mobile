@@ -4,21 +4,18 @@ import { Alert, BackHandler, ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { uniq } from 'lodash'
 
-import { flattenNavigationParamsProps } from '../lib/navigationUtils'
 import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
 
-import ContentsList from './ContentsList'
-import FilterList from './FilterList'
 import HomeListView from './HomeListView'
 import Menu from './Menu'
 import HomeHeader from './HomeHeader'
-import Playlist from './Playlist'
 import PlaylistStatusBar from './PlaylistStatusBar'
 
 const handleTween = ratio => ({ main: { opacity: (2 - ratio) / 2 } })
 
-export class Home extends Component {
+export default class Home extends Component {
   static propTypes = {
+    navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
     contents: PropTypes.array,
     hostname: PropTypes.string.isRequired,
     port: PropTypes.string.isRequired,
@@ -35,9 +32,6 @@ export class Home extends Component {
 
     this.state = {
       selectedGroupName: '',
-      isSearchMode: false,
-      isSongDrawerOpened: false,
-      showPlaylist: false,
       playlistContents: [],
     }
   }
@@ -45,7 +39,7 @@ export class Home extends Component {
   componentWillMount() {
     const { contents } = this.props
     this.prepareContentsListViews(contents)
-    BackHandler.addEventListener('hardwareBackPress', this.handleBack)
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBack)
     this.webSocketConnect()
   }
 
@@ -59,7 +53,6 @@ export class Home extends Component {
   }
 
   addToPlaylist = id => {
-    if (!this.state.isSearchMode) this.closeSongDrawer()
     const { url, username } = this.props
     fetch(`${url}/request`, {
       headers: {
@@ -73,19 +66,7 @@ export class Home extends Component {
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
   };
 
-  closeSongDrawer = () => {
-    this.songDrawer.close()
-  };
-
   handleBack = () => {
-    if (this.state.isSongDrawerOpened) {
-      this.closeSongDrawer()
-      return true
-    }
-    if (this.state.showPlaylist) {
-      this.setState({ showPlaylist: false })
-      return true
-    }
     Alert.alert(
       'Warning',
       'This will exit.',
@@ -113,36 +94,29 @@ export class Home extends Component {
 
   onDirectorySelect = selectedDirectoryName => {
     this.menuDrawer.close()
-    this.setState({ selectedDirectoryName, isSongDrawerOpened: false })
+    this.setState({ selectedDirectoryName })
   };
 
   onGroupSelect = selectedGroupName => {
-    this.setState(
-      { selectedGroupName, isSearchMode: false, isSongDrawerOpened: true },
-      () => {
-        this.menuDrawer.close()
-        this.songDrawer.open()
-      },
-    )
+    this.menuDrawer.close()
+    this.props.navigation.navigate('ContentsList', {
+      contents: this.state.contentsPerGroups[selectedGroupName],
+      hideGroups: true,
+      onSelect: this.addToPlaylist,
+      title: selectedGroupName,
+    })
   };
 
   openSearch = () => {
-    this.setState(
-      { isSearchMode: true, isSongDrawerOpened: true },
-      () => {
-        this.menuDrawer.close()
-        this.songDrawer.open()
-      },
-    )
+    this.menuDrawer.close()
+    this.props.navigation.navigate('FilterList', {
+      onSelect: this.addToPlaylist,
+      contents: this.props.contents,
+    })
   };
 
   openMenu = () => {
-    this.songDrawer.close()
     this.menuDrawer.open()
-  };
-
-  onSongDrawerClose = () => {
-    this.setState({ isSongDrawerOpened: false, isSearchMode: false })
   };
 
   prepareContentsListViews(contents) {
@@ -174,10 +148,17 @@ export class Home extends Component {
 
   setMenuDrawerRef = ref => (this.menuDrawer = ref)
 
-  setSongDrawerRef = ref => (this.songDrawer = ref)
+  showPlaylist = () => {
+    const { playingContent, playlistContents } = this.state
+    const { navigation: { navigate }, username: myUsername } = this.props
+    const myPlaylistContents = playlistContents
+    .filter(({ username }) => username === myUsername)
+    .filter(({ id }) => id !== (playingContent || {}).id)
 
-  toggleShowPlaylist = () => {
-    this.setState({ showPlaylist: !this.state.showPlaylist })
+    navigate('Playlist', {
+      contents: myPlaylistContents,
+      handleRandomize: this.handleRandomize,
+    })
   };
 
   webSocketConnect() {
@@ -190,8 +171,6 @@ export class Home extends Component {
       if (type === 'playingContent') {
         return this.setState({
           playingContent: payload,
-          // Stop showing playlist if we do not have a playingContent
-          showPlaylist: payload ? this.state.showPlaylist : false,
         })
       }
     }
@@ -214,19 +193,7 @@ export class Home extends Component {
   render() {
     const selectedDirectoryName = this.state.selectedDirectoryName ||
       Object.keys(this.state.contentsPerDirectories)[0]
-    const {
-      contentsPerGroups,
-      isSearchMode,
-      isSongDrawerOpened,
-      playingContent,
-      playlistContents,
-      selectedGroupName,
-    } = this.state
-    const { contents: allContents, username: myUsername } = this.props
-    const myPlaylistContents = playlistContents
-      .filter(({ username }) => username === myUsername)
-      .filter(({ id }) => id !== (playingContent || {}).id)
-
+    const { playingContent, playlistContents } = this.state
     return (
       <Drawer
         ref={this.setMenuDrawerRef}
@@ -250,61 +217,19 @@ export class Home extends Component {
           openSearch={this.openSearch}
           title={selectedDirectoryName}
         />
-        <Drawer
-          ref={this.setSongDrawerRef}
-          side="right"
-          type={isSearchMode ? 'displace' : 'overlay'}
-          content={
-            isSongDrawerOpened && (isSearchMode ?
-              <FilterList
-                onSelect={this.addToPlaylist}
-                contents={allContents}
-              /> :
-              <ContentsList
-                contents={contentsPerGroups[selectedGroupName]}
-                hideGroups
-                onSelect={this.addToPlaylist}
-                title={selectedGroupName}
-              />
-            )
-          }
-          onClose={this.onSongDrawerClose}
-          acceptPan={false}
-          captureGestures={isSearchMode ? false : 'open'}
-          panOpenMask={0}
-          openDrawerOffset={isSearchMode ? 1 : 0.5}
-          panCloseMask={0.5}
-          closedDrawerOffset={-3}
-          tapToClose={!isSearchMode}
-          tweenHandler={handleTween}
-          styles={{
-            drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
-            main: { paddingLeft: 3 },
-          }}
-        >
-          {!this.state.showPlaylist ? (
-            <HomeListView
-              groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
-              directoryName={selectedDirectoryName}
-              onGroupSelect={this.onGroupSelect}
-            />
-          ) : (
-            <Playlist
-              contents={myPlaylistContents}
-              handleRandomize={this.handleRandomize}
-            />
-          )}
-        </Drawer>
+        <HomeListView
+          groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
+          directoryName={selectedDirectoryName}
+          onGroupSelect={this.onGroupSelect}
+        />
         {playingContent && (
           <PlaylistStatusBar
             {...playingContent}
             contentsCount={playlistContents.length}
-            onPress={this.toggleShowPlaylist}
+            onPress={this.showPlaylist}
           />
         )}
       </Drawer>
     )
   }
 }
-
-export default flattenNavigationParamsProps(Home)
