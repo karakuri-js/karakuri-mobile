@@ -4,6 +4,7 @@ import { Alert, BackHandler, ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { uniq } from 'lodash'
 
+import { flattenNavigationParamsProps } from '../lib/navigationUtils'
 import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
 
 import ContentsList from './ContentsList'
@@ -16,19 +17,17 @@ import PlaylistStatusBar from './PlaylistStatusBar'
 
 const handleTween = ratio => ({ main: { opacity: (2 - ratio) / 2 } })
 
-export default class Home extends Component {
+export class Home extends Component {
   static propTypes = {
-    navigation: PropTypes.shape({
-      state: PropTypes.shape({
-        params: PropTypes.shape({
-          contents: PropTypes.array,
-          hostname: PropTypes.string.isRequired,
-          port: PropTypes.string.isRequired,
-          url: PropTypes.string.isRequired,
-          username: PropTypes.string.isRequired,
-        }),
-      }),
-    }),
+    contents: PropTypes.array,
+    hostname: PropTypes.string.isRequired,
+    port: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  }
+
+  static defaultProps = {
+    contents: [],
   }
 
   constructor(props) {
@@ -44,7 +43,7 @@ export default class Home extends Component {
   }
 
   componentWillMount() {
-    const { contents } = this.props.navigation.state.params
+    const { contents } = this.props
     this.prepareContentsListViews(contents)
     BackHandler.addEventListener('hardwareBackPress', this.handleBack)
     this.webSocketConnect()
@@ -52,7 +51,7 @@ export default class Home extends Component {
 
   componentWillReceiveProps(nextProps) {
     // TODO check if the contents have changed before doing this
-    this.prepareContentsListViews(nextProps.navigation.state.params.contents)
+    this.prepareContentsListViews(nextProps.contents)
   }
 
   componentWillUnmount() {
@@ -61,7 +60,7 @@ export default class Home extends Component {
 
   addToPlaylist = id => {
     if (!this.state.isSearchMode) this.closeSongDrawer()
-    const { url, username } = this.props.navigation.state.params
+    const { url, username } = this.props
     fetch(`${url}/request`, {
       headers: {
         Accept: 'application/json',
@@ -99,7 +98,7 @@ export default class Home extends Component {
   };
 
   handleRandomize = () => {
-    const { url, username } = this.props.navigation.state.params
+    const { url, username } = this.props
     fetch(`${url}/randomize`, {
       headers: {
         Accept: 'application/json',
@@ -182,7 +181,7 @@ export default class Home extends Component {
   };
 
   webSocketConnect() {
-    const { hostname, port } = this.props.navigation.state.params
+    const { hostname, port } = this.props
     const ws = new WebSocket(`ws://${hostname}:${port}`)
     ws.onmessage = ({ data }) => {
       if (!data) return
@@ -223,7 +222,7 @@ export default class Home extends Component {
       playlistContents,
       selectedGroupName,
     } = this.state
-    const { contents: allContents, username: myUsername } = this.props.navigation.state.params
+    const { contents: allContents, username: myUsername } = this.props
     const myPlaylistContents = playlistContents
       .filter(({ username }) => username === myUsername)
       .filter(({ id }) => id !== (playingContent || {}).id)
@@ -307,3 +306,5 @@ export default class Home extends Component {
     )
   }
 }
+
+export default flattenNavigationParamsProps(Home)
