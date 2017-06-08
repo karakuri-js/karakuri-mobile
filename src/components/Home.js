@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Alert, BackHandler, ToastAndroid } from 'react-native'
+import { ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 import { uniq } from 'lodash'
 
@@ -39,17 +39,12 @@ export default class Home extends Component {
   componentWillMount() {
     const { contents } = this.props
     this.prepareContentsListViews(contents)
-    // BackHandler.addEventListener('hardwareBackPress', this.handleBack)
     this.webSocketConnect()
   }
 
   componentWillReceiveProps(nextProps) {
     // TODO check if the contents have changed before doing this
     this.prepareContentsListViews(nextProps.contents)
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
   }
 
   addToPlaylist = id => {
@@ -64,18 +59,6 @@ export default class Home extends Component {
     }).then(response => response.json())
       .then(({ message }) => ToastAndroid.show(message, ToastAndroid.LONG))
       .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
-  };
-
-  handleBack = () => {
-    Alert.alert(
-      'Warning',
-      'This will exit.',
-      [
-        { text: 'Cancel', onPress: () => {} },
-        { text: 'OK', onPress: () => BackHandler.exitApp() },
-      ],
-    )
-    return true
   };
 
   handleRandomize = () => {

@@ -79,7 +79,10 @@ export default class Connection extends Component {
       AsyncStorage.setItem('port', port)
       fetch(url.concat('/contents'))
         .then(response => response.json())
-        .then(contents => this.props.navigation.navigate('Home', { contents, hostname, port, url, username }))
+        .then(contents => {
+          this.props.navigation.navigate('Home', { contents, hostname, port, url, username })
+          this.setState({ isLoading: false })
+        })
         .catch(({ message }) => this.setState({ message, isLoading: false }))
     })
   }
