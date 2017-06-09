@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
@@ -13,7 +14,7 @@ import PlaylistStatusBar from './PlaylistStatusBar'
 
 const handleTween = ratio => ({ main: { opacity: (2 - ratio) / 2 } })
 
-export default class Home extends Component {
+export class Home extends Component {
   static propTypes = {
     navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
     contents: PropTypes.array,
@@ -216,3 +217,7 @@ export default class Home extends Component {
     )
   }
 }
+
+export default connect(
+  ({ authentication, karaoke }) => ({ ...authentication, contents: karaoke.contents }),
+)(Home)

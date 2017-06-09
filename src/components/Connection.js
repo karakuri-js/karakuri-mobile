@@ -7,7 +7,10 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import { connect } from 'react-redux'
 import Button from 'apsl-react-native-button'
+
+import { login } from '../actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -42,17 +45,23 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Connection extends Component {
+export class Connection extends Component {
   static propTypes = {
     navigation: PropTypes.shape({
       navigate: PropTypes.func.isRequired,
     }).isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    errorMessage: PropTypes.string,
+  }
+
+  static defaultProps = {
+    isLoading: false,
+    errorMessage: '',
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      isLoading: false,
       hostname: '',
       port: '3000',
       username: '',
@@ -66,25 +75,16 @@ export default class Connection extends Component {
   }
 
   connect = () => {
-    this.setState({ isLoading: true }, () => {
-      let { hostname, port = '80', username } = this.state
-      hostname = hostname.trim()
-      port = port.trim()
-      username = username.trim()
-      if (!username) return this.setState({ message: 'Gimme an username', isLoading: false })
-      if (!hostname) return this.setState({ message: 'Gimme a hostname', isLoading: false })
-      const url = `http://${hostname}:${port}`
-      AsyncStorage.setItem('username', username)
-      AsyncStorage.setItem('hostname', hostname)
-      AsyncStorage.setItem('port', port)
-      fetch(url.concat('/contents'))
-        .then(response => response.json())
-        .then(contents => {
-          this.props.navigation.navigate('Home', { contents, hostname, port, url, username })
-          this.setState({ isLoading: false })
-        })
-        .catch(({ message }) => this.setState({ message, isLoading: false }))
-    })
+    let { hostname, port = '80', username } = this.state
+    hostname = hostname.trim()
+    port = port.trim()
+    username = username.trim()
+    if (!username) return this.setState({ message: 'Gimme an username', isLoading: false })
+    if (!hostname) return this.setState({ message: 'Gimme a hostname', isLoading: false })
+    AsyncStorage.setItem('username', username)
+    AsyncStorage.setItem('hostname', hostname)
+    AsyncStorage.setItem('port', port)
+    return this.props.login({ hostname, port, username }).then(() => this.props.navigation.navigate('Home'))
   }
 
   setHostName = hostname => this.setState({ hostname })
@@ -94,6 +94,7 @@ export default class Connection extends Component {
   setUserName = username => this.setState({ username })
 
   render() {
+    const { isLoading, errorMessage } = this.props
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -122,7 +123,7 @@ export default class Connection extends Component {
         />
 
         <Button
-          isLoading={this.state.isLoading}
+          isLoading={isLoading}
           onPress={this.connect}
           style={styles.button}
           textStyle={styles.buttonText}
@@ -130,8 +131,13 @@ export default class Connection extends Component {
           Connect
         </Button>
 
-        <Text style={styles.errorMessage}>{this.state.message}</Text>
+        <Text style={styles.errorMessage}>{errorMessage}</Text>
       </View>
     )
   }
 }
+
+export default connect(
+  ({ authentication: { isLoading, errorMessage } }) => ({ isLoading, errorMessage }),
+  { login },
+)(Connection)
