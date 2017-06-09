@@ -21,7 +21,7 @@ export default function authentication(state = initialState, action) {
     case LOGIN_FAILURE:
       return {
         isLoading: false,
-        message: action.message,
+        errorMessage: action.errorMessage,
       }
 
     default:

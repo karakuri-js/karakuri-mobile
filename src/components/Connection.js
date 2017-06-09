@@ -84,7 +84,9 @@ export class Connection extends Component {
     AsyncStorage.setItem('username', username)
     AsyncStorage.setItem('hostname', hostname)
     AsyncStorage.setItem('port', port)
-    return this.props.login({ hostname, port, username }).then(() => this.props.navigation.navigate('Home'))
+    return this.props.login({ hostname, port, username })
+      .then(() => this.props.navigation.navigate('Home'))
+      .catch(() => {})
   }
 
   setHostName = hostname => this.setState({ hostname })

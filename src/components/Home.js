@@ -3,9 +3,8 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
-import { uniq } from 'lodash'
 
-import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
+import { addToPlaylist, selectDirectory } from '../actions'
 
 import HomeListView from './HomeListView'
 import Menu from './Menu'
@@ -32,35 +31,13 @@ export class Home extends Component {
     super(props)
 
     this.state = {
-      selectedGroupName: '',
       playlistContents: [],
     }
   }
 
   componentWillMount() {
-    const { contents } = this.props
-    this.prepareContentsListViews(contents)
     this.webSocketConnect()
   }
-
-  componentWillReceiveProps(nextProps) {
-    // TODO check if the contents have changed before doing this
-    this.prepareContentsListViews(nextProps.contents)
-  }
-
-  addToPlaylist = id => {
-    const { url, username } = this.props
-    fetch(`${url}/request`, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'post',
-      body: JSON.stringify({ id, username }),
-    }).then(response => response.json())
-      .then(({ message }) => ToastAndroid.show(message, ToastAndroid.LONG))
-      .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.LONG))
-  };
 
   handleRandomize = () => {
     const { url, username } = this.props
@@ -78,57 +55,33 @@ export class Home extends Component {
 
   onDirectorySelect = selectedDirectoryName => {
     this.menuDrawer.close()
-    this.setState({ selectedDirectoryName })
+    this.props.selectDirectory(selectedDirectoryName)
   };
 
-  onGroupSelect = selectedGroupName => {
+  onGroupSelect = groupName => {
     this.menuDrawer.close()
-    this.props.navigation.navigate('ContentsList', {
-      contents: this.state.contentsPerGroups[selectedGroupName],
-      hideGroups: true,
-      onSelect: this.addToPlaylist,
-      title: selectedGroupName,
-    })
+    this.props.navigation.navigate(
+      'ContentsList',
+      {
+        contents: this.props.contentsPerGroups[groupName],
+        onSelect: this.props.addToPlaylist,
+        hideGroups: true,
+        title: groupName,
+      },
+    )
   };
 
   openSearch = () => {
     this.menuDrawer.close()
     this.props.navigation.navigate('FilterList', {
-      onSelect: this.addToPlaylist,
-      contents: this.props.contents,
+      onSelect: this.props.addToPlaylist,
+      contents: this.props.allContents,
     })
   };
 
   openMenu = () => {
     this.menuDrawer.open()
   };
-
-  prepareContentsListViews(contents) {
-    // Group contents per directory & groups, then create listview datasources
-    const contentsPerDirectories = getContentsPerDirectories(contents)
-    const contentsPerGroups = getContentsPerGroups(contents)
-    const groupsPerLettersAndDirectories = Object.keys(contentsPerDirectories).reduce(
-      (directoriesObj, dirName) => ({
-        ...directoriesObj,
-        [dirName]: contentsPerDirectories[dirName].map(content => content.group).reduce(
-          (alphabetListObj, groupName) => {
-            const letter = groupName[0].toUpperCase()
-            return {
-              ...alphabetListObj,
-              [letter]: uniq((alphabetListObj[letter] || []).concat(groupName)),
-            }
-          },
-          {},
-        ),
-      }),
-      {},
-    )
-    this.setState({
-      contentsPerDirectories,
-      contentsPerGroups,
-      groupsPerLettersAndDirectories,
-    })
-  }
 
   setMenuDrawerRef = ref => (this.menuDrawer = ref)
 
@@ -168,15 +121,14 @@ export class Home extends Component {
   renderMenu() {
     return (
       <Menu
-        directories={Object.keys(this.state.contentsPerDirectories)}
+        directories={this.props.directories}
         onDirectorySelect={this.onDirectorySelect}
       />
     )
   }
 
   render() {
-    const selectedDirectoryName = this.state.selectedDirectoryName ||
-      Object.keys(this.state.contentsPerDirectories)[0]
+    const { directoryGroups, selectedDirectoryName } = this.props
     const { playingContent, playlistContents } = this.state
     return (
       <Drawer
@@ -202,7 +154,7 @@ export class Home extends Component {
           title={selectedDirectoryName}
         />
         <HomeListView
-          groups={this.state.groupsPerLettersAndDirectories[selectedDirectoryName]}
+          groups={this.props.groupsPerLettersAndDirectories[selectedDirectoryName]}
           directoryName={selectedDirectoryName}
           onGroupSelect={this.onGroupSelect}
         />
@@ -219,5 +171,6 @@ export class Home extends Component {
 }
 
 export default connect(
-  ({ authentication, karaoke }) => ({ ...authentication, contents: karaoke.contents }),
+  ({ authentication, karaoke }) => ({ ...authentication, ...karaoke }),
+  { addToPlaylist, selectDirectory },
 )(Home)
