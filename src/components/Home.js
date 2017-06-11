@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 
-import { selectDirectory, selectGroup } from '../actions'
+import { updateLocalPlaylist, updatePlayingContent, selectDirectory, selectGroup } from '../actions'
 
 import HomeListView from './HomeListView'
 import Menu from './Menu'
@@ -27,31 +26,9 @@ export class Home extends Component {
     contents: [],
   }
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      playlistContents: [],
-    }
-  }
-
   componentWillMount() {
     this.webSocketConnect()
   }
-
-  handleRandomize = () => {
-    const { url, username } = this.props
-    fetch(`${url}/randomize`, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'post',
-      body: JSON.stringify({ username }),
-    }).then(response => response.json())
-      .then(({ message }) => ToastAndroid.show(message, ToastAndroid.SHORT))
-      .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
-  };
 
   onDirectorySelect = selectedDirectoryName => {
     this.menuDrawer.close()
@@ -75,30 +52,18 @@ export class Home extends Component {
 
   setMenuDrawerRef = ref => (this.menuDrawer = ref)
 
-  showPlaylist = () => {
-    const { playingContent, playlistContents } = this.state
-    const { navigation: { navigate }, username: myUsername } = this.props
-    const myPlaylistContents = playlistContents
-    .filter(({ username }) => username === myUsername)
-    .filter(({ id }) => id !== (playingContent || {}).id)
-
-    navigate('Playlist', {
-      contents: myPlaylistContents,
-      handleRandomize: this.handleRandomize,
-    })
-  };
+  showPlaylist = () => this.props.navigation.navigate('PlaylistScreen')
 
   webSocketConnect() {
+    // TODO remove all this from this component
     const { hostname, port } = this.props
     const ws = new WebSocket(`ws://${hostname}:${port}`)
     ws.onmessage = ({ data }) => {
       if (!data) return
       const { type, payload } = JSON.parse(data)
-      if (type === 'playlist') return this.setState({ playlistContents: payload })
+      if (type === 'playlist') return this.props.updateLocalPlaylist(payload)
       if (type === 'playingContent') {
-        return this.setState({
-          playingContent: payload,
-        })
+        return this.props.updatePlayingContent(payload)
       }
     }
     // Always try to reconnect if we've lost the connection
@@ -118,8 +83,7 @@ export class Home extends Component {
   }
 
   render() {
-    const { directoryGroups, selectedDirectoryName } = this.props
-    const { playingContent, playlistContents } = this.state
+    const { directoryGroups, selectedDirectoryName, playingContent, playlistContents } = this.props
     return (
       <Drawer
         ref={this.setMenuDrawerRef}
@@ -161,6 +125,6 @@ export class Home extends Component {
 }
 
 export default connect(
-  ({ authentication, karaoke }) => ({ ...authentication, ...karaoke }),
-  { selectDirectory, selectGroup },
+  ({ authentication, karaoke, playlist }) => ({ ...authentication, ...karaoke, ...playlist }),
+  { updateLocalPlaylist, updatePlayingContent, selectDirectory, selectGroup },
 )(Home)

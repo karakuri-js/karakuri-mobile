@@ -1,7 +1,11 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { StyleSheet, View } from 'react-native'
 import Button from 'apsl-react-native-button'
+
+import { randomizePlaylist } from '../actions'
+
 import ContentsList from './ContentsList'
 
 const styles = StyleSheet.create({
@@ -24,13 +28,13 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Playlist extends PureComponent {
+export class PlaylistScreen extends PureComponent {
   static propTypes = {
     contents: PropTypes.array,
-    handleRandomize: PropTypes.func,
+    randomizePlaylist: PropTypes.func,
   }
 
-  static defaultProps = { contents: [], handleRandomize: () => {} }
+  static defaultProps = { contents: [], randomizePlaylist: () => {} }
 
   render() {
     const { contents } = this.props
@@ -44,7 +48,7 @@ export default class Playlist extends PureComponent {
         </View>
         <View style={styles.buttonContainer}>
           <Button
-            onPress={this.props.handleRandomize}
+            onPress={this.props.randomizePlaylist}
             style={styles.button}
             textStyle={styles.buttonText}
           >
@@ -55,3 +59,8 @@ export default class Playlist extends PureComponent {
     )
   }
 }
+
+export default connect(
+  ({ playlist }) => ({ contents: playlist.myPlaylistContents }),
+  { randomizePlaylist },
+)(PlaylistScreen)

@@ -7,7 +7,7 @@ import Connection from './components/Connection'
 import BrowseSongsScreen from './components/BrowseSongsScreen'
 import Home from './components/Home'
 import SearchSongsScreen from './components/SearchSongsScreen'
-import Playlist from './components/Playlist'
+import PlaylistScreen from './components/PlaylistScreen'
 
 import configureStore from './store/configureStore'
 
@@ -18,7 +18,7 @@ const AppNavigator = StackNavigator({
   Home: { screen: Home },
   BrowseSongsScreen: { screen: flattenNavigationParamsProps(BrowseSongsScreen) },
   SearchSongsScreen: { screen: flattenNavigationParamsProps(SearchSongsScreen) },
-  Playlist: { screen: flattenNavigationParamsProps(Playlist) },
+  PlaylistScreen: { screen: flattenNavigationParamsProps(PlaylistScreen) },
 }, { headerMode: 'none' })
 
 // onNavigationStateChange={null} desactivates the internal logger

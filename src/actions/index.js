@@ -52,4 +52,29 @@ export const addToPlaylist = id => (dispatch, getState) => {
     })
 }
 
-export const updateLocalPlaylist = () => (dispatch, getState) => {}
+export const updateLocalPlaylist = playlistContents => (dispatch, getState) => {
+  const { authentication: { username: myUsername }, playlist: { playingContent } } = getState()
+  const myPlaylistContents = playlistContents
+    .filter(({ username }) => username === myUsername)
+    .filter(({ id }) => id !== (playingContent || {}).id)
+  dispatch({ type: types.PLAYLIST_UPDATE, myPlaylistContents, playlistContents })
+}
+
+export const updatePlayingContent = playingContent => ({
+  type: types.PLAYING_CONTENT_UPDATE,
+  playingContent,
+})
+
+export const randomizePlaylist = () => (dispatch, getState) => {
+  const { url, username } = getState().authentication
+  fetch(`${url}/randomize`, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'post',
+    body: JSON.stringify({ username }),
+  }).then(response => response.json())
+      .then(({ message }) => ToastAndroid.show(message, ToastAndroid.SHORT))
+      .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
+}
