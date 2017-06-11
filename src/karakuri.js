@@ -4,9 +4,9 @@ import { StackNavigator } from 'react-navigation'
 import { flattenNavigationParamsProps } from './lib/navigationUtils'
 
 import Connection from './components/Connection'
-import ContentsList from './components/ContentsList'
+import BrowseSongsScreen from './components/BrowseSongsScreen'
 import Home from './components/Home'
-import FilterList from './components/FilterList'
+import SearchSongsScreen from './components/SearchSongsScreen'
 import Playlist from './components/Playlist'
 
 import configureStore from './store/configureStore'
@@ -16,8 +16,8 @@ const store = configureStore()
 const AppNavigator = StackNavigator({
   Connection: { screen: Connection },
   Home: { screen: Home },
-  ContentsList: { screen: flattenNavigationParamsProps(ContentsList) },
-  FilterList: { screen: flattenNavigationParamsProps(FilterList) },
+  BrowseSongsScreen: { screen: flattenNavigationParamsProps(BrowseSongsScreen) },
+  SearchSongsScreen: { screen: flattenNavigationParamsProps(SearchSongsScreen) },
   Playlist: { screen: flattenNavigationParamsProps(Playlist) },
 }, { headerMode: 'none' })
 

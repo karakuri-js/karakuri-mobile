@@ -1,8 +1,8 @@
 import { uniq } from 'lodash'
-import { CONTENTS_LOADED, SELECT_DIRECTORY } from '../constants/actionTypes'
+import { CONTENTS_LOADED, SELECT_DIRECTORY, SELECT_GROUP } from '../constants/actionTypes'
 import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
 
-const initialState = { contents: [], directoryContents: [], groupContents: [] }
+const initialState = { contents: [], directoryContents: [], groupContents: [], selectedGroupName: '' }
 
 export default function karaoke(state = initialState, action) {
   switch (action.type) {
@@ -38,6 +38,8 @@ export default function karaoke(state = initialState, action) {
         groupsPerLettersAndDirectories,
         selectedDirectoryName,
         directoryGroups: groupsPerLettersAndDirectories[selectedDirectoryName],
+        groupContents: [],
+        selectedGroupName: '',
       }
     }
 
@@ -47,6 +49,14 @@ export default function karaoke(state = initialState, action) {
         selectedDirectoryName: action.directoryName,
         directoryGroups: state.groupsPerLettersAndDirectories[action.directoryName],
       }
+
+    case SELECT_GROUP:
+      return {
+        ...state,
+        selectedGroupName: action.groupName,
+        groupContents: state.contentsPerGroups[action.groupName],
+      }
+
 
     default:
       return state

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { ToastAndroid } from 'react-native'
 import Drawer from 'react-native-drawer'
 
-import { addToPlaylist, selectDirectory } from '../actions'
+import { selectDirectory, selectGroup } from '../actions'
 
 import HomeListView from './HomeListView'
 import Menu from './Menu'
@@ -60,23 +60,13 @@ export class Home extends Component {
 
   onGroupSelect = groupName => {
     this.menuDrawer.close()
-    this.props.navigation.navigate(
-      'ContentsList',
-      {
-        contents: this.props.contentsPerGroups[groupName],
-        onSelect: this.props.addToPlaylist,
-        hideGroups: true,
-        title: groupName,
-      },
-    )
+    this.props.selectGroup(groupName)
+    this.props.navigation.navigate('BrowseSongsScreen')
   };
 
   openSearch = () => {
     this.menuDrawer.close()
-    this.props.navigation.navigate('FilterList', {
-      onSelect: this.props.addToPlaylist,
-      contents: this.props.allContents,
-    })
+    this.props.navigation.navigate('SearchSongsScreen')
   };
 
   openMenu = () => {
@@ -172,5 +162,5 @@ export class Home extends Component {
 
 export default connect(
   ({ authentication, karaoke }) => ({ ...authentication, ...karaoke }),
-  { addToPlaylist, selectDirectory },
+  { selectDirectory, selectGroup },
 )(Home)
