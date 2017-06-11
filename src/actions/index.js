@@ -30,6 +30,7 @@ export const login = ({ username, hostname, port }) => dispatch => {
 }
 
 export const selectDirectory = directoryName => ({ type: types.SELECT_DIRECTORY, directoryName })
+export const selectGroup = groupName => ({ type: types.SELECT_GROUP, groupName })
 
 export const addToPlaylist = id => (dispatch, getState) => {
   const { url, username } = getState().authentication
