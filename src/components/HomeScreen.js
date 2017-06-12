@@ -10,9 +10,11 @@ import Menu from './Menu'
 import HomeHeader from './HomeHeader'
 import PlaylistStatusBar from './PlaylistStatusBar'
 
+import { BROWSE_SONGS_SCREEN, SEARCH_SONGS_SCREEN, PLAYLIST_SCREEN } from '../constants/screens'
+
 const handleTween = ratio => ({ main: { opacity: (2 - ratio) / 2 } })
 
-export class Home extends Component {
+export class HomeScreen extends Component {
   static propTypes = {
     navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
     contents: PropTypes.array,
@@ -30,12 +32,12 @@ export class Home extends Component {
   onGroupSelect = groupName => {
     this.menuDrawer.close()
     this.props.selectGroup(groupName)
-    this.props.navigation.navigate('BrowseSongsScreen')
+    this.props.navigation.navigate(BROWSE_SONGS_SCREEN)
   };
 
   openSearch = () => {
     this.menuDrawer.close()
-    this.props.navigation.navigate('SearchSongsScreen')
+    this.props.navigation.navigate(SEARCH_SONGS_SCREEN)
   };
 
   openMenu = () => {
@@ -44,7 +46,7 @@ export class Home extends Component {
 
   setMenuDrawerRef = ref => (this.menuDrawer = ref)
 
-  showPlaylist = () => this.props.navigation.navigate('PlaylistScreen')
+  showPlaylist = () => this.props.navigation.navigate(PLAYLIST_SCREEN)
 
   renderMenu() {
     return (
@@ -100,4 +102,4 @@ export class Home extends Component {
 export default connect(
   ({ karaoke, playlist }) => ({ ...karaoke, ...playlist }),
   { updateLocalPlaylist, updatePlayingContent, selectDirectory, selectGroup },
-)(Home)
+)(HomeScreen)
