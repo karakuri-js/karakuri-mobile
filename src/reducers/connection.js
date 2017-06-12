@@ -1,4 +1,8 @@
-import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE } from '../constants/actionTypes'
+import {
+  CONNECTION_REQUEST,
+  CONNECTION_SUCCESS,
+  CONNECTION_FAILURE,
+} from '../constants/actionTypes'
 
 const initialState = { isLoading: false }
 

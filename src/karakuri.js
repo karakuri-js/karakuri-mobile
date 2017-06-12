@@ -15,18 +15,20 @@ import configureStore from './store/configureStore'
 
 const store = configureStore()
 
-const AppNavigator = StackNavigator({
-  [screens.CONNECTION_SCREEN]: { screen: ConnectionScreen },
-  [screens.HOME_SCREEN]: { screen: HomeScreen },
-  [screens.BROWSE_SONGS_SCREEN]: { screen: flattenNavigationParamsProps(BrowseSongsScreen) },
-  [screens.SEARCH_SONGS_SCREEN]: { screen: flattenNavigationParamsProps(SearchSongsScreen) },
-  [screens.PLAYLIST_SCREEN]: { screen: flattenNavigationParamsProps(PlaylistScreen) },
-}, { headerMode: 'none' })
+const AppNavigator = StackNavigator(
+  {
+    [screens.CONNECTION_SCREEN]: { screen: ConnectionScreen },
+    [screens.HOME_SCREEN]: { screen: HomeScreen },
+    [screens.BROWSE_SONGS_SCREEN]: { screen: flattenNavigationParamsProps(BrowseSongsScreen) },
+    [screens.SEARCH_SONGS_SCREEN]: { screen: flattenNavigationParamsProps(SearchSongsScreen) },
+    [screens.PLAYLIST_SCREEN]: { screen: flattenNavigationParamsProps(PlaylistScreen) },
+  },
+  { headerMode: 'none' },
+)
 
 // onNavigationStateChange={null} desactivates the internal logger
 // which makes a HUGE difference in performance.
-export default () => (
+export default () =>
   <Provider store={store}>
     <AppNavigator onNavigationStateChange={null} />
   </Provider>
-)

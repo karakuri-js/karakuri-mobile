@@ -41,10 +41,7 @@ export class PlaylistScreen extends PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.listContainer}>
-          <ContentsList
-            contents={contents}
-            title="My Playlist"
-          />
+          <ContentsList contents={contents} title="My Playlist" />
         </View>
         <View style={styles.buttonContainer}>
           <Button
@@ -60,7 +57,6 @@ export class PlaylistScreen extends PureComponent {
   }
 }
 
-export default connect(
-  ({ playlist }) => ({ contents: playlist.myPlaylistContents }),
-  { randomizePlaylist },
-)(PlaylistScreen)
+export default connect(({ playlist }) => ({ contents: playlist.myPlaylistContents }), {
+  randomizePlaylist,
+})(PlaylistScreen)

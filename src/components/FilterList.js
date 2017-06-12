@@ -64,10 +64,7 @@ export default class FilterList extends Component {
 
     return (
       <View style={styles.container}>
-        <View
-          style={styles.searchContainer}
-          elevation={10}
-        >
+        <View style={styles.searchContainer} elevation={10}>
           <View style={styles.searchIcon}>
             <Text>🔍</Text>
           </View>
@@ -80,18 +77,17 @@ export default class FilterList extends Component {
             />
           </View>
         </View>
-        {!foundResults && isLongEnoughFilter && (
+        {!foundResults &&
+          isLongEnoughFilter &&
           <View style={styles.noFoundResults}>
             <Text style={styles.noFoundResultsText}>No results :(</Text>
-          </View>
-        )}
-        {foundResults && (
+          </View>}
+        {foundResults &&
           <ListView
             keyboardShouldPersistTaps="always"
             dataSource={this.dataSource.cloneWithRows(filteredContents)}
             renderRow={this.renderRow}
-          />
-        )}
+          />}
       </View>
     )
   }

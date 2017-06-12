@@ -1,11 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  StyleSheet,
-  Text,
-  TouchableNativeFeedback,
-  View,
-} from 'react-native'
+import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
@@ -17,28 +12,17 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  content: {
-
-  },
+  content: {},
   contentText: {
     color: '#FFF',
   },
-  contentsCount: {
-
-  },
+  contentsCount: {},
   contentsCountText: {
     color: '#FFF',
   },
 })
 
-const PlaylistStatusBar = ({
-  contentsCount,
-  group,
-  onPress,
-  songName,
-  type,
-  username,
-}) => (
+const PlaylistStatusBar = ({ contentsCount, group, onPress, songName, type, username }) =>
   <TouchableNativeFeedback onPress={onPress}>
     <View style={styles.container}>
       <View style={styles.content}>
@@ -54,7 +38,6 @@ const PlaylistStatusBar = ({
       </View>
     </View>
   </TouchableNativeFeedback>
-)
 
 PlaylistStatusBar.propTypes = {
   contentsCount: PropTypes.number.isRequired,

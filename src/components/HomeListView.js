@@ -18,7 +18,7 @@ export default class HomeListView extends PureComponent {
 
   onGroupSelect = group => {
     this.props.onGroupSelect(group)
-  };
+  }
 
   render() {
     return (

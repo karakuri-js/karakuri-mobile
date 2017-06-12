@@ -1,11 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import {
-  StyleSheet,
-  Text,
-  TouchableNativeFeedback,
-  View,
-} from 'react-native'
+import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
@@ -33,13 +28,11 @@ export default class MenuItem extends PureComponent {
 
   onDirectorySelect = () => {
     this.props.onDirectorySelect(this.props.directory)
-  };
+  }
 
   render() {
     return (
-      <TouchableNativeFeedback
-        onPress={this.onDirectorySelect}
-      >
+      <TouchableNativeFeedback onPress={this.onDirectorySelect}>
         <View style={styles.container}>
           <Text style={styles.item}>
             {this.props.directory}

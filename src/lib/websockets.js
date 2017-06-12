@@ -13,8 +13,5 @@ export const handleWebsocketsConnection = (dispatch, getState) => {
     }
   }
   // Always try to reconnect if we've lost the connection
-  ws.onclose = () => setTimeout(
-    () => handleWebsocketsConnection(),
-    10000,
-  )
+  ws.onclose = () => setTimeout(() => handleWebsocketsConnection(), 10000)
 }

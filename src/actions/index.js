@@ -44,7 +44,8 @@ export const addToPlaylist = id => (dispatch, getState) => {
     },
     method: 'post',
     body: JSON.stringify({ id, username }),
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
     .then(({ message }) => {
       dispatch({ type: types.PLAYLIST_ADDITION_SUCCESS })
       ToastAndroid.show(message, ToastAndroid.LONG) // Could be handled in a middleware
@@ -77,7 +78,8 @@ export const randomizePlaylist = () => (dispatch, getState) => {
     },
     method: 'post',
     body: JSON.stringify({ username }),
-  }).then(response => response.json())
-      .then(({ message }) => ToastAndroid.show(message, ToastAndroid.SHORT))
-      .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
+  })
+    .then(response => response.json())
+    .then(({ message }) => ToastAndroid.show(message, ToastAndroid.SHORT))
+    .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
 }
