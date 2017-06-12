@@ -1,12 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {
-  AsyncStorage,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native'
+import { AsyncStorage, StyleSheet, Text, TextInput, View } from 'react-native'
 import { connect } from 'react-redux'
 import Button from 'apsl-react-native-button'
 
@@ -39,7 +33,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#0D1011',
   },
   buttonText: {
-    fontSize: 18, color: 'white',
+    fontSize: 18,
+    color: 'white',
   },
   errorMessage: {
     color: 'red',
@@ -86,7 +81,8 @@ export class ConnectionScreen extends Component {
     AsyncStorage.setItem('username', username)
     AsyncStorage.setItem('hostname', hostname)
     AsyncStorage.setItem('port', port)
-    return this.props.connectToServer({ hostname, port, username })
+    return this.props
+      .connectToServer({ hostname, port, username })
       .then(() => this.props.navigation.navigate(HOME_SCREEN))
       .catch(() => {})
   }
@@ -120,11 +116,7 @@ export class ConnectionScreen extends Component {
         />
 
         <Text style={styles.label}>Port:</Text>
-        <TextInput
-          onChangeText={this.setPort}
-          placeholder="Enter a port"
-          value={this.state.port}
-        />
+        <TextInput onChangeText={this.setPort} placeholder="Enter a port" value={this.state.port} />
 
         <Button
           isLoading={isLoading}

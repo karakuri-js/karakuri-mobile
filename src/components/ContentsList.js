@@ -41,22 +41,14 @@ export default class ContentsList extends PureComponent {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  renderRow = content => (
-    <ContentRow
-      {...content}
-      onSelect={this.props.onSelect}
-      hideGroup={this.props.hideGroups}
-    />
-  )
+  renderRow = content =>
+    <ContentRow {...content} onSelect={this.props.onSelect} hideGroup={this.props.hideGroups} />
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.header} elevation={10}>
-          <Text
-            numberOfLines={1}
-            style={styles.headerText}
-          >
+          <Text numberOfLines={1} style={styles.headerText}>
             {this.props.title}
           </Text>
         </View>

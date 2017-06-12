@@ -33,14 +33,12 @@ export default class ContentRow extends PureComponent {
 
   onPress = () => {
     this.props.onSelect(this.props.id)
-  };
+  }
 
   render() {
     const { group, hideGroup, songName, type } = this.props
     return (
-      <TouchableNativeFeedback
-        onPress={this.onPress}
-      >
+      <TouchableNativeFeedback onPress={this.onPress}>
         <View style={styles.row}>
           <Text style={styles.rowText}>
             {!hideGroup && `${group} - `}

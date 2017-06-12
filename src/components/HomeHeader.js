@@ -33,36 +33,22 @@ export default class HomeHeader extends PureComponent {
 
   openMenu = () => {
     this.props.openMenu()
-  };
+  }
 
   openSearch = () => {
     this.props.openSearch()
-  };
+  }
 
   render() {
     return (
       <View style={styles.header}>
-        <TouchableHighlight
-          underlayColor="#333"
-          onPress={this.openMenu}
-        >
-          <Icon
-            name="navicon"
-            size={50}
-            style={styles.menuButton}
-          />
+        <TouchableHighlight underlayColor="#333" onPress={this.openMenu}>
+          <Icon name="navicon" size={50} style={styles.menuButton} />
         </TouchableHighlight>
 
         <Text style={styles.headerText}>{this.props.title}</Text>
-        <TouchableHighlight
-          underlayColor="#333"
-          onPress={this.openSearch}
-        >
-          <Icon
-            name="search"
-            size={50}
-            style={styles.menuButton}
-          />
+        <TouchableHighlight underlayColor="#333" onPress={this.openSearch}>
+          <Icon name="search" size={50} style={styles.menuButton} />
         </TouchableHighlight>
       </View>
     )

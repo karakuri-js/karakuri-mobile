@@ -5,14 +5,13 @@ import { addToPlaylist } from '../actions'
 
 import ContentsList from './ContentsList'
 
-export const BrowseSongsScreen = props => (
+export const BrowseSongsScreen = props =>
   <ContentsList
     onSelect={props.addToPlaylist}
     contents={props.groupContents}
     hideGroups
     title={props.selectedGroupName}
   />
-)
 
 BrowseSongsScreen.propTypes = {
   addToPlaylist: PropTypes.func.isRequired,

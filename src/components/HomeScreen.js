@@ -33,34 +33,29 @@ export class HomeScreen extends Component {
   onDirectorySelect = selectedDirectoryName => {
     this.menuDrawer.close()
     this.props.selectDirectory(selectedDirectoryName)
-  };
+  }
 
   onGroupSelect = groupName => {
     this.menuDrawer.close()
     this.props.selectGroup(groupName)
     this.props.navigation.navigate(BROWSE_SONGS_SCREEN)
-  };
+  }
 
   openSearch = () => {
     this.menuDrawer.close()
     this.props.navigation.navigate(SEARCH_SONGS_SCREEN)
-  };
+  }
 
   openMenu = () => {
     this.menuDrawer.open()
-  };
+  }
 
   setMenuDrawerRef = ref => (this.menuDrawer = ref)
 
   showPlaylist = () => this.props.navigation.navigate(PLAYLIST_SCREEN)
 
   renderMenu() {
-    return (
-      <Menu
-        directories={this.props.directories}
-        onDirectorySelect={this.onDirectorySelect}
-      />
-    )
+    return <Menu directories={this.props.directories} onDirectorySelect={this.onDirectorySelect} />
   }
 
   render() {
@@ -93,19 +88,20 @@ export class HomeScreen extends Component {
           directoryName={selectedDirectoryName}
           onGroupSelect={this.onGroupSelect}
         />
-        {playingContent && (
+        {playingContent &&
           <PlaylistStatusBar
             {...playingContent}
             contentsCount={playlistContents.length}
             onPress={this.showPlaylist}
-          />
-        )}
+          />}
       </Drawer>
     )
   }
 }
 
-export default connect(
-  ({ contents, playlist }) => ({ ...contents, ...playlist }),
-  { updateLocalPlaylist, updatePlayingContent, selectDirectory, selectGroup },
-)(HomeScreen)
+export default connect(({ contents, playlist }) => ({ ...contents, ...playlist }), {
+  updateLocalPlaylist,
+  updatePlayingContent,
+  selectDirectory,
+  selectGroup,
+})(HomeScreen)

@@ -2,7 +2,12 @@ import { uniq } from 'lodash'
 import { CONTENTS_LOADED, SELECT_DIRECTORY, SELECT_GROUP } from '../constants/actionTypes'
 import { getContentsPerDirectories, getContentsPerGroups } from '../lib/contentsFormatter'
 
-const initialState = { allContents: [], directoryContents: [], groupContents: [], selectedGroupName: '' }
+const initialState = {
+  allContents: [],
+  directoryContents: [],
+  groupContents: [],
+  selectedGroupName: '',
+}
 
 export default function contents(state = initialState, action) {
   switch (action.type) {
@@ -14,16 +19,15 @@ export default function contents(state = initialState, action) {
       const groupsPerLettersAndDirectories = Object.keys(contentsPerDirectories).reduce(
         (directoriesObj, dirName) => ({
           ...directoriesObj,
-          [dirName]: contentsPerDirectories[dirName].map(content => content.group).reduce(
-            (alphabetListObj, groupName) => {
+          [dirName]: contentsPerDirectories[dirName]
+            .map(content => content.group)
+            .reduce((alphabetListObj, groupName) => {
               const letter = groupName[0].toUpperCase()
               return {
                 ...alphabetListObj,
                 [letter]: uniq((alphabetListObj[letter] || []).concat(groupName)),
               }
-            },
-            {},
-          ),
+            }, {}),
         }),
         {},
       )
@@ -56,7 +60,6 @@ export default function contents(state = initialState, action) {
         selectedGroupName: action.groupName,
         groupContents: state.contentsPerGroups[action.groupName],
       }
-
 
     default:
       return state

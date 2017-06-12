@@ -1,12 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import {
-  StyleSheet,
-  Text,
-  TouchableNativeFeedback,
-  View,
-  Dimensions,
-} from 'react-native'
+import { StyleSheet, Text, TouchableNativeFeedback, View, Dimensions } from 'react-native'
 
 const styles = StyleSheet.create({
   row: {
@@ -29,14 +23,12 @@ export default class HomeRow extends PureComponent {
 
   onPress = () => {
     this.props.onPress(this.props.item)
-  };
+  }
 
   render() {
     const { item } = this.props
     return (
-      <TouchableNativeFeedback
-        onPress={this.onPress}
-      >
+      <TouchableNativeFeedback onPress={this.onPress}>
         <View style={styles.row}>
           <Text style={styles.rowText}>
             {item}
