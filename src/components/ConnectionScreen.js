@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import Button from 'apsl-react-native-button'
 
 import { connectToServer } from '../actions'
+import { HOME_SCREEN } from '../constants/screens'
 
 const styles = StyleSheet.create({
   container: {
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class Connection extends Component {
+export class ConnectionScreen extends Component {
   static propTypes = {
     navigation: PropTypes.shape({
       navigate: PropTypes.func.isRequired,
@@ -85,7 +86,7 @@ export class Connection extends Component {
     AsyncStorage.setItem('hostname', hostname)
     AsyncStorage.setItem('port', port)
     return this.props.connectToServer({ hostname, port, username })
-      .then(() => this.props.navigation.navigate('Home'))
+      .then(() => this.props.navigation.navigate(HOME_SCREEN))
       .catch(() => {})
   }
 
@@ -142,4 +143,4 @@ export class Connection extends Component {
 export default connect(
   ({ connection: { isLoading, errorMessage } }) => ({ isLoading, errorMessage }),
   { connectToServer },
-)(Connection)
+)(ConnectionScreen)
