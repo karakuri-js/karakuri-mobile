@@ -7,10 +7,10 @@ const initialState = { allContents: [], directoryContents: [], groupContents: []
 export default function contents(state = initialState, action) {
   switch (action.type) {
     case CONTENTS_LOADED: {
-      const { contents } = action
+      const { contents: allContents } = action
       // Group contents per directory & groups, then create listview datasources
-      const contentsPerDirectories = getContentsPerDirectories(contents)
-      const contentsPerGroups = getContentsPerGroups(contents)
+      const contentsPerDirectories = getContentsPerDirectories(allContents)
+      const contentsPerGroups = getContentsPerGroups(allContents)
       const groupsPerLettersAndDirectories = Object.keys(contentsPerDirectories).reduce(
         (directoriesObj, dirName) => ({
           ...directoriesObj,
@@ -32,7 +32,7 @@ export default function contents(state = initialState, action) {
       const selectedDirectoryName = directories[0]
 
       return {
-        allContents: contents,
+        allContents,
         directories: Object.keys(contentsPerDirectories),
         contentsPerGroups,
         groupsPerLettersAndDirectories,

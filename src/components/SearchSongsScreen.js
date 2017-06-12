@@ -1,24 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { addToPlaylist } from '../actions'
 
 import FilterList from './FilterList'
 
-export class SearchSongsScreen extends Component {
-  static propTypes = {
-    allContents: PropTypes.array,
-    addToPlaylist: PropTypes.func.isRequired,
-  }
+export const SearchSongsScreen = props => (
+  <FilterList
+    onSelect={props.addToPlaylist}
+    contents={props.allContents}
+  />
+)
 
-  render() {
-    return (
-      <FilterList
-        onSelect={this.props.addToPlaylist}
-        contents={this.props.allContents}
-      />
-    )
-  }
+SearchSongsScreen.propTypes = {
+  allContents: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addToPlaylist: PropTypes.func.isRequired,
 }
 
 export default connect(

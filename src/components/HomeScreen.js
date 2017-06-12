@@ -16,12 +16,18 @@ const handleTween = ratio => ({ main: { opacity: (2 - ratio) / 2 } })
 
 export class HomeScreen extends Component {
   static propTypes = {
+    directories: PropTypes.arrayOf(PropTypes.string).isRequired,
+    directoryGroups: PropTypes.object.isRequired,
+    playingContent: PropTypes.object,
+    playlistContents: PropTypes.arrayOf(PropTypes.object).isRequired,
     navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
-    contents: PropTypes.array,
+    selectDirectory: PropTypes.func.isRequired,
+    selectedDirectoryName: PropTypes.string.isRequired,
+    selectGroup: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    contents: [],
+    playingContent: null,
   }
 
   onDirectorySelect = selectedDirectoryName => {
@@ -83,7 +89,7 @@ export class HomeScreen extends Component {
           title={selectedDirectoryName}
         />
         <HomeListView
-          groups={this.props.groupsPerLettersAndDirectories[selectedDirectoryName]}
+          groups={directoryGroups}
           directoryName={selectedDirectoryName}
           onGroupSelect={this.onGroupSelect}
         />
