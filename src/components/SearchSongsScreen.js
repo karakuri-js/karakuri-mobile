@@ -22,6 +22,6 @@ export class SearchSongsScreen extends Component {
 }
 
 export default connect(
-  ({ karaoke: { allContents } }) => ({ allContents }),
+  ({ contents: { allContents } }) => ({ allContents }),
   { addToPlaylist },
 )(SearchSongsScreen)

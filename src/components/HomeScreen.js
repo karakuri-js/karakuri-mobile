@@ -100,6 +100,6 @@ export class HomeScreen extends Component {
 }
 
 export default connect(
-  ({ karaoke, playlist }) => ({ ...karaoke, ...playlist }),
+  ({ contents, playlist }) => ({ ...contents, ...playlist }),
   { updateLocalPlaylist, updatePlayingContent, selectDirectory, selectGroup },
 )(HomeScreen)
