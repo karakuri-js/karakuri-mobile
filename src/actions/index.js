@@ -3,15 +3,15 @@ import * as types from '../constants/actionTypes'
 
 import { handleWebsocketsConnection } from '../lib/websockets'
 
-export const login = ({ username, hostname, port }) => (dispatch, getState) => {
-  dispatch({ type: types.LOGIN_REQUEST })
+export const connectToServer = ({ username, hostname, port }) => (dispatch, getState) => {
+  dispatch({ type: types.CONNECTION_REQUEST })
 
   const url = `http://${hostname}:${port}`
   return fetch(url.concat('/contents'))
     .then(response => response.json())
     .then(contents => {
       dispatch({
-        type: types.LOGIN_SUCCESS,
+        type: types.CONNECTION_SUCCESS,
         username,
         hostname,
         port,
@@ -25,7 +25,7 @@ export const login = ({ username, hostname, port }) => (dispatch, getState) => {
     })
     .catch(err => {
       dispatch({
-        type: types.LOGIN_FAILURE,
+        type: types.CONNECTION_FAILURE,
         errorMessage: err && err.toString(),
       })
       return Promise.reject() // To get the original promise to fail. FIXME?
@@ -36,7 +36,7 @@ export const selectDirectory = directoryName => ({ type: types.SELECT_DIRECTORY,
 export const selectGroup = groupName => ({ type: types.SELECT_GROUP, groupName })
 
 export const addToPlaylist = id => (dispatch, getState) => {
-  const { url, username } = getState().authentication
+  const { url, username } = getState().connection
   fetch(`${url}/request`, {
     headers: {
       Accept: 'application/json',
@@ -56,7 +56,7 @@ export const addToPlaylist = id => (dispatch, getState) => {
 }
 
 export const updateLocalPlaylist = playlistContents => (dispatch, getState) => {
-  const { authentication: { username: myUsername }, playlist: { playingContent } } = getState()
+  const { connection: { username: myUsername }, playlist: { playingContent } } = getState()
   const myPlaylistContents = playlistContents
     .filter(({ username }) => username === myUsername)
     .filter(({ id }) => id !== (playingContent || {}).id)
@@ -69,7 +69,7 @@ export const updatePlayingContent = playingContent => ({
 })
 
 export const randomizePlaylist = () => (dispatch, getState) => {
-  const { url, username } = getState().authentication
+  const { url, username } = getState().connection
   fetch(`${url}/randomize`, {
     headers: {
       Accept: 'application/json',

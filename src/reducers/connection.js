@@ -1,10 +1,10 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../constants/actionTypes'
+import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE } from '../constants/actionTypes'
 
 const initialState = { isLoading: false }
 
-export default function authentication(state = initialState, action) {
+export default function connection(state = initialState, action) {
   switch (action.type) {
-    case LOGIN_SUCCESS:
+    case CONNECTION_SUCCESS:
       return {
         username: action.username,
         hostname: action.hostname,
@@ -13,12 +13,12 @@ export default function authentication(state = initialState, action) {
         isLoading: false,
       }
 
-    case LOGIN_REQUEST:
+    case CONNECTION_REQUEST:
       return {
         isLoading: true,
       }
 
-    case LOGIN_FAILURE:
+    case CONNECTION_FAILURE:
       return {
         isLoading: false,
         errorMessage: action.errorMessage,
