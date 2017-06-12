@@ -10,7 +10,7 @@ import {
 import { connect } from 'react-redux'
 import Button from 'apsl-react-native-button'
 
-import { login } from '../actions'
+import { connectToServer } from '../actions'
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +84,7 @@ export class Connection extends Component {
     AsyncStorage.setItem('username', username)
     AsyncStorage.setItem('hostname', hostname)
     AsyncStorage.setItem('port', port)
-    return this.props.login({ hostname, port, username })
+    return this.props.connectToServer({ hostname, port, username })
       .then(() => this.props.navigation.navigate('Home'))
       .catch(() => {})
   }
@@ -140,6 +140,6 @@ export class Connection extends Component {
 }
 
 export default connect(
-  ({ authentication: { isLoading, errorMessage } }) => ({ isLoading, errorMessage }),
-  { login },
+  ({ connection: { isLoading, errorMessage } }) => ({ isLoading, errorMessage }),
+  { connectToServer },
 )(Connection)
