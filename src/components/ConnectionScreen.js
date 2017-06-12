@@ -48,11 +48,12 @@ const styles = StyleSheet.create({
 
 export class ConnectionScreen extends Component {
   static propTypes = {
+    connectToServer: PropTypes.func.isRequired,
+    errorMessage: PropTypes.string,
+    isLoading: PropTypes.bool.isRequired,
     navigation: PropTypes.shape({
       navigate: PropTypes.func.isRequired,
     }).isRequired,
-    isLoading: PropTypes.bool.isRequired,
-    errorMessage: PropTypes.string,
   }
 
   static defaultProps = {

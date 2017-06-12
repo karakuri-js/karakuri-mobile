@@ -11,6 +11,8 @@ module.exports = {
   rules: {
     'arrow-parens': [2, 'as-needed'],
     'consistent-return': 0,
+    'import/no-named-as-default': 0,
+    'import/prefer-default-export': 0,
     'no-console': 0,
      // Look into this - forbidding object & array could be useful, but
      // it leads to repetitions of object shapes for props passed through
