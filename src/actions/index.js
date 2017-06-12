@@ -1,7 +1,9 @@
 import { ToastAndroid } from 'react-native'
 import * as types from '../constants/actionTypes'
 
-export const login = ({ username, hostname, port }) => dispatch => {
+import { handleWebsocketsConnection } from '../lib/websockets'
+
+export const login = ({ username, hostname, port }) => (dispatch, getState) => {
   dispatch({ type: types.LOGIN_REQUEST })
 
   const url = `http://${hostname}:${port}`
@@ -19,6 +21,7 @@ export const login = ({ username, hostname, port }) => dispatch => {
         type: types.CONTENTS_LOADED,
         contents,
       })
+      handleWebsocketsConnection(dispatch, getState)
     })
     .catch(err => {
       dispatch({
