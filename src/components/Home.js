@@ -16,18 +16,10 @@ export class Home extends Component {
   static propTypes = {
     navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
     contents: PropTypes.array,
-    hostname: PropTypes.string.isRequired,
-    port: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
   }
 
   static defaultProps = {
     contents: [],
-  }
-
-  componentWillMount() {
-    this.webSocketConnect()
   }
 
   onDirectorySelect = selectedDirectoryName => {
@@ -53,25 +45,6 @@ export class Home extends Component {
   setMenuDrawerRef = ref => (this.menuDrawer = ref)
 
   showPlaylist = () => this.props.navigation.navigate('PlaylistScreen')
-
-  webSocketConnect() {
-    // TODO remove all this from this component
-    const { hostname, port } = this.props
-    const ws = new WebSocket(`ws://${hostname}:${port}`)
-    ws.onmessage = ({ data }) => {
-      if (!data) return
-      const { type, payload } = JSON.parse(data)
-      if (type === 'playlist') return this.props.updateLocalPlaylist(payload)
-      if (type === 'playingContent') {
-        return this.props.updatePlayingContent(payload)
-      }
-    }
-    // Always try to reconnect if we've lost the connection
-    ws.onclose = () => setTimeout(
-      () => this.webSocketConnect(),
-      10000,
-    )
-  }
 
   renderMenu() {
     return (
@@ -125,6 +98,6 @@ export class Home extends Component {
 }
 
 export default connect(
-  ({ authentication, karaoke, playlist }) => ({ ...authentication, ...karaoke, ...playlist }),
+  ({ karaoke, playlist }) => ({ ...karaoke, ...playlist }),
   { updateLocalPlaylist, updatePlayingContent, selectDirectory, selectGroup },
 )(Home)
