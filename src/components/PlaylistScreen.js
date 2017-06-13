@@ -36,6 +36,10 @@ export class PlaylistScreen extends PureComponent {
 
   static defaultProps = { contents: [], randomizePlaylist: () => {} }
 
+  static navigationOptions = {
+    drawerLabel: 'Playlist',
+  }
+
   render() {
     const { contents } = this.props
     return (
