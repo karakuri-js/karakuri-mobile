@@ -8,9 +8,6 @@ export const handleWebsocketsConnection = (dispatch, getState) => {
     if (!data) return
     const { type, payload } = JSON.parse(data)
     if (type === 'playlist') return dispatch(updateLocalPlaylist(payload))
-    if (type === 'playingContent') {
-      return dispatch(updatePlayingContent(payload))
-    }
   }
   // Always try to reconnect if we've lost the connection
   ws.onclose = () => setTimeout(() => handleWebsocketsConnection(dispatch, getState), 10000)
