@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import Button from 'apsl-react-native-button'
 
 import { connectToServer } from '../actions'
-import { HOME_SCREEN } from '../constants/screens'
+import { MAIN_SCREEN } from '../constants/screens'
 
 const styles = StyleSheet.create({
   container: {
@@ -83,7 +83,7 @@ export class ConnectionScreen extends Component {
     AsyncStorage.setItem('port', port)
     return this.props
       .connectToServer({ hostname, port, username })
-      .then(() => this.props.navigation.navigate(HOME_SCREEN))
+      .then(() => this.props.navigation.navigate(MAIN_SCREEN))
       .catch(() => {})
   }
 

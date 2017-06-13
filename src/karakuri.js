@@ -7,9 +7,8 @@ import * as screens from './constants/screens'
 
 import ConnectionScreen from './components/ConnectionScreen'
 import BrowseSongsScreen from './components/BrowseSongsScreen'
-import HomeScreen from './components/HomeScreen'
+import MainScreen from './components/MainScreen'
 import SearchSongsScreen from './components/SearchSongsScreen'
-import PlaylistScreen from './components/PlaylistScreen'
 
 import configureStore from './store/configureStore'
 
@@ -18,10 +17,20 @@ const store = configureStore()
 const AppNavigator = StackNavigator(
   {
     [screens.CONNECTION_SCREEN]: { screen: ConnectionScreen },
-    [screens.HOME_SCREEN]: { screen: HomeScreen },
-    [screens.BROWSE_SONGS_SCREEN]: { screen: flattenNavigationParamsProps(BrowseSongsScreen) },
-    [screens.SEARCH_SONGS_SCREEN]: { screen: flattenNavigationParamsProps(SearchSongsScreen) },
-    [screens.PLAYLIST_SCREEN]: { screen: flattenNavigationParamsProps(PlaylistScreen) },
+    [screens.MAIN_SCREEN_CONTAINER]: {
+      screen: StackNavigator(
+        {
+          [screens.MAIN_SCREEN]: { screen: MainScreen },
+          [screens.BROWSE_SONGS_SCREEN]: {
+            screen: flattenNavigationParamsProps(BrowseSongsScreen),
+          },
+          [screens.SEARCH_SONGS_SCREEN]: {
+            screen: flattenNavigationParamsProps(SearchSongsScreen),
+          },
+        },
+        { headerMode: 'none' },
+      ),
+    },
   },
   { headerMode: 'none' },
 )
