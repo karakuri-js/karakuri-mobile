@@ -7,7 +7,7 @@ import { selectDirectory, selectGroup } from '../actions'
 import HomeListView from './HomeListView'
 import Menu from './Menu'
 
-import { BROWSE_SONGS_SCREEN, SEARCH_SONGS_SCREEN, PLAYLIST_SCREEN } from '../constants/screens'
+import { BROWSE_SONGS_SCREEN, PLAYLIST_SCREEN } from '../constants/screens'
 
 export class BrowseGroupsScreen extends Component {
   static propTypes = {
