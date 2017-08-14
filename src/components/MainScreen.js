@@ -1,21 +1,15 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { BackHandler, View } from 'react-native'
 import { connect } from 'react-redux'
-import { DrawerNavigator } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 import PropTypes from 'prop-types'
 
 import * as screens from '../constants/screens'
-import { flattenNavigationParamsProps } from '../lib/navigationUtils'
+import { toggleDrawer } from '../actions/navigation'
+import { ConnectedMainNavigator } from '../navigation/MainNavigator'
 
 import HomeHeader from './HomeHeader'
-import BrowseGroupsScreen from './BrowseGroupsScreen'
 import PlaylistStatusBar from './PlaylistStatusBar'
-import PlaylistScreen from './PlaylistScreen'
-
-const DrawerScreens = DrawerNavigator({
-  [screens.BROWSE_GROUPS_SCREEN]: { screen: BrowseGroupsScreen },
-  [screens.PLAYLIST_SCREEN]: { screen: flattenNavigationParamsProps(PlaylistScreen) },
-})
 
 const styles = {
   container: {
@@ -28,28 +22,42 @@ const styles = {
 
 export class MainScreen extends Component {
   static propTypes = {
+    back: PropTypes.func.isRequired,
     playingContent: PropTypes.object,
     playlistContents: PropTypes.arrayOf(PropTypes.object).isRequired,
-    navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
+    navigate: PropTypes.func.isRequired,
+    toggleDrawer: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
     playingContent: null,
   }
 
-  openDrawer = () => this.props.navigation.navigate('DrawerOpen')
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.backHandler)
+  }
 
-  goToSearch = () => this.props.navigation.navigate(screens.SEARCH_SONGS_SCREEN)
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.backHandler)
+  }
 
-  goToPlaylist = () => this.props.navigation.navigate(screens.PLAYLIST_SCREEN)
+  backHandler = () => this.props.back()
+
+  goToSearch = () => this.props.navigate({ routeName: screens.SEARCH_SONGS_SCREEN })
+
+  goToPlaylist = () => this.props.navigate({ routeName: screens.PLAYLIST_SCREEN })
 
   render() {
     const { playingContent, playlistContents } = this.props
     return (
       <View style={styles.container}>
-        <HomeHeader title="Karakuri" openMenu={this.openDrawer} openSearch={this.goToSearch} />
+        <HomeHeader
+          title="Karakuri"
+          openMenu={this.props.toggleDrawer}
+          openSearch={this.goToSearch}
+        />
         <View style={styles.drawerScreensContainer}>
-          <DrawerScreens />
+          <ConnectedMainNavigator />
         </View>
         {playingContent &&
           <PlaylistStatusBar
@@ -62,4 +70,8 @@ export class MainScreen extends Component {
   }
 }
 
-export default connect(({ playlist }) => ({ ...playlist }))(MainScreen)
+export default connect(({ playlist }) => ({ ...playlist }), {
+  back: NavigationActions.back,
+  navigate: NavigationActions.navigate,
+  toggleDrawer,
+})(MainScreen)
