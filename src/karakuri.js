@@ -1,6 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import { StackNavigator } from 'react-navigation'
+import { StackNavigator, DrawerNavigator } from 'react-navigation'
 
 import * as screens from './constants/screens'
 
@@ -14,7 +14,11 @@ const store = configureStore()
 const AppNavigator = StackNavigator(
   {
     [screens.CONNECTION_SCREEN]: { screen: ConnectionScreen },
-    [screens.MAIN_SCREEN]: { screen: MainScreen },
+    [screens.MAIN_SCREEN_CONTAINER]: {
+      screen: DrawerNavigator({
+        [screens.MAIN_SCREEN]: { screen: MainScreen },
+      }),
+    },
   },
   { headerMode: 'none' },
 )

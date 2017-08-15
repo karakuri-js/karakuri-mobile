@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { DrawerNavigator, addNavigationHelpers } from 'react-navigation'
+import { DrawerNavigator, StackNavigator, addNavigationHelpers } from 'react-navigation'
 
 import * as screens from '../constants/screens'
 import { flattenNavigationParamsProps } from '../lib/navigationUtils'
@@ -9,7 +9,7 @@ import BrowseSongsScreen from '../components/BrowseSongsScreen'
 import SearchSongsScreen from '../components/SearchSongsScreen'
 import PlaylistScreen from '../components/PlaylistScreen'
 
-export const MainNavigator = DrawerNavigator({
+export const mainRoutes = {
   [screens.BROWSE_GROUPS_SCREEN]: { screen: BrowseGroupsScreen },
   [screens.PLAYLIST_SCREEN]: { screen: flattenNavigationParamsProps(PlaylistScreen) },
   [screens.BROWSE_SONGS_SCREEN]: {
@@ -17,6 +17,12 @@ export const MainNavigator = DrawerNavigator({
   },
   [screens.SEARCH_SONGS_SCREEN]: {
     screen: flattenNavigationParamsProps(SearchSongsScreen),
+  },
+}
+
+export const MainNavigator = DrawerNavigator({
+  [screens.MAIN_SCREEN_CONTAINER]: {
+    screen: StackNavigator(mainRoutes, { headerMode: 'none' }),
   },
 })
 
