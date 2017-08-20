@@ -8,7 +8,7 @@ import * as screens from '../constants/screens'
 import { toggleDrawer } from '../actions/navigation'
 import { ConnectedMainNavigator } from '../navigation/MainNavigator'
 
-import HomeHeader from './HomeHeader'
+import MainHeader from './MainHeader'
 import PlaylistStatusBar from './PlaylistStatusBar'
 
 const styles = {
@@ -51,7 +51,7 @@ export class MainScreen extends Component {
     const { playingContent, playlistContents } = this.props
     return (
       <View style={styles.container}>
-        <HomeHeader
+        <MainHeader
           title="Karakuri"
           openMenu={this.props.toggleDrawer}
           openSearch={this.goToSearch}
