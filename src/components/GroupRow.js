@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class HomeRow extends PureComponent {
+export default class GroupRow extends PureComponent {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
     item: PropTypes.string.isRequired,

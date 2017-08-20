@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import AlphabetListView from 'react-native-alphabetlistview'
 
 import { selectDirectory, selectGroup } from '../actions'
 
-import HomeListView from './HomeListView'
+import GroupRow from './GroupRow'
 import Menu from './Menu'
 
 import { BROWSE_SONGS_SCREEN, PLAYLIST_SCREEN } from '../constants/screens'
+
+const nullFn = () => null
+
+const alphabetListStyles = {
+  width: 40,
+}
 
 export class BrowseGroupsScreen extends Component {
   static propTypes = {
@@ -15,7 +22,6 @@ export class BrowseGroupsScreen extends Component {
     directoryGroups: PropTypes.object.isRequired,
     navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
     selectDirectory: PropTypes.func.isRequired,
-    selectedDirectoryName: PropTypes.string.isRequired,
     selectGroup: PropTypes.func.isRequired,
   }
 
@@ -32,12 +38,16 @@ export class BrowseGroupsScreen extends Component {
     <Menu directories={this.props.directories} onDirectorySelect={this.onDirectorySelect} />
 
   render() {
-    const { directoryGroups, selectedDirectoryName } = this.props
     return (
-      <HomeListView
-        groups={directoryGroups}
-        directoryName={selectedDirectoryName}
-        onGroupSelect={this.onGroupSelect}
+      <AlphabetListView
+        data={this.props.directoryGroups}
+        cell={GroupRow}
+        cellHeight={50}
+        cellProps={{ onPress: this.onGroupSelect }}
+        pageSize={5}
+        sectionHeader={nullFn}
+        sectionHeaderHeight={0}
+        sectionListStyle={alphabetListStyles}
       />
     )
   }
