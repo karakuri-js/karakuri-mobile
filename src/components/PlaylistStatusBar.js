@@ -22,22 +22,21 @@ const styles = StyleSheet.create({
   },
 })
 
-const PlaylistStatusBar = ({ contentsCount, group, onPress, songName, type, username }) =>
+const PlaylistStatusBar = ({ contentsCount, group, onPress, songName, type, username }) => (
   <TouchableNativeFeedback onPress={onPress}>
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.contentText}>
           {group} - {type} - {songName}
         </Text>
-        <Text style={styles.contentText}>
-          Requested by {username}
-        </Text>
+        <Text style={styles.contentText}>Requested by {username}</Text>
       </View>
       <View style={styles.contentsCount}>
         <Text style={styles.contentsCountText}>{contentsCount}</Text>
       </View>
     </View>
   </TouchableNativeFeedback>
+)
 
 PlaylistStatusBar.propTypes = {
   contentsCount: PropTypes.number.isRequired,

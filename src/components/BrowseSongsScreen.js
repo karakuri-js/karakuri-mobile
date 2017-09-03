@@ -29,6 +29,9 @@ export class BrowseSongsScreen extends Component {
 }
 
 export default connect(
-  ({ contents: { groupContents, selectedGroupName } }) => ({ groupContents, selectedGroupName }),
+  ({ contents: { groupContents, selectedGroupName } }) => ({
+    groupContents,
+    selectedGroupName,
+  }),
   { addToPlaylist },
 )(BrowseSongsScreen)

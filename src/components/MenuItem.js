@@ -34,9 +34,7 @@ export default class MenuItem extends PureComponent {
     return (
       <TouchableNativeFeedback onPress={this.onDirectorySelect}>
         <View style={styles.container}>
-          <Text style={styles.item}>
-            {this.props.directory}
-          </Text>
+          <Text style={styles.item}>{this.props.directory}</Text>
         </View>
       </TouchableNativeFeedback>
     )

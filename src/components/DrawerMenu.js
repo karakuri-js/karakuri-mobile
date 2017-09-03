@@ -47,15 +47,15 @@ class DrawerMenu extends Component {
 
     return (
       <View style={styles.container}>
-        {routesInDrawer.map(routeInDrawer =>
+        {routesInDrawer.map(routeInDrawer => (
           <DrawerItem
             key={routeInDrawer.id}
             label={routeInDrawer.drawerTitle}
             id={routeInDrawer.id}
             onPress={this.navigate}
             isFocused={focusedDrawerRouteName === routeInDrawer.id}
-          />,
-        )}
+          />
+        ))}
       </View>
     )
   }

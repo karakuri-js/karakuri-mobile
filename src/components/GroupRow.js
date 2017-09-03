@@ -30,9 +30,7 @@ export default class GroupRow extends PureComponent {
     return (
       <TouchableNativeFeedback onPress={this.onPress}>
         <View style={styles.row}>
-          <Text style={styles.rowText}>
-            {item}
-          </Text>
+          <Text style={styles.rowText}>{item}</Text>
         </View>
       </TouchableNativeFeedback>
     )

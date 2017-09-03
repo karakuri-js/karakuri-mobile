@@ -134,6 +134,9 @@ export class ConnectionScreen extends Component {
 }
 
 export default connect(
-  ({ connection: { isLoading, errorMessage } }) => ({ isLoading, errorMessage }),
+  ({ connection: { isLoading, errorMessage } }) => ({
+    isLoading,
+    errorMessage,
+  }),
   { connectToServer },
 )(ConnectionScreen)

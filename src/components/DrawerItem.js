@@ -57,13 +57,10 @@ class DrawerItem extends Component {
     return (
       <TouchableNativeFeedback onPress={this.onPress}>
         <View style={[styles.item, { backgroundColor }]}>
-          {icon &&
-            <View style={[styles.icon, isFocused ? null : styles.inactiveIcon]}>
-              {icon}
-            </View>}
-          <Text style={[styles.label, { color }]}>
-            {label}
-          </Text>
+          {icon && (
+            <View style={[styles.icon, isFocused ? null : styles.inactiveIcon]}>{icon}</View>
+          )}
+          <Text style={[styles.label, { color }]}>{label}</Text>
         </View>
       </TouchableNativeFeedback>
     )

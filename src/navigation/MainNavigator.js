@@ -11,9 +11,21 @@ import PlaylistScreen from '../components/PlaylistScreen'
 import DrawerMenu from '../components/DrawerMenu'
 
 export const routesInDrawer = [
-  { id: screens.BROWSE_GROUPS_SCREEN, screen: BrowseGroupsScreen, drawerTitle: 'Browse Groups' },
-  { id: screens.PLAYLIST_SCREEN, screen: PlaylistScreen, drawerTitle: 'My Playlist' },
-  { id: screens.SEARCH_SONGS_SCREEN, screen: SearchSongsScreen, drawerTitle: 'Search Songs' },
+  {
+    id: screens.BROWSE_GROUPS_SCREEN,
+    screen: BrowseGroupsScreen,
+    drawerTitle: 'Browse Groups',
+  },
+  {
+    id: screens.PLAYLIST_SCREEN,
+    screen: PlaylistScreen,
+    drawerTitle: 'My Playlist',
+  },
+  {
+    id: screens.SEARCH_SONGS_SCREEN,
+    screen: SearchSongsScreen,
+    drawerTitle: 'Search Songs',
+  },
 ]
 
 const otherStackNavigatorRoutes = {
@@ -28,7 +40,10 @@ export const MainNavigator = DrawerNavigator(
       screen: StackNavigator(
         {
           ...routesInDrawer.reduce(
-            (prev, route) => ({ ...prev, [route.id]: { screen: route.screen } }),
+            (prev, route) => ({
+              ...prev,
+              [route.id]: { screen: route.screen },
+            }),
             {},
           ),
           ...otherStackNavigatorRoutes,
@@ -44,11 +59,11 @@ export const MainNavigator = DrawerNavigator(
 
 export const ConnectedMainNavigator = connect(({ navigation }) => ({
   navigation,
-}))(({ navigation, dispatch }) =>
+}))(({ navigation, dispatch }) => (
   <MainNavigator
     navigation={addNavigationHelpers({
       dispatch,
       state: navigation,
     })}
-  />,
-)
+  />
+))

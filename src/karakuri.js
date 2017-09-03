@@ -25,7 +25,8 @@ const AppNavigator = StackNavigator(
 
 // onNavigationStateChange={null} desactivates the internal logger
 // which makes a HUGE difference in performance.
-export default () =>
+export default () => (
   <Provider store={store}>
     <AppNavigator onNavigationStateChange={null} />
   </Provider>
+)

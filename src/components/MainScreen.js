@@ -59,12 +59,13 @@ export class MainScreen extends Component {
         <View style={styles.drawerScreensContainer}>
           <ConnectedMainNavigator />
         </View>
-        {playingContent &&
+        {playingContent && (
           <PlaylistStatusBar
             {...playingContent}
             contentsCount={playlistContents.length}
             onPress={this.goToPlaylist}
-          />}
+          />
+        )}
       </View>
     )
   }
