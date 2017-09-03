@@ -1,4 +1,4 @@
-import { ToastAndroid } from 'react-native'
+import { AsyncStorage, ToastAndroid } from 'react-native'
 import * as types from '../constants/actionTypes'
 
 import { handleWebsocketsConnection } from '../lib/websockets'
@@ -22,6 +22,18 @@ export const connectToServer = ({ username, hostname, port }) => (dispatch, getS
         contents,
       })
       handleWebsocketsConnection(dispatch, getState)
+
+      AsyncStorage.getItem(`${username}-favorites`).then(favoritesString => {
+        try {
+          const favorites = JSON.parse(favoritesString)
+          dispatch({
+            type: types.FAVORITES_LOADED,
+            favorites,
+          })
+        } catch (e) {
+          console.error(e)
+        }
+      })
     })
     .catch(err => {
       dispatch({
@@ -90,3 +102,5 @@ export const randomizePlaylist = () => (dispatch, getState) => {
     .then(({ message }) => ToastAndroid.show(message, ToastAndroid.SHORT))
     .catch(err => ToastAndroid.show(err.toString(), ToastAndroid.SHORT))
 }
+
+export const toggleFavorite = contentId => ({ type: types.TOGGLE_FAVORITE, contentId })
