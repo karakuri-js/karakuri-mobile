@@ -46,19 +46,25 @@ export default class ContentsList extends Component {
   static propTypes = {
     contents: PropTypes.array,
     displaySearch: PropTypes.bool,
-    favorites: PropTypes.object.isRequired,
+    favorites: PropTypes.object,
     hideGroups: PropTypes.bool,
     onSelect: PropTypes.func,
+    showAddToPlaylist: PropTypes.bool,
+    showToggleFavorites: PropTypes.bool,
     title: PropTypes.string,
-    toggleFavorite: PropTypes.func.isRequired,
+    toggleFavorite: PropTypes.func,
   }
 
   static defaultProps = {
     contents: [],
     displaySearch: false,
-    onSelect: () => {},
+    favorites: {},
     hideGroups: false,
+    onSelect: () => {},
+    showAddToPlaylist: true,
+    showToggleFavorites: true,
     title: '',
+    toggleFavorite: () => {},
   }
 
   constructor(props) {
@@ -79,6 +85,8 @@ export default class ContentsList extends Component {
       {...content}
       hideGroup={this.props.hideGroups}
       isFavorite={this.props.favorites[content.id]}
+      showStar={this.props.showAddToPlaylist}
+      showPlus={this.props.showToggleFavorites}
       onPlusPress={this.props.onSelect}
       onStarPress={this.props.toggleFavorite}
     />

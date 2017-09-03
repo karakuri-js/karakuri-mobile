@@ -36,16 +36,17 @@ export class PlaylistScreen extends PureComponent {
 
   static defaultProps = { contents: [], randomizePlaylist: () => {} }
 
-  static navigationOptions = {
-    drawerLabel: 'Playlist',
-  }
-
   render() {
     const { contents } = this.props
     return (
       <View style={styles.container}>
         <View style={styles.listContainer}>
-          <ContentsList contents={contents} title="My Playlist" />
+          <ContentsList
+            contents={contents}
+            showAddToPlaylist={false}
+            showToggleFavorites={false}
+            title="My Playlist"
+          />
         </View>
         <View style={styles.buttonContainer}>
           <Button

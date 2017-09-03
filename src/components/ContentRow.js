@@ -25,10 +25,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 1 / PixelRatio.get(),
   },
-  contentContainer: {
-    flexDirection: 'row',
-    flex: 1,
-  },
   textContainer: {
     flex: 1,
     flexWrap: 'wrap',
@@ -37,9 +33,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#D9E4D7',
     flexWrap: 'wrap',
-  },
-  flagContainer: {
-    width: 32,
   },
   iconsContainer: {
     width: 36,
@@ -53,8 +46,10 @@ export default class ContentRow extends PureComponent {
     id: PropTypes.string.isRequired,
     isFavorite: PropTypes.bool,
     language: PropTypes.string,
-    onPlusPress: PropTypes.func.isRequired,
-    onStarPress: PropTypes.func.isRequired,
+    onPlusPress: PropTypes.func,
+    onStarPress: PropTypes.func,
+    showStar: PropTypes.bool,
+    showPlus: PropTypes.bool,
     songName: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
   }
@@ -63,7 +58,10 @@ export default class ContentRow extends PureComponent {
     isFavorite: false,
     language: '',
     hideGroup: false,
-    onSelect: () => {},
+    onPlusPress: () => {},
+    onStarPress: () => {},
+    showPlus: true,
+    showStar: true,
   }
 
   onPlusPress = () => this.props.onPlusPress(this.props.id)
@@ -71,35 +69,46 @@ export default class ContentRow extends PureComponent {
   onStarPress = () => this.props.onStarPress(this.props.id)
 
   render() {
-    const { group, hideGroup, isFavorite, language, songName, type } = this.props
+    const {
+      group,
+      hideGroup,
+      isFavorite,
+      language,
+      showPlus,
+      showStar,
+      songName,
+      type,
+    } = this.props
 
     return (
       <View style={styles.row}>
-        <View style={styles.iconsContainer}>
-          <TouchableNativeFeedback onPress={this.onStarPress}>
-            <Icon
-              name={isFavorite ? 'star' : 'star-outlined'}
-              size={30}
-              style={{ color: isFavorite ? 'yellow' : '#fff' }}
-            />
-          </TouchableNativeFeedback>
-        </View>
-        <View style={styles.contentContainer}>
-          <View style={styles.flagContainer}>
-            <Flag code={languageCodes[language] || 'unknown'} size={24} type="flat" />
+        {showStar && (
+          <View style={styles.iconsContainer}>
+            <TouchableNativeFeedback onPress={this.onStarPress}>
+              <Icon
+                name={isFavorite ? 'star' : 'star-outlined'}
+                size={30}
+                style={{ color: isFavorite ? 'yellow' : '#fff' }}
+              />
+            </TouchableNativeFeedback>
           </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              {!hideGroup && `${group} - `}
-              {type} - {songName}
-            </Text>
-          </View>
-        </View>
+        )}
         <View style={styles.iconsContainer}>
-          <TouchableNativeFeedback onPress={this.onPlusPress}>
-            <Icon name="plus" size={30} style={{ color: '#fff' }} />
-          </TouchableNativeFeedback>
+          <Flag code={languageCodes[language] || 'unknown'} size={24} type="flat" />
         </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>
+            {!hideGroup && `${group} - `}
+            {type} - {songName}
+          </Text>
+        </View>
+        {showPlus && (
+          <View style={styles.iconsContainer}>
+            <TouchableNativeFeedback onPress={this.onPlusPress}>
+              <Icon name="plus" size={30} style={{ color: '#fff' }} />
+            </TouchableNativeFeedback>
+          </View>
+        )}
       </View>
     )
   }
