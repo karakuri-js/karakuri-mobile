@@ -6,6 +6,7 @@ import * as screens from '../constants/screens'
 import { flattenNavigationParamsProps } from '../lib/navigationUtils'
 import BrowseGroupsScreen from '../components/BrowseGroupsScreen'
 import BrowseSongsScreen from '../components/BrowseSongsScreen'
+import FavoritesScreen from '../components/FavoritesScreen'
 import SearchSongsScreen from '../components/SearchSongsScreen'
 import PlaylistScreen from '../components/PlaylistScreen'
 import DrawerMenu from '../components/DrawerMenu'
@@ -25,6 +26,11 @@ export const routesInDrawer = [
     id: screens.SEARCH_SONGS_SCREEN,
     screen: SearchSongsScreen,
     drawerTitle: 'Search Songs',
+  },
+  {
+    id: screens.FAVORITES_SCREEN,
+    screen: FavoritesScreen,
+    drawerTitle: 'Favorites',
   },
 ]
 
