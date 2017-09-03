@@ -34,8 +34,9 @@ export class BrowseGroupsScreen extends Component {
 
   showPlaylist = () => this.props.navigation.navigate(PLAYLIST_SCREEN)
 
-  renderMenu = () =>
+  renderMenu = () => (
     <Menu directories={this.props.directories} onDirectorySelect={this.onDirectorySelect} />
+  )
 
   render() {
     return (

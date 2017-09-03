@@ -32,8 +32,14 @@ export const connectToServer = ({ username, hostname, port }) => (dispatch, getS
     })
 }
 
-export const selectDirectory = directoryName => ({ type: types.SELECT_DIRECTORY, directoryName })
-export const selectGroup = groupName => ({ type: types.SELECT_GROUP, groupName })
+export const selectDirectory = directoryName => ({
+  type: types.SELECT_DIRECTORY,
+  directoryName,
+})
+export const selectGroup = groupName => ({
+  type: types.SELECT_GROUP,
+  groupName,
+})
 
 export const addToPlaylist = id => (dispatch, getState) => {
   const { url, username } = getState().connection
@@ -62,7 +68,12 @@ export const updateLocalPlaylist = ({ playingContent, playlistContents }) => (
 ) => {
   const { connection: { username: myUsername } } = getState()
   const myPlaylistContents = playlistContents.filter(({ username }) => username === myUsername)
-  dispatch({ type: types.PLAYLIST_UPDATE, playingContent, playlistContents, myPlaylistContents })
+  dispatch({
+    type: types.PLAYLIST_UPDATE,
+    playingContent,
+    playlistContents,
+    myPlaylistContents,
+  })
 }
 
 export const randomizePlaylist = () => (dispatch, getState) => {

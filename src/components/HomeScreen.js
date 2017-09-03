@@ -74,7 +74,11 @@ export class HomeScreen extends Component {
         tapToClose
         tweenHandler={handleTween}
         styles={{
-          drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
+          drawer: {
+            shadowColor: '#000000',
+            shadowOpacity: 0.8,
+            shadowRadius: 3,
+          },
           main: { paddingLeft: 3 },
         }}
       >
@@ -88,12 +92,13 @@ export class HomeScreen extends Component {
           directoryName={selectedDirectoryName}
           onGroupSelect={this.onGroupSelect}
         />
-        {playingContent &&
+        {playingContent && (
           <PlaylistStatusBar
             {...playingContent}
             contentsCount={playlistContents.length}
             onPress={this.showPlaylist}
-          />}
+          />
+        )}
       </Drawer>
     )
   }

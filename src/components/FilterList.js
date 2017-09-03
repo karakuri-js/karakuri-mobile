@@ -45,7 +45,9 @@ export default class FilterList extends Component {
   }
 
   componentWillMount() {
-    this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+    this.dataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    })
   }
 
   setTextFilter = textFilter => this.setState({ textFilter })
@@ -78,16 +80,18 @@ export default class FilterList extends Component {
           </View>
         </View>
         {!foundResults &&
-          isLongEnoughFilter &&
+        isLongEnoughFilter && (
           <View style={styles.noFoundResults}>
             <Text style={styles.noFoundResultsText}>No results :(</Text>
-          </View>}
-        {foundResults &&
+          </View>
+        )}
+        {foundResults && (
           <ListView
             keyboardShouldPersistTaps="always"
             dataSource={this.dataSource.cloneWithRows(filteredContents)}
             renderRow={this.renderRow}
-          />}
+          />
+        )}
       </View>
     )
   }

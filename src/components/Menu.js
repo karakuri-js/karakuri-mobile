@@ -27,24 +27,23 @@ const styles = StyleSheet.create({
   },
 })
 
-const Menu = ({ directories, onDirectorySelect }) =>
+const Menu = ({ directories, onDirectorySelect }) => (
   <View style={styles.container}>
     <View style={styles.header} elevation={10}>
-      <Text style={styles.headerText}>
-        Karakuri
-      </Text>
+      <Text style={styles.headerText}>Karakuri</Text>
     </View>
 
     <ScrollView style={styles.directoriesContainer}>
-      {directories.map((directory, key) =>
+      {directories.map((directory, key) => (
         <MenuItem
           key={key} // eslint-disable-line react/no-array-index-key
           directory={directory}
           onDirectorySelect={onDirectorySelect}
-        />,
-      )}
+        />
+      ))}
     </ScrollView>
   </View>
+)
 
 Menu.propTypes = {
   directories: PropTypes.arrayOf(PropTypes.string).isRequired,

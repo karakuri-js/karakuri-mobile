@@ -5,14 +5,15 @@ import { addToPlaylist } from '../actions'
 
 import FilterList from './FilterList'
 
-export const SearchSongsScreen = props =>
+export const SearchSongsScreen = props => (
   <FilterList onSelect={props.addToPlaylist} contents={props.allContents} />
+)
 
 SearchSongsScreen.propTypes = {
   allContents: PropTypes.arrayOf(PropTypes.object).isRequired,
   addToPlaylist: PropTypes.func.isRequired,
 }
 
-export default connect(({ contents: { allContents } }) => ({ allContents }), { addToPlaylist })(
-  SearchSongsScreen,
-)
+export default connect(({ contents: { allContents } }) => ({ allContents }), {
+  addToPlaylist,
+})(SearchSongsScreen)
