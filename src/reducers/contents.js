@@ -37,7 +37,9 @@ export default function contents(state = initialState, action) {
 
       return {
         allContents,
-        directories: Object.keys(contentsPerDirectories),
+        directories: Object.keys(contentsPerDirectories).sort(
+          (a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1),
+        ),
         contentsPerGroups,
         groupsPerLettersAndDirectories,
         selectedDirectoryName,
