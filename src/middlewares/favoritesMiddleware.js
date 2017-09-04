@@ -1,7 +1,6 @@
 import { AsyncStorage } from 'react-native'
 import { CONNECTION_SUCCESS, FAVORITES_LOADED, TOGGLE_FAVORITE } from '../constants/actionTypes'
-
-const getFavoritesKey = username => `${username}-favorites`
+import { getFavoritesKey } from '../lib/storageUtils'
 
 const favoritesMiddleware = store => next => action => {
   const result = next(action)

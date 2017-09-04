@@ -1,7 +1,8 @@
 import { AsyncStorage, ToastAndroid } from 'react-native'
-import * as types from '../constants/actionTypes'
 
+import * as types from '../constants/actionTypes'
 import { handleWebsocketsConnection } from '../lib/websockets'
+import { getFavoritesKey } from '../lib/storageUtils'
 
 export const connectToServer = ({ username, hostname, port }) => (dispatch, getState) => {
   dispatch({ type: types.CONNECTION_REQUEST })
@@ -23,12 +24,11 @@ export const connectToServer = ({ username, hostname, port }) => (dispatch, getS
       })
       handleWebsocketsConnection(dispatch, getState)
 
-      AsyncStorage.getItem(`${username}-favorites`).then(favoritesString => {
+      AsyncStorage.getItem(getFavoritesKey(username)).then(favoritesString => {
         try {
-          const favorites = JSON.parse(favoritesString)
           dispatch({
             type: types.FAVORITES_LOADED,
-            favorites,
+            favorites: JSON.parse(favoritesString),
           })
         } catch (e) {
           console.error(e)
