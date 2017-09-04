@@ -4,35 +4,34 @@ import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 10,
   },
   item: {
-    fontSize: 20,
     fontWeight: 'bold',
-    color: '#D9E4D7',
     paddingTop: 5,
     paddingBottom: 5,
-    marginLeft: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    color: '#000',
   },
 })
 
-export default class MenuItem extends PureComponent {
+export default class DirectoryItem extends PureComponent {
   static propTypes = {
     directory: PropTypes.string.isRequired,
-    onDirectorySelect: PropTypes.func.isRequired,
+    onPress: PropTypes.func.isRequired,
   }
 
-  onDirectorySelect = () => {
-    this.props.onDirectorySelect(this.props.directory)
+  onPress = () => {
+    this.props.onPress(this.props.directory)
   }
 
   render() {
     return (
-      <TouchableNativeFeedback onPress={this.onDirectorySelect}>
+      <TouchableNativeFeedback onPress={this.onPress}>
         <View style={styles.container}>
           <Text style={styles.item}>{this.props.directory}</Text>
         </View>

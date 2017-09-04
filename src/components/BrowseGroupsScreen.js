@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ScrollView, View } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import AlphabetListView from 'react-native-alphabetlistview'
@@ -6,7 +7,7 @@ import AlphabetListView from 'react-native-alphabetlistview'
 import { selectDirectory, selectGroup } from '../actions'
 
 import GroupRow from './GroupRow'
-import Menu from './Menu'
+import DirectoryItem from './DirectoryItem'
 
 import { BROWSE_SONGS_SCREEN, PLAYLIST_SCREEN } from '../constants/screens'
 
@@ -15,6 +16,19 @@ const nullFn = () => null
 const alphabetListStyles = {
   width: 40,
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  directoriesContainer: {
+    flex: 1,
+    height: 50,
+  },
+  listview: {
+    flex: 10,
+  },
+})
 
 export class BrowseGroupsScreen extends Component {
   static propTypes = {
@@ -32,24 +46,30 @@ export class BrowseGroupsScreen extends Component {
     this.props.navigation.navigate(BROWSE_SONGS_SCREEN)
   }
 
-  showPlaylist = () => this.props.navigation.navigate(PLAYLIST_SCREEN)
-
-  renderMenu = () => (
-    <Menu directories={this.props.directories} onDirectorySelect={this.onDirectorySelect} />
+  renderDirectory = directory => (
+    <DirectoryItem key={directory} directory={directory} onPress={this.onDirectorySelect} />
   )
+
+  showPlaylist = () => this.props.navigation.navigate(PLAYLIST_SCREEN)
 
   render() {
     return (
-      <AlphabetListView
-        data={this.props.directoryGroups}
-        cell={GroupRow}
-        cellHeight={50}
-        cellProps={{ onPress: this.onGroupSelect }}
-        pageSize={5}
-        sectionHeader={nullFn}
-        sectionHeaderHeight={0}
-        sectionListStyle={alphabetListStyles}
-      />
+      <View style={styles.container}>
+        <ScrollView horizontal style={styles.directoriesContainer}>
+          {this.props.directories.map(this.renderDirectory)}
+        </ScrollView>
+        <AlphabetListView
+          data={this.props.directoryGroups}
+          cell={GroupRow}
+          cellHeight={50}
+          cellProps={{ onPress: this.onGroupSelect }}
+          pageSize={5}
+          sectionHeader={nullFn}
+          sectionHeaderHeight={0}
+          sectionListStyle={alphabetListStyles}
+          style={styles.listview}
+        />
+      </View>
     )
   }
 }
