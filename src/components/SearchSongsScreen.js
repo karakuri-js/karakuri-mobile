@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+
 import { addToPlaylist, toggleFavorite } from '../actions'
+import { getAllContents } from '../selectors/contents'
 
 import ContentsList from './ContentsList'
 
@@ -22,7 +24,10 @@ SearchSongsScreen.propTypes = {
   toggleFavorite: PropTypes.func.isRequired,
 }
 
-export default connect(({ contents: { allContents }, favorites }) => ({ allContents, favorites }), {
-  addToPlaylist,
-  toggleFavorite,
-})(SearchSongsScreen)
+export default connect(
+  state => ({ allContents: getAllContents(state), favorites: state.favorites }),
+  {
+    addToPlaylist,
+    toggleFavorite,
+  },
+)(SearchSongsScreen)

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { addToPlaylist, toggleFavorite } from '../actions'
+import { getCurrentGroupContents, getCurrentGroupName } from '../selectors/contents'
 
 import ContentsList from './ContentsList'
 
@@ -33,10 +34,10 @@ export class BrowseSongsScreen extends Component {
 }
 
 export default connect(
-  ({ contents: { groupContents, selectedGroupName }, favorites }) => ({
-    groupContents,
-    selectedGroupName,
-    favorites,
+  state => ({
+    groupContents: getCurrentGroupContents(state),
+    selectedGroupName: getCurrentGroupName(state),
+    favorites: state.favorites,
   }),
   { addToPlaylist, toggleFavorite },
 )(BrowseSongsScreen)
