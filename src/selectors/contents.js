@@ -1,7 +1,12 @@
 import { createSelector } from 'reselect'
 import { first, uniq } from 'lodash'
 
-export const getAllContents = state => state.contents.allContents
+export const getAllContents = state =>
+  state.contents.allContents.map(content => ({
+    ...content,
+    isFavorite: state.favorites[content.id],
+  }))
+
 const getCurrentDirectoryName = state => state.contents.directoryName
 export const getCurrentGroupName = state => state.contents.groupName
 
@@ -50,6 +55,10 @@ export const getDirectories = createSelector([getContentsPerDirectories], conten
   Object.keys(contentsPerDirectories).sort(
     (c1, c2) => (c1.toLowerCase() > c2.toLowerCase() ? 1 : -1),
   ),
+)
+
+export const getFavoritesContents = createSelector([getAllContents], contents =>
+  contents.filter(c => c.isFavorite),
 )
 
 export const getCurrentDirectoryGroupsPerLetter = createSelector(

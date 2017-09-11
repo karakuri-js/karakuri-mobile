@@ -46,7 +46,6 @@ export default class ContentsList extends Component {
   static propTypes = {
     contents: PropTypes.array,
     displaySearch: PropTypes.bool,
-    favorites: PropTypes.object,
     hideGroups: PropTypes.bool,
     onSelect: PropTypes.func,
     showAddToPlaylist: PropTypes.bool,
@@ -84,7 +83,6 @@ export default class ContentsList extends Component {
     <ContentRow
       {...content}
       hideGroup={this.props.hideGroups}
-      isFavorite={this.props.favorites[content.id]}
       showStar={this.props.showAddToPlaylist}
       showPlus={this.props.showToggleFavorites}
       onPlusPress={this.props.onSelect}

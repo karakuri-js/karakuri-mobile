@@ -7,12 +7,11 @@ import { getAllContents } from '../selectors/contents'
 
 import ContentsList from './ContentsList'
 
-export const SearchSongsScreen = ({ allContents, favorites, ...props }) => (
+export const SearchSongsScreen = ({ allContents, ...props }) => (
   <ContentsList
     contents={allContents}
     displaySearch
     onSelect={props.addToPlaylist}
-    favorites={favorites}
     toggleFavorite={props.toggleFavorite}
   />
 )
@@ -20,14 +19,10 @@ export const SearchSongsScreen = ({ allContents, favorites, ...props }) => (
 SearchSongsScreen.propTypes = {
   allContents: PropTypes.arrayOf(PropTypes.object).isRequired,
   addToPlaylist: PropTypes.func.isRequired,
-  favorites: PropTypes.object.isRequired,
   toggleFavorite: PropTypes.func.isRequired,
 }
 
-export default connect(
-  state => ({ allContents: getAllContents(state), favorites: state.favorites }),
-  {
-    addToPlaylist,
-    toggleFavorite,
-  },
-)(SearchSongsScreen)
+export default connect(state => ({ allContents: getAllContents(state) }), {
+  addToPlaylist,
+  toggleFavorite,
+})(SearchSongsScreen)
