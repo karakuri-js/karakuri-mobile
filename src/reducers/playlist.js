@@ -2,7 +2,6 @@ import { PLAYLIST_UPDATE } from '../constants/actionTypes'
 
 const initialState = {
   playlistContents: [],
-  myPlaylistContents: [],
   playingContent: null,
 }
 
@@ -13,7 +12,6 @@ export default function playlist(state = initialState, action) {
         ...state,
         playingContent: action.playingContent,
         playlistContents: action.playlistContents,
-        myPlaylistContents: action.myPlaylistContents,
       }
 
     default:
