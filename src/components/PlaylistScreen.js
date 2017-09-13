@@ -8,6 +8,7 @@ import { getAugmentedMyPlaylistContents } from '../selectors/contents'
 import * as Colors from '../constants/colors'
 
 import ContentsList from './ContentsList'
+import { provideGoToContentScreen } from './goToContentScreenHOC'
 
 const styles = StyleSheet.create({
   container: {
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
 export class PlaylistScreen extends PureComponent {
   static propTypes = {
     contents: PropTypes.array,
+    goToContentScreen: PropTypes.func.isRequired,
     randomizePlaylist: PropTypes.func,
   }
 
@@ -44,6 +46,7 @@ export class PlaylistScreen extends PureComponent {
         <View style={styles.listContainer}>
           <ContentsList
             contents={contents}
+            onSelect={this.props.goToContentScreen}
             showAddToPlaylist={false}
             showToggleFavorites={false}
             title="My Playlist"
@@ -63,4 +66,4 @@ export class PlaylistScreen extends PureComponent {
 
 export default connect(state => ({ contents: getAugmentedMyPlaylistContents(state) }), {
   randomizePlaylist,
-})(PlaylistScreen)
+})(provideGoToContentScreen(PlaylistScreen))

@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
 
 export default class ContentsList extends Component {
   static propTypes = {
+    addToPlaylist: PropTypes.func,
     contents: PropTypes.array,
     displaySearch: PropTypes.bool,
     hideGroups: PropTypes.bool,
@@ -57,6 +58,7 @@ export default class ContentsList extends Component {
   }
 
   static defaultProps = {
+    addToPlaylist: PropTypes.func,
     contents: [],
     displaySearch: false,
     favorites: {},
@@ -87,7 +89,8 @@ export default class ContentsList extends Component {
       hideGroup={this.props.hideGroups}
       showStar={this.props.showAddToPlaylist}
       showPlus={this.props.showToggleFavorites}
-      onPlusPress={this.props.onSelect}
+      onTitlePress={this.props.onSelect}
+      onPlusPress={this.props.addToPlaylist}
       onStarPress={this.props.toggleFavorite}
     />
   )
