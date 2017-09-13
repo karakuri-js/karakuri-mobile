@@ -74,19 +74,11 @@ export const addToPlaylist = id => (dispatch, getState) => {
     })
 }
 
-export const updateLocalPlaylist = ({ playingContent, playlistContents }) => (
-  dispatch,
-  getState,
-) => {
-  const { connection: { username: myUsername } } = getState()
-  const myPlaylistContents = playlistContents.filter(({ username }) => username === myUsername)
-  dispatch({
-    type: types.PLAYLIST_UPDATE,
-    playingContent,
-    playlistContents,
-    myPlaylistContents,
-  })
-}
+export const updateLocalPlaylist = ({ playingContent, playlistContents }) => ({
+  type: types.PLAYLIST_UPDATE,
+  playingContent,
+  playlistContents,
+})
 
 export const randomizePlaylist = () => (dispatch, getState) => {
   const { url, username } = getState().connection

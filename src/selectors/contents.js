@@ -1,14 +1,20 @@
 import { createSelector } from 'reselect'
 import { first, uniq } from 'lodash'
 
-export const getAllContents = state =>
-  state.contents.allContents.map(content => ({
+const getAugmentedContents = (contents, favorites) =>
+  contents.map(content => ({
     ...content,
-    isFavorite: state.favorites[content.id],
+    isFavorite: favorites[content.id],
   }))
 
+export const getAllContents = state =>
+  getAugmentedContents(state.contents.allContents, state.favorites)
+const getUsername = state => state.connection.username
 const getCurrentDirectoryName = state => state.contents.directoryName
 export const getCurrentGroupName = state => state.contents.groupName
+
+export const getPlaylistContents = state =>
+  getAugmentedContents(state.playlist.playlistContents, state.favorites)
 
 const getContentsPerDirectories = createSelector([getAllContents], contents =>
   contents.reduce((obj, content) => {
@@ -59,6 +65,13 @@ export const getDirectories = createSelector([getContentsPerDirectories], conten
 
 export const getFavoritesContents = createSelector([getAllContents], contents =>
   contents.filter(c => c.isFavorite),
+)
+
+export const getPlayingContent = state => state.playlist.playingContent
+
+export const getMyPlaylistContents = createSelector(
+  [getPlaylistContents, getUsername],
+  (contents, username) => contents.filter(c => c.username === username),
 )
 
 export const getCurrentDirectoryGroupsPerLetter = createSelector(

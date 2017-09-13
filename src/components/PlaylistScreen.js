@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native'
 import Button from 'apsl-react-native-button'
 
 import { randomizePlaylist } from '../actions'
+import { getMyPlaylistContents } from '../selectors/contents'
 
 import ContentsList from './ContentsList'
 
@@ -62,6 +63,6 @@ export class PlaylistScreen extends PureComponent {
   }
 }
 
-export default connect(({ playlist }) => ({ contents: playlist.myPlaylistContents }), {
+export default connect(state => ({ contents: getMyPlaylistContents(state) }), {
   randomizePlaylist,
 })(PlaylistScreen)

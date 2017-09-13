@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import * as screens from '../constants/screens'
 import { toggleDrawer } from '../actions/navigation'
 import { ConnectedMainNavigator } from '../navigation/MainNavigator'
+import { getPlayingContent, getPlaylistContents } from '../selectors/contents'
 
 import MainHeader from './MainHeader'
 import PlaylistStatusBar from './PlaylistStatusBar'
@@ -71,8 +72,14 @@ export class MainScreen extends Component {
   }
 }
 
-export default connect(({ playlist }) => ({ ...playlist }), {
-  back: NavigationActions.back,
-  navigate: NavigationActions.navigate,
-  toggleDrawer,
-})(MainScreen)
+export default connect(
+  state => ({
+    playingContent: getPlayingContent(state),
+    playlistContents: getPlaylistContents(state),
+  }),
+  {
+    back: NavigationActions.back,
+    navigate: NavigationActions.navigate,
+    toggleDrawer,
+  },
+)(MainScreen)
