@@ -1,4 +1,9 @@
-import { CONTENTS_LOADED, SELECT_DIRECTORY, SELECT_GROUP } from '../constants/actionTypes'
+import {
+  CONTENTS_LOADED,
+  SELECT_DIRECTORY,
+  SELECT_GROUP,
+  SELECT_CONTENT,
+} from '../constants/actionTypes'
 
 const initialState = {
   allContents: [],
@@ -25,6 +30,12 @@ export default function contents(state = initialState, action) {
       return {
         ...state,
         groupName: action.groupName,
+      }
+
+    case SELECT_CONTENT:
+      return {
+        ...state,
+        content: action.content,
       }
 
     default:
