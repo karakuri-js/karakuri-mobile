@@ -20,20 +20,24 @@ const languageCodes = {
 const styles = StyleSheet.create({
   row: {
     padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1 / PixelRatio.get(),
+    backgroundColor: '#272822',
+  },
+  mainContainer: {
     flex: 1,
+  },
+  textAndIconsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1 / PixelRatio.get(),
-  },
-  textContainer: {
-    flex: 1,
-    flexWrap: 'wrap',
   },
   text: {
     fontSize: 16,
     color: Colors.primaryText,
     flexWrap: 'wrap',
+    flex: 1,
   },
   iconsContainer: {
     width: 36,
@@ -49,8 +53,9 @@ export default class ContentRow extends PureComponent {
     language: PropTypes.string,
     onPlusPress: PropTypes.func,
     onStarPress: PropTypes.func,
-    showStar: PropTypes.bool,
+    onTitlePress: PropTypes.func,
     showPlus: PropTypes.bool,
+    showStar: PropTypes.bool,
     songName: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
   }
@@ -61,6 +66,7 @@ export default class ContentRow extends PureComponent {
     hideGroup: false,
     onPlusPress: () => {},
     onStarPress: () => {},
+    onTitlePress: () => {},
     showPlus: true,
     showStar: true,
   }
@@ -69,10 +75,11 @@ export default class ContentRow extends PureComponent {
 
   onStarPress = () => this.props.onStarPress(this.props.id)
 
+  onTitlePress = () => this.props.onTitlePress(this.props.id)
+
   render() {
     const {
       group,
-      goTo,
       hideGroup,
       isFavorite,
       language,
@@ -95,15 +102,19 @@ export default class ContentRow extends PureComponent {
             </TouchableNativeFeedback>
           </View>
         )}
-        <View style={styles.iconsContainer}>
-          <Flag code={languageCodes[language] || 'unknown'} size={24} type="flat" />
+        <View style={styles.mainContainer}>
+          <TouchableNativeFeedback onPress={this.onTitlePress}>
+            <View style={styles.textAndIconsContainer}>
+              <View style={styles.iconsContainer}>
+                <Flag code={languageCodes[language] || 'unknown'} size={24} type="flat" />
+              </View>
+              <Text style={styles.text}>
+                {!hideGroup && `${group} - `}
+                {type} - {songName}
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
         </View>
-        <TouchableNativeFeedback style={styles.textContainer} onPress={goTo}>
-          <Text style={styles.text}>
-            {!hideGroup && `${group} - `}
-            {type} - {songName}
-          </Text>
-        </TouchableNativeFeedback>
         {showPlus && (
           <View style={styles.iconsContainer}>
             <TouchableNativeFeedback onPress={this.onPlusPress}>
