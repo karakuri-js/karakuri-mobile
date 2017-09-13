@@ -72,6 +72,7 @@ export default class ContentRow extends PureComponent {
   render() {
     const {
       group,
+      goTo,
       hideGroup,
       isFavorite,
       language,
@@ -97,12 +98,12 @@ export default class ContentRow extends PureComponent {
         <View style={styles.iconsContainer}>
           <Flag code={languageCodes[language] || 'unknown'} size={24} type="flat" />
         </View>
-        <View style={styles.textContainer}>
+        <TouchableNativeFeedback style={styles.textContainer} onPress={goTo}>
           <Text style={styles.text}>
             {!hideGroup && `${group} - `}
             {type} - {songName}
           </Text>
-        </View>
+        </TouchableNativeFeedback>
         {showPlus && (
           <View style={styles.iconsContainer}>
             <TouchableNativeFeedback onPress={this.onPlusPress}>

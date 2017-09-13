@@ -6,6 +6,7 @@ import * as screens from '../constants/screens'
 import { flattenNavigationParamsProps } from '../lib/navigationUtils'
 import BrowseGroupsScreen from '../components/BrowseGroupsScreen'
 import BrowseSongsScreen from '../components/BrowseSongsScreen'
+import ContentScreen from '../components/ContentScreen'
 import FavoritesScreen from '../components/FavoritesScreen'
 import HistoryScreen from '../components/HistoryScreen'
 import SearchSongsScreen from '../components/SearchSongsScreen'
@@ -43,6 +44,9 @@ export const routesInDrawer = [
 const otherStackNavigatorRoutes = {
   [screens.BROWSE_SONGS_SCREEN]: {
     screen: flattenNavigationParamsProps(BrowseSongsScreen),
+  },
+  [screens.CONTENT_SCREEN]: {
+    screen: flattenNavigationParamsProps(ContentScreen),
   },
 }
 
