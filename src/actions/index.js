@@ -54,7 +54,7 @@ export const addToPlaylist = id => (dispatch, getState) => {
   })
     .then(response => response.json())
     .then(({ message }) => {
-      dispatch({ type: types.PLAYLIST_ADDITION_SUCCESS })
+      dispatch({ type: types.PLAYLIST_ADDITION_SUCCESS, id })
       ToastAndroid.show(message, ToastAndroid.LONG) // Could be handled in a middleware
     })
     .catch(err => {
