@@ -1,8 +1,7 @@
-import { AsyncStorage, ToastAndroid } from 'react-native'
+import { ToastAndroid } from 'react-native'
 
 import * as types from '../constants/actionTypes'
 import { handleWebsocketsConnection } from '../lib/websockets'
-import { getFavoritesKey } from '../lib/storageUtils'
 
 export const connectToServer = ({ username, hostname, port }) => (dispatch, getState) => {
   dispatch({ type: types.CONNECTION_REQUEST })
@@ -23,17 +22,6 @@ export const connectToServer = ({ username, hostname, port }) => (dispatch, getS
         contents,
       })
       handleWebsocketsConnection(dispatch, getState)
-
-      AsyncStorage.getItem(getFavoritesKey(username)).then(favoritesString => {
-        try {
-          dispatch({
-            type: types.FAVORITES_LOADED,
-            favorites: JSON.parse(favoritesString),
-          })
-        } catch (e) {
-          console.error(e)
-        }
-      })
     })
     .catch(err => {
       dispatch({
@@ -55,7 +43,8 @@ export const selectGroup = groupName => ({
 
 export const addToPlaylist = id => (dispatch, getState) => {
   const { url, username } = getState().connection
-  fetch(`${url}/request`, {
+
+  return fetch(`${url}/request`, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
