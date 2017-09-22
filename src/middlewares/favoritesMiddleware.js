@@ -8,7 +8,7 @@ const favoritesMiddleware = store => next => action => {
   if (action.type === CONNECTION_SUCCESS) {
     AsyncStorage.getItem(getFavoritesKey(action.username)).then(favoritesString => {
       try {
-        const favorites = JSON.parse(favoritesString)
+        const favorites = JSON.parse(favoritesString) || {}
         store.dispatch({
           type: FAVORITES_LOADED,
           favorites,
