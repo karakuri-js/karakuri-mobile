@@ -7,13 +7,15 @@ import {
 import { getHistoryKey } from '../lib/storageUtils'
 
 const loadHistory = username =>
-  AsyncStorage.getItem(getHistoryKey(username)).then(
-    historyString => JSON.parse(historyString) || {},
-  )
+  AsyncStorage.getItem(getHistoryKey(username))
+    .then(historyString => JSON.parse(historyString) || {})
+    .then(history =>
+      // Convert all dates stored in string in the object to proper dates.
+      Object.keys(history).reduce((prev, id) => ({ ...prev, [id]: new Date(history[id]) }), {}),
+    )
 
 const historyMiddleware = store => next => action => {
   const result = next(action)
-
   if (action.type === CONNECTION_SUCCESS) {
     loadHistory(action.username)
       .then(history =>
@@ -26,16 +28,13 @@ const historyMiddleware = store => next => action => {
   }
 
   if (action.type === PLAYLIST_ADDITION_SUCCESS) {
-    loadHistory(action.username)
-      .then(history => {
-        const updatedHistory = { ...history, [action.id]: new Date() }
-        AsyncStorage.setItem(getHistoryKey(action.username), JSON.stringify(updatedHistory))
-        store.dispatch({
-          type: HISTORY_LOADED,
-          history: updatedHistory,
-        })
-      })
-      .catch(e => console.error(e))
+    const { connection: { username }, history } = store.getState()
+    const updatedHistory = { ...history, [action.id]: new Date() }
+    AsyncStorage.setItem(getHistoryKey(username), JSON.stringify(updatedHistory))
+    store.dispatch({
+      type: HISTORY_LOADED,
+      history: updatedHistory,
+    })
   }
 
   return result
