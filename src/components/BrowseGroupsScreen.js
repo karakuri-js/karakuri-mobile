@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import AlphabetListView from 'react-native-alphabetlistview'
