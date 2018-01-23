@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import * as screens from '../constants/screens'
 import { toggleDrawer } from '../actions/navigation'
 import { ConnectedMainNavigator } from '../navigation/MainNavigator'
-import { getPlayingContent, getPlaylistContents } from '../selectors/contents'
+import { getAugmentedPlayingContent, getPlaylistContentsNumber } from '../selectors/contents'
 
 import MainHeader from './MainHeader'
 import PlaylistStatusBar from './PlaylistStatusBar'
@@ -25,7 +25,7 @@ export class MainScreen extends Component {
   static propTypes = {
     back: PropTypes.func.isRequired,
     playingContent: PropTypes.object,
-    playlistContents: PropTypes.arrayOf(PropTypes.object).isRequired,
+    playlistContentsNumber: PropTypes.number.isRequired,
     navigate: PropTypes.func.isRequired,
     toggleDrawer: PropTypes.func.isRequired,
   }
@@ -49,7 +49,7 @@ export class MainScreen extends Component {
   goToPlaylist = () => this.props.navigate({ routeName: screens.PLAYLIST_SCREEN })
 
   render() {
-    const { playingContent, playlistContents } = this.props
+    const { playingContent, playlistContentsNumber } = this.props
     return (
       <View style={styles.container}>
         <MainHeader
@@ -63,7 +63,7 @@ export class MainScreen extends Component {
         {playingContent && (
           <PlaylistStatusBar
             {...playingContent}
-            contentsCount={playlistContents.length}
+            contentsCount={playlistContentsNumber}
             onPress={this.goToPlaylist}
           />
         )}
@@ -74,8 +74,8 @@ export class MainScreen extends Component {
 
 export default connect(
   state => ({
-    playingContent: getPlayingContent(state),
-    playlistContents: getPlaylistContents(state),
+    playingContent: getAugmentedPlayingContent(state),
+    playlistContentsNumber: getPlaylistContentsNumber(state),
   }),
   {
     back: NavigationActions.back,

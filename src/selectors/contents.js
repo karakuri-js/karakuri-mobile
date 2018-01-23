@@ -1,21 +1,32 @@
 import { createSelector } from 'reselect'
 import { first, uniq } from 'lodash'
 
-const getAugmentedContents = (contents, favorites, history) =>
-  contents.map(content => ({
-    ...content,
-    isFavorite: favorites[content.id],
-    lastPlayed: history[content.id],
-  }))
+const getAugmentedContent = (content, favorites, history) => ({
+  ...content,
+  isFavorite: favorites[content.id],
+  lastPlayed: history[content.id],
+})
 
-export const getAllContents = state =>
-  getAugmentedContents(state.contents.allContents, state.favorites, state.history)
+const getAugmentedContents = (contents, favorites, history) =>
+  contents.map(content => getAugmentedContent(content, favorites, history))
+
+export const getAllContents = state => state.contents.allContents
+export const getFavorites = state => state.favorites
+export const getHistory = state => state.history
+
+export const getAllAugmentedContents = createSelector(
+  [getAllContents, getFavorites, getHistory],
+  (allContents, favorites, history) => getAugmentedContents(allContents, favorites, history),
+)
 const getUsername = state => state.connection.username
 const getCurrentDirectoryName = state => state.contents.directoryName
 export const getCurrentGroupName = state => state.contents.groupName
 
-export const getPlaylistContents = state =>
-  getAugmentedContents(state.playlist.playlistContents, state.favorites, state.history)
+const getPlaylistContents = state => state.playlist.playlistContents
+export const getPlaylistContentsNumber = createSelector(
+  [getPlaylistContents],
+  contents => contents.length,
+)
 
 const getContentsPerDirectories = createSelector([getAllContents], contents =>
   contents.reduce((obj, content) => {
@@ -64,21 +75,33 @@ export const getDirectories = createSelector([getContentsPerDirectories], conten
   ),
 )
 
-export const getFavoritesContents = createSelector([getAllContents], contents =>
-  contents.filter(c => c.isFavorite),
+export const getFavoritesContents = createSelector(
+  [getAllContents, getFavorites, getHistory],
+  (contents, favorites, history) =>
+    getAugmentedContents(contents.filter(content => favorites[content.id]), favorites, history),
 )
 
-export const getHistoryContents = createSelector([getAllContents], contents =>
-  contents
-    .filter(content => content.lastPlayed)
-    .sort((c1, c2) => (c1.lastPlayed > c2.lastPlayed ? -1 : 1)),
+export const getHistoryContents = createSelector(
+  [getAllContents, getFavorites, getHistory],
+  (contents, favorites, history) =>
+    getAugmentedContents(contents.filter(content => history[content.id])).sort(
+      (c1, c2) => (c1.lastPlayed > c2.lastPlayed ? -1 : 1),
+      favorites,
+      history,
+    ),
 )
 
-export const getPlayingContent = state => state.playlist.playingContent
+const getPlayingContent = state => state.playlist.playingContent
+
+export const getAugmentedPlayingContent = createSelector(
+  [getPlayingContent, getFavorites, getHistory],
+  (content, favorites, history) => content && getAugmentedContent(content, favorites, history),
+)
 
 export const getMyPlaylistContents = createSelector(
-  [getPlaylistContents, getUsername],
-  (contents, username) => contents.filter(c => c.username === username),
+  [getPlaylistContents, getUsername, getFavorites, getHistory],
+  (contents, username, favorites, history) =>
+    getAugmentedContents(contents.filter(c => c.username === username), favorites, history),
 )
 
 export const getCurrentDirectoryGroupsPerLetter = createSelector(
@@ -90,6 +113,7 @@ export const getCurrentDirectoryGroupsPerLetter = createSelector(
 )
 
 export const getCurrentGroupContents = createSelector(
-  [getContentsPerGroups, getCurrentGroupName],
-  (contentsPerGroups, groupName) => contentsPerGroups[groupName],
+  [getContentsPerGroups, getCurrentGroupName, getFavorites, getHistory],
+  (contentsPerGroups, groupName, favorites, history) =>
+    getAugmentedContents(contentsPerGroups[groupName], favorites, history),
 )
