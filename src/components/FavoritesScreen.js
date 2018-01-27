@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { addToPlaylist, toggleFavorite } from '../actions'
-import { getFavoritesContents } from '../selectors/contents'
+import { getAugmentedFavoriteContents } from '../selectors/contents'
 
 import ContentsList from './ContentsList'
 
@@ -23,7 +23,7 @@ FavoritesScreen.propTypes = {
 
 export default connect(
   state => ({
-    favoriteContents: getFavoritesContents(state),
+    favoriteContents: getAugmentedFavoriteContents(state),
   }),
   { addToPlaylist, toggleFavorite },
 )(FavoritesScreen)
