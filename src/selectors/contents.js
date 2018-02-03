@@ -1,9 +1,14 @@
 import { createSelector } from 'reselect'
 import { first, uniq } from 'lodash'
 
+const prop = key => obj => obj[key]
+// explicit checks for better performance
+const isTrueIn = (container, pred) => obj => container[pred(obj)] === true
+const existsIn = (container, pred) => obj => typeof container[pred(obj)] !== 'undefined'
+
 const getAugmentedContent = (content, favorites) => ({
   ...content,
-  isFavorite: favorites[content.id],
+  isFavorite: favorites[content.id] || false,
 })
 
 const getAugmentedContents = (contents, favorites) =>
@@ -85,7 +90,7 @@ export const getDirectories = createSelector([getContentsPerDirectories], conten
 export const getAugmentedFavoriteContents = createSelector(
   [getAllContents, getFavorites],
   (contents, favorites) =>
-    getAugmentedContents(contents.filter(content => favorites[content.id]), favorites),
+    getAugmentedContents(contents.filter(isTrueIn(favorites, prop('id'))), favorites),
 )
 
 export const getAugmentedHistoryContents = createSelector(
@@ -93,7 +98,7 @@ export const getAugmentedHistoryContents = createSelector(
   (contents, favorites, history) =>
     getAugmentedContents(
       contents
-        .filter(content => history[content.id])
+        .filter(existsIn(history, prop('id')))
         .sort((c1, c2) => (c1.lastPlayed > c2.lastPlayed ? -1 : 1)),
       favorites,
     ),
