@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { addToPlaylist, toggleFavorite } from '../actions'
-import { getHistoryContents } from '../selectors/contents'
+import { getAugmentedHistoryContents } from '../selectors/contents'
 
 import ContentsList from './ContentsList'
 
@@ -21,7 +21,7 @@ HistoryScreen.propTypes = {
   toggleFavorite: PropTypes.func.isRequired,
 }
 
-export default connect(state => ({ historyContents: getHistoryContents(state) }), {
+export default connect(state => ({ historyContents: getAugmentedHistoryContents(state) }), {
   addToPlaylist,
   toggleFavorite,
 })(HistoryScreen)

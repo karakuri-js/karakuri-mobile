@@ -99,7 +99,7 @@ export const getAugmentedHistoryContents = createSelector(
     getAugmentedContents(
       contents
         .filter(existsIn(history, prop('id')))
-        .sort((c1, c2) => (c1.lastPlayed > c2.lastPlayed ? -1 : 1)),
+        .sort((c1, c2) => (history[c1.id] > history[c2.id] ? -1 : 1)),
       favorites,
     ),
 )
