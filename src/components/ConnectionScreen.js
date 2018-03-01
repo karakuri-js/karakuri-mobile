@@ -70,9 +70,17 @@ export class ConnectionScreen extends Component {
   }
 
   componentWillMount() {
-    AsyncStorage.getItem('username').then(username => username && this.setState({ username }))
-    AsyncStorage.getItem('hostname').then(hostname => hostname && this.setState({ hostname }))
-    AsyncStorage.getItem('port').then(port => port && this.setState({ port }))
+    Promise.all([
+      AsyncStorage.getItem('username'),
+      AsyncStorage.getItem('hostname'),
+      AsyncStorage.getItem('port'),
+    ]).then(([username, hostname, port]) => {
+      this.setState({ username, hostname, port }, () => {
+        if (username && hostname && port) {
+          this.connect()
+        }
+      })
+    })
   }
 
   connect = () => {
