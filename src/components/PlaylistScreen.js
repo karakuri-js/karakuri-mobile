@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { StyleSheet, View } from 'react-native'
-import Button from 'apsl-react-native-button'
+import { Button, StyleSheet, View } from 'react-native'
 
 import { randomizePlaylist } from '../actions'
 import { getAugmentedMyPlaylistContents } from '../selectors/contents'
@@ -52,11 +51,8 @@ export class PlaylistScreen extends PureComponent {
         <View style={styles.buttonContainer}>
           <Button
             onPress={this.props.randomizePlaylist}
-            style={styles.button}
-            textStyle={styles.buttonText}
-          >
-            Randomize
-          </Button>
+            title="Randomize"
+          />
         </View>
       </View>
     )

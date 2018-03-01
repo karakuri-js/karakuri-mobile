@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { AsyncStorage, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  AsyncStorage,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Button,
+} from 'react-native'
 import { connect } from 'react-redux'
-import Button from 'apsl-react-native-button'
 
 import { connectToServer } from '../actions'
 import { MAIN_SCREEN } from '../constants/screens'
@@ -28,9 +35,6 @@ const styles = StyleSheet.create({
   label: {
     color: '#000',
     fontWeight: 'bold',
-  },
-  button: {
-    backgroundColor: '#0D1011',
   },
   buttonText: {
     fontSize: 18,
@@ -116,16 +120,17 @@ export class ConnectionScreen extends Component {
         />
 
         <Text style={styles.label}>Port:</Text>
-        <TextInput onChangeText={this.setPort} placeholder="Enter a port" value={this.state.port} />
+        <TextInput
+          onChangeText={this.setPort}
+          placeholder="Enter a port"
+          value={this.state.port}
+        />
 
         <Button
-          isLoading={isLoading}
+          disabled={isLoading}
           onPress={this.connect}
-          style={styles.button}
-          textStyle={styles.buttonText}
-        >
-          Connect
-        </Button>
+          title="Connect"
+        />
 
         <Text style={styles.errorMessage}>{errorMessage}</Text>
       </View>
