@@ -1,0 +1,8 @@
+export const darkPrimary = '#00796B'
+export const lightPrimary = '#B2DFDB'
+export const primary = '#009688'
+export const text = '#FFFFFF'
+export const accent = '#9e9e9e'
+export const primaryText = '#212121'
+export const secondaryText = '#757575'
+export const divider = '#BDBDBD'

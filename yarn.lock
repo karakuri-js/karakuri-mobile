@@ -3450,12 +3450,6 @@ react-devtools-core@3.0.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-native-alphabetlistview@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-alphabetlistview/-/react-native-alphabetlistview-0.2.0.tgz#471879c0d205ec6acfd9964bcf3a5eb7bf7fc445"
-  dependencies:
-    merge "^1.2.0"
-
 "react-native-alphabetlistview@https://github.com/i6mi6/react-native-alphabetlistview.git":
   version "0.2.0"
   resolved "https://github.com/i6mi6/react-native-alphabetlistview.git#e9e45d1d07b3f158f937f31e6e27770c243cb313"

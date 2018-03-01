@@ -13,24 +13,29 @@ import { connect } from 'react-redux'
 
 import { connectToServer } from '../actions'
 import { MAIN_SCREEN } from '../constants/screens'
+import * as Colors from '../constants/colors'
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
-    marginTop: 50,
+    margin: 0,
   },
   titleContainer: {
+    backgroundColor: Colors.primary,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 50,
+    height: 200,
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 10,
-    color: '#000',
+    color: Colors.text,
+  },
+  contentContainer: {
+    margin: 20,
   },
   label: {
     color: '#000',
@@ -108,40 +113,47 @@ export class ConnectionScreen extends Component {
   render() {
     const { isLoading, errorMessage } = this.props
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior="position"
+        keyboardVerticalOffset={50}
+        style={styles.container}
+      >
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Karakuri</Text>
         </View>
 
-        <Text style={styles.label}>Username:</Text>
-        <TextInput
-          onChangeText={this.setUserName}
-          placeholder="Enter a username"
-          value={this.state.username}
-        />
+        <View style={styles.contentContainer}>
+          <Text style={styles.label}>Username:</Text>
+          <TextInput
+            onChangeText={this.setUserName}
+            placeholder="Enter a username"
+            value={this.state.username}
+          />
 
-        <Text style={styles.label}>Hostname:</Text>
-        <TextInput
-          onChangeText={this.setHostName}
-          placeholder="Enter a hostname"
-          value={this.state.hostname}
-        />
+          <Text style={styles.label}>Hostname:</Text>
+          <TextInput
+            onChangeText={this.setHostName}
+            placeholder="Enter a hostname"
+            value={this.state.hostname}
+          />
 
-        <Text style={styles.label}>Port:</Text>
-        <TextInput
-          onChangeText={this.setPort}
-          placeholder="Enter a port"
-          value={this.state.port}
-        />
+          <Text style={styles.label}>Port:</Text>
+          <TextInput
+            onChangeText={this.setPort}
+            placeholder="Enter a port"
+            value={this.state.port}
+          />
 
-        <Button
-          disabled={isLoading}
-          onPress={this.connect}
-          title="Connect"
-        />
+          <Button
+            disabled={isLoading}
+            onPress={this.connect}
+            color={Colors.darkPrimary}
+            title="Connect"
+          />
 
-        <Text style={styles.errorMessage}>{errorMessage}</Text>
-      </View>
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        </View>
+      </KeyboardAvoidingView>
     )
   }
 }

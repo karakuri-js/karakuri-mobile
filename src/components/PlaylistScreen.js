@@ -5,6 +5,7 @@ import { Button, StyleSheet, View } from 'react-native'
 
 import { randomizePlaylist } from '../actions'
 import { getAugmentedMyPlaylistContents } from '../selectors/contents'
+import * as Colors from '../constants/colors'
 
 import ContentsList from './ContentsList'
 
@@ -51,6 +52,7 @@ export class PlaylistScreen extends PureComponent {
         <View style={styles.buttonContainer}>
           <Button
             onPress={this.props.randomizePlaylist}
+            color={Colors.darkPrimary}
             title="Randomize"
           />
         </View>
