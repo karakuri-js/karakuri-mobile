@@ -14,11 +14,7 @@ const store = configureStore()
 const AppNavigator = StackNavigator(
   {
     [screens.CONNECTION_SCREEN]: { screen: ConnectionScreen },
-    [screens.MAIN_SCREEN_CONTAINER]: {
-      screen: DrawerNavigator({
-        [screens.MAIN_SCREEN]: { screen: MainScreen },
-      }),
-    },
+    [screens.MAIN_SCREEN]: { screen: MainScreen },
   },
   { headerMode: 'none' },
 )
