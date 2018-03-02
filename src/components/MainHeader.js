@@ -2,11 +2,12 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/EvilIcons'
+import * as Colors from '../constants/colors'
 
 const styles = StyleSheet.create({
   header: {
     height: 55,
-    backgroundColor: '#0D1011',
+    backgroundColor: Colors.primary,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -15,12 +16,12 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   headerText: {
-    color: '#D9E4D7',
+    color: Colors.text,
     fontSize: 25,
     textAlign: 'center',
   },
   menuButton: {
-    color: '#D9E4D7',
+    color: Colors.text,
   },
 })
 

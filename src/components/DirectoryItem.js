@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 
+import * as Colors from '../constants/colors'
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -15,7 +17,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     paddingRight: 10,
-    color: '#000',
+    color: Colors.primaryText,
   },
 })
 

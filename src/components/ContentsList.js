@@ -4,41 +4,43 @@ import { ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import ContentRow from './ContentRow'
 import fuzzySearch from '../lib/fuzzySearch'
+import * as Colors from '../constants/colors'
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#272822',
+    backgroundColor: Colors.text,
     flex: 1,
   },
   header: {
     height: 50,
-    backgroundColor: '#222',
     justifyContent: 'center',
     paddingLeft: 10,
+    backgroundColor: Colors.text,
   },
   headerText: {
-    color: '#FFF',
+    color: Colors.secondaryText,
     fontSize: 20,
     fontWeight: 'bold',
   },
   searchContainer: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.text,
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  searchIcon: {
     paddingLeft: 10,
     paddingRight: 10,
   },
   searchInputContainer: {
-    width: 300,
+    flexGrow: 1,
+  },
+  searchInput: {
+    color: Colors.primaryText,
   },
   noFoundResults: {
     padding: 10,
   },
   noFoundResultsText: {
-    color: '#FFF',
+    color: Colors.primaryText,
   },
 })
 
@@ -111,15 +113,15 @@ export default class ContentsList extends Component {
         )}
         {displaySearch && (
           <View style={styles.searchContainer} elevation={10}>
-            <View style={styles.searchIcon}>
-              <Text>🔍</Text>
-            </View>
             <View style={styles.searchInputContainer}>
               <TextInput
                 autoFocus
                 onChangeText={this.setTextFilter}
                 placeholder="Search..."
                 value={this.state.text}
+                underlineColorAndroid="transparent"
+                style={styles.searchInput}
+                placeholderTextColor={Colors.secondaryText}
               />
             </View>
           </View>

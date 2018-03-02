@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, TouchableNativeFeedback, View, Dimensions } from 'react-native'
 
+import * as Colors from '../constants/colors'
+
 const styles = StyleSheet.create({
   row: {
     padding: 10,
@@ -12,6 +14,7 @@ const styles = StyleSheet.create({
   },
   rowText: {
     fontSize: 16,
+    color: Colors.secondaryText,
   },
 })
 

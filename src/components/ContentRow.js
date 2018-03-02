@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { PixelRatio, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import Flag from 'react-native-flags'
 import Icon from 'react-native-vector-icons/Entypo'
+import * as Colors from '../constants/colors'
 
 const languageCodes = {
   eng: 'US',
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: '#D9E4D7',
+    color: Colors.primaryText,
     flexWrap: 'wrap',
   },
   iconsContainer: {
@@ -88,7 +89,7 @@ export default class ContentRow extends PureComponent {
               <Icon
                 name={isFavorite ? 'star' : 'star-outlined'}
                 size={30}
-                style={{ color: isFavorite ? 'yellow' : '#fff' }}
+                style={{ color: isFavorite ? '#FFC107' : Colors.accent }}
               />
             </TouchableNativeFeedback>
           </View>
@@ -105,7 +106,7 @@ export default class ContentRow extends PureComponent {
         {showPlus && (
           <View style={styles.iconsContainer}>
             <TouchableNativeFeedback onPress={this.onPlusPress}>
-              <Icon name="plus" size={30} style={{ color: '#fff' }} />
+              <Icon name="plus" size={30} style={{ color: Colors.accent }} />
             </TouchableNativeFeedback>
           </View>
         )}

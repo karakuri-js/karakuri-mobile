@@ -11,6 +11,7 @@ import GroupRow from './GroupRow'
 import DirectoryItem from './DirectoryItem'
 
 import { BROWSE_SONGS_SCREEN, PLAYLIST_SCREEN } from '../constants/screens'
+import * as Colors from '../constants/colors'
 
 const nullFn = () => null
 
@@ -21,6 +22,7 @@ const alphabetListStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.text,
   },
   directoriesContainer: {
     flex: 1,
