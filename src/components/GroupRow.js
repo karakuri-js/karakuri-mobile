@@ -6,11 +6,12 @@ import * as Colors from '../constants/colors'
 
 const styles = StyleSheet.create({
   row: {
-    padding: 10,
+    paddingLeft: 10,
     flex: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
     width: Dimensions.get('window').width - 40,
+    height: 45,
   },
   rowText: {
     fontSize: 16,
