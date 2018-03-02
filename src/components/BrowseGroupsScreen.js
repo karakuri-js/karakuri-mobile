@@ -2,22 +2,16 @@ import React, { Component } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import AlphabetListView from 'react-native-alphabetlistview'
+import AlphabetFlatList from './AlphabetFlatList'
 
 import { selectDirectory, selectGroup } from '../actions'
-import { getDirectories, getCurrentDirectoryGroupsPerLetter } from '../selectors/contents'
+import { getDirectories, getCurrentDirectoryGroups } from '../selectors/contents'
 
 import GroupRow from './GroupRow'
 import DirectoryItem from './DirectoryItem'
 
 import { BROWSE_SONGS_SCREEN, PLAYLIST_SCREEN } from '../constants/screens'
 import * as Colors from '../constants/colors'
-
-const nullFn = () => null
-
-const alphabetListStyles = {
-  width: 40,
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -33,10 +27,14 @@ const styles = StyleSheet.create({
   },
 })
 
+const getItemLayout = (data, index) => ({ length: 45, offset: 45 * index, index })
+
+const keyExtractor = (item, index) => index.toString()
+
 export class BrowseGroupsScreen extends Component {
   static propTypes = {
     directories: PropTypes.arrayOf(PropTypes.string).isRequired,
-    directoryGroups: PropTypes.object.isRequired,
+    directoryGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
     navigation: PropTypes.shape({ navigate: PropTypes.func.isRequired }).isRequired,
     selectDirectory: PropTypes.func.isRequired,
     selectGroup: PropTypes.func.isRequired,
@@ -53,6 +51,8 @@ export class BrowseGroupsScreen extends Component {
     <DirectoryItem key={directory} directory={directory} onPress={this.onDirectorySelect} />
   )
 
+  renderItem = item => <GroupRow item={item.item} onPress={this.onGroupSelect} />
+
   showPlaylist = () => this.props.navigation.navigate(PLAYLIST_SCREEN)
 
   render() {
@@ -61,17 +61,14 @@ export class BrowseGroupsScreen extends Component {
         <ScrollView horizontal style={styles.directoriesContainer}>
           {this.props.directories.map(this.renderDirectory)}
         </ScrollView>
-        <AlphabetListView
-          data={this.props.directoryGroups}
-          cell={GroupRow}
-          cellHeight={50}
-          cellProps={{ onPress: this.onGroupSelect }}
-          pageSize={5}
-          sectionHeader={nullFn}
-          sectionHeaderHeight={0}
-          sectionListStyle={alphabetListStyles}
-          style={styles.listview}
-        />
+        <View style={styles.listview}>
+          <AlphabetFlatList
+            data={this.props.directoryGroups}
+            getItemLayout={getItemLayout}
+            keyExtractor={keyExtractor}
+            renderItem={this.renderItem}
+          />
+        </View>
       </View>
     )
   }
@@ -80,7 +77,7 @@ export class BrowseGroupsScreen extends Component {
 export default connect(
   state => ({
     directories: getDirectories(state),
-    directoryGroups: getCurrentDirectoryGroupsPerLetter(state),
+    directoryGroups: getCurrentDirectoryGroups(state),
   }),
   {
     selectDirectory,

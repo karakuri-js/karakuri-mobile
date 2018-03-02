@@ -61,24 +61,14 @@ const getContentsPerGroups = createSelector([getAllContents], contents =>
   ),
 )
 
-const getGroupsPerLettersAndDirectories = createSelector(
-  [getContentsPerDirectories],
-  contentsPerDirectories =>
-    Object.keys(contentsPerDirectories).reduce(
-      (directoriesObj, dirName) => ({
-        ...directoriesObj,
-        [dirName]: contentsPerDirectories[dirName]
-          .map(content => content.group)
-          .reduce((alphabetListObj, groupName) => {
-            const letter = groupName[0].toUpperCase()
-            return {
-              ...alphabetListObj,
-              [letter]: uniq((alphabetListObj[letter] || []).concat(groupName)),
-            }
-          }, {}),
-      }),
-      {},
-    ),
+const getGroups = createSelector([getContentsPerDirectories], contentsPerDirectories =>
+  Object.keys(contentsPerDirectories).reduce(
+    (directoriesObj, dirName) => ({
+      ...directoriesObj,
+      [dirName]: uniq(contentsPerDirectories[dirName].map(content => content.group)),
+    }),
+    {},
+  ),
 )
 
 export const getDirectories = createSelector([getContentsPerDirectories], contentsPerDirectories =>
@@ -111,12 +101,10 @@ export const getAugmentedPlayingContent = createSelector(
   (content, favorites) => content && getAugmentedContent(content, favorites),
 )
 
-export const getCurrentDirectoryGroupsPerLetter = createSelector(
-  [getGroupsPerLettersAndDirectories, getCurrentDirectoryName, getDirectories],
-  (groupsPerLettersAndDirectories, directoryName, directories) =>
-    directoryName
-      ? groupsPerLettersAndDirectories[directoryName]
-      : groupsPerLettersAndDirectories[first(directories)],
+export const getCurrentDirectoryGroups = createSelector(
+  [getGroups, getCurrentDirectoryName, getDirectories],
+  (groups, directoryName, directories) =>
+    directoryName ? groups[directoryName] : groups[first(directories)],
 )
 
 export const getCurrentGroupContents = createSelector(
