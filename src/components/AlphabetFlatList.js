@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Platform } from 'react-native'
+import { StyleSheet, View, FlatList, InteractionManager } from 'react-native'
 import { memoize, uniq } from 'lodash'
 
 import PropTypes from 'prop-types'
 
-const ALPHA_FONT_FAMILY = Platform.select({
-  ios: 'Gill Sans',
-  android: 'sans-serif',
-})
+import AlphabetItem from './AlphabetItem'
 
 const styleType = PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array])
 
@@ -24,28 +21,6 @@ const styles = StyleSheet.create({
   alphabetListContainerStyle: {
     flex: 0.2,
     backgroundColor: 'transparent',
-  },
-  alphabetButtonStyle: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  alphabetButtonContainerStyle: {
-    flex: 1,
-    paddingVertical: '10%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  alphabetTextStyle: {
-    fontFamily: ALPHA_FONT_FAMILY,
-    fontSize: 16,
-    color: 'rgb(90,90,90)',
-  },
-  selectedAlphabetTextStyle: {
-    fontFamily: ALPHA_FONT_FAMILY,
-    fontWeight: '600',
-    fontSize: 16,
-    color: 'rgb(90,90,90)',
   },
 })
 
@@ -75,6 +50,7 @@ export default class AlphabetFlatList extends Component {
     this.state = {
       alphabetList: letters,
       selectedLetter: letters[0],
+      animatedScrolling: false,
     }
   }
 
@@ -99,9 +75,11 @@ export default class AlphabetFlatList extends Component {
   }
 
   handleScroll = ({ viewableItems }) => {
-    const letter = viewableItems[0].item[0].toUpperCase()
-    if (letter !== this.state.selectedLetter) {
-      this.setState({ selectedLetter: letter })
+    if (!this.state.animatedScrolling) {
+      const letter = viewableItems[0].item[0].toUpperCase()
+      if (letter !== this.state.selectedLetter) {
+        this.setState({ selectedLetter: letter })
+      }
     }
   }
 
@@ -109,33 +87,23 @@ export default class AlphabetFlatList extends Component {
     const matchedIndex = this.props.data.findIndex(
       item => item && item[0].toUpperCase() === selectedItem,
     )
-    this.setState({ selectedLetter: selectedItem })
+    this.setState({ selectedLetter: selectedItem, animatedScrolling: true })
     this.mainList.scrollToIndex({
       animated: true,
       index: matchedIndex,
       viewPosition: 0,
     })
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ animatedScrolling: false })
+    })
   }
 
   renderAlphabetItem = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => this.onPressLetter(item)}
-      style={styles.alphabetButtonContainerStyle}
-    >
-      <View style={styles.alphabetButtonStyle}>
-        <Text
-          style={
-            this.state.selectedLetter === item ? (
-              styles.selectedAlphabetTextStyle
-            ) : (
-              styles.alphabetTextStyle
-            )
-          }
-        >
-          {item}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    <AlphabetItem
+      selected={this.state.selectedLetter === item}
+      letter={item}
+      onPressLetter={this.onPressLetter}
+    />
   )
 
   alphabetKeyExtractor = (item, index) => index.toString()

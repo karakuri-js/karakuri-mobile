@@ -22,7 +22,7 @@ module.exports = {
       {
         allowArrowFunctions: false,
         allowBind: false,
-        ignoreRefs: false,
+        ignoreRefs: true,
       },
     ],
     'react/sort-comp': [
