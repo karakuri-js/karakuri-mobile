@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, StyleSheet, View } from 'react-native'
 
-import { randomizePlaylist } from '../actions'
+import { toggleFavorite, randomizePlaylist } from '../actions'
 import { getAugmentedMyPlaylistContents } from '../selectors/contents'
 import * as Colors from '../constants/colors'
 
@@ -33,9 +33,10 @@ export class PlaylistScreen extends PureComponent {
   static propTypes = {
     contents: PropTypes.array,
     randomizePlaylist: PropTypes.func,
+    toggleFavorite: PropTypes.func,
   }
 
-  static defaultProps = { contents: [], randomizePlaylist: () => {} }
+  static defaultProps = { contents: [], randomizePlaylist: () => {}, toggleFavorite: () => {} }
 
   render() {
     const { contents } = this.props
@@ -45,8 +46,8 @@ export class PlaylistScreen extends PureComponent {
           <ContentsList
             contents={contents}
             showAddToPlaylist={false}
-            showToggleFavorites={false}
             title="My Playlist"
+            toggleFavorite={this.props.toggleFavorite}
           />
         </View>
         <View style={styles.buttonContainer}>
@@ -63,4 +64,5 @@ export class PlaylistScreen extends PureComponent {
 
 export default connect(state => ({ contents: getAugmentedMyPlaylistContents(state) }), {
   randomizePlaylist,
+  toggleFavorite,
 })(PlaylistScreen)
