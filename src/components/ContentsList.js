@@ -77,8 +77,8 @@ export class ContentsList extends Component {
     <ContentRow
       {...content}
       hideGroup={this.props.hideGroups}
-      showStar={this.props.showAddToPlaylist}
-      showPlus={this.props.showToggleFavorites}
+      showStar={this.props.showToggleFavorites}
+      showPlus={this.props.showAddToPlaylist}
       onTitlePress={this.props.goToContentScreen}
       onPlusPress={this.props.addToPlaylist}
       onStarPress={this.props.toggleFavorite}
