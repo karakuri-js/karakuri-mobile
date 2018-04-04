@@ -5,6 +5,7 @@ import { NavigationActions } from 'react-navigation'
 import PropTypes from 'prop-types'
 
 import * as screens from '../constants/screens'
+import { toggleFavorite } from '../actions'
 import { toggleDrawer } from '../actions/navigation'
 import { ConnectedMainNavigator } from '../navigation/MainNavigator'
 import { getAugmentedPlayingContent, getPlaylistContentsNumber } from '../selectors/contents'
@@ -28,6 +29,7 @@ export class MainScreen extends Component {
     playlistContentsNumber: PropTypes.number.isRequired,
     navigate: PropTypes.func.isRequired,
     toggleDrawer: PropTypes.func.isRequired,
+    toggleFavorite: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -48,6 +50,8 @@ export class MainScreen extends Component {
 
   goToPlaylist = () => this.props.navigate({ routeName: screens.PLAYLIST_SCREEN })
 
+  toggleFavoriteOnPlayingContent = () => this.props.toggleFavorite(this.props.playingContent.id)
+
   render() {
     const { playingContent, playlistContentsNumber } = this.props
     return (
@@ -65,6 +69,7 @@ export class MainScreen extends Component {
             {...playingContent}
             contentsCount={playlistContentsNumber}
             onPress={this.goToPlaylist}
+            onStarPress={this.toggleFavoriteOnPlayingContent}
           />
         )}
       </View>
@@ -81,5 +86,6 @@ export default connect(
     back: NavigationActions.back,
     navigate: NavigationActions.navigate,
     toggleDrawer,
+    toggleFavorite,
   },
 )(MainScreen)
