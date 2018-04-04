@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import { PixelRatio, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import Flag from 'react-native-flags'
 import Icon from 'react-native-vector-icons/Entypo'
+
 import * as Colors from '../constants/colors'
+import FavoriteIcon from './FavoriteIcon'
 
 const languageCodes = {
   eng: 'US',
@@ -92,13 +94,7 @@ export default class ContentRow extends PureComponent {
       <View style={styles.row}>
         {showStar && (
           <View style={styles.iconsContainer}>
-            <TouchableNativeFeedback onPress={this.onStarPress}>
-              <Icon
-                name={isFavorite ? 'star' : 'star-outlined'}
-                size={30}
-                style={{ color: isFavorite ? '#FFC107' : Colors.accent }}
-              />
-            </TouchableNativeFeedback>
+            <FavoriteIcon isFavorite={isFavorite} onPress={this.onStarPress} />
           </View>
         )}
         <View style={styles.mainContainer}>
