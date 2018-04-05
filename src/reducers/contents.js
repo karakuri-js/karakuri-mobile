@@ -35,7 +35,7 @@ export default function contents(state = initialState, action) {
     case SELECT_CONTENT:
       return {
         ...state,
-        content: action.content,
+        contentId: action.contentId,
       }
 
     default:

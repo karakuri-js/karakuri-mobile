@@ -1,33 +1,17 @@
 import React, { PureComponent } from 'react'
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableNativeFeedback,
-  View,
-} from 'react-native'
-import Icon from 'react-native-vector-icons/Entypo'
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native'
 
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Video from 'react-native-video'
 
 import { addToPlaylist, toggleFavorite } from '../actions'
-import { getAllContents } from '../selectors/contents'
-import ContentRow from './ContentRow'
-
-const { width } = Dimensions.get('window')
-const nothingFn = () => {}
+import { getSelectedAugmentedContent } from '../selectors/contents'
+import HeaderTitle from './HeaderTitle'
+import * as Colors from '../constants/colors'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  video: {
-    width,
-    height: 200,
-    backgroundColor: '#000',
   },
   lyrics: {
     flex: 1,
@@ -39,30 +23,16 @@ const styles = StyleSheet.create({
   lyricsLine: {
     textAlign: 'center',
   },
-  reportTouchableFeedback: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
-  reportContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 5,
-  },
-  reportIcon: {
-    color: 'red',
-  },
-  reportText: {
-    color: 'red',
+  buttonContainer: {
+    paddingTop: 10,
+    paddingBottom: 5,
   },
 })
 
 export class ContentScreen extends PureComponent {
   static propTypes = {
     addToPlaylist: PropTypes.func.isRequired,
-    allContents: PropTypes.arrayOf(PropTypes.object).isRequired,
-    id: PropTypes.string.isRequired,
+    content: PropTypes.object.isRequired,
     toggleFavorite: PropTypes.func.isRequired,
     url: PropTypes.string.isRequired,
   }
@@ -70,28 +40,26 @@ export class ContentScreen extends PureComponent {
   constructor(props) {
     super(props)
 
-    this.state = { content: null, lyrics: [] }
+    this.state = { lyrics: [] }
   }
 
   componentWillMount() {
-    const content = this.props.allContents.find(c => c.id === this.props.id)
-    if (content) {
-      this.setState({ content })
-      this.getLyrics(content)
-    }
-  }
-
-  getLyrics = ({ id }) =>
-    fetch(this.props.url.concat(`/contents/${id}`))
+    if (!this.props.content.id) return
+    fetch(this.props.url.concat(`/contents/${this.props.content.id}`))
       .then(response => response.json())
       .then(({ lyrics }) => this.setState({ lyrics }))
       .catch(err => console.error(err))
+  }
+
+  report = () => {}
+  addToPlaylist = () => this.props.addToPlaylist(this.props.content.id)
+  toggleFavorite = () => this.props.toggleFavorite(this.props.content.id)
 
   render() {
-    const { content, lyrics } = this.state
-    const { url } = this.props
+    const { content } = this.props
+    const { lyrics } = this.state
 
-    if (!content) {
+    if (!content.songName) {
       return (
         <View>
           <Text>No content found :(</Text>
@@ -101,23 +69,22 @@ export class ContentScreen extends PureComponent {
 
     return (
       <View style={styles.container}>
-        <Video source={{ uri: `${url}/${content.path}` }} resizeMode="cover" style={styles.video} />
-
-        <ContentRow
-          {...content}
-          onPlusPress={this.props.addToPlaylist}
-          onReportPress={nothingFn}
-          onStarPress={this.props.toggleFavorite}
-        />
-        <TouchableNativeFeedback
-          onPress={this.onReportPress}
-          style={styles.reportTouchableFeedback}
-        >
-          <View style={styles.reportContainer}>
-            <Icon name="warning" size={30} style={styles.reportIcon} />
-            <Text style={styles.reportText}>Report</Text>
+        <HeaderTitle title={content.songName} />
+        <View>
+          <View style={styles.buttonContainer}>
+            <Button onPress={this.addToPlaylist} title="Add to Playlist" />
           </View>
-        </TouchableNativeFeedback>
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={this.toggleFavorite}
+              title={content.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              color={content.isFavorite ? Colors.accent : Colors.favorite}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button onPress={this.report} title="Report" color={Colors.error} />
+          </View>
+        </View>
         <ScrollView contentContainerStyle={styles.lyricsContentContainer} style={styles.lyrics}>
           {lyrics &&
             lyrics.map((lyricsLine, key) => (
@@ -129,7 +96,6 @@ export class ContentScreen extends PureComponent {
               </Text>
             ))}
         </ScrollView>
-        <View />
       </View>
     )
   }
@@ -137,7 +103,7 @@ export class ContentScreen extends PureComponent {
 
 export default connect(
   state => ({
-    allContents: getAllContents(state),
+    content: getSelectedAugmentedContent(state),
     url: state.connection.url,
   }),
   { addToPlaylist, toggleFavorite },

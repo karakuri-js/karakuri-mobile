@@ -3,13 +3,15 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { addToPlaylist, toggleFavorite } from '../actions'
 import { getAugmentedFavoriteContents } from '../selectors/contents'
+import { provideGoToContentScreen } from './goToContentScreenHOC'
 
 import ContentsList from './ContentsList'
 
 const FavoritesScreen = props => (
   <ContentsList
-    onSelect={props.addToPlaylist}
+    addToPlaylist={props.addToPlaylist}
     contents={props.favoriteContents}
+    onSelect={props.goToContentScreen}
     title="Favorites"
     toggleFavorite={props.toggleFavorite}
   />
@@ -18,6 +20,7 @@ const FavoritesScreen = props => (
 FavoritesScreen.propTypes = {
   addToPlaylist: PropTypes.func.isRequired,
   favoriteContents: PropTypes.arrayOf(PropTypes.object).isRequired,
+  goToContentScreen: PropTypes.func.isRequired,
   toggleFavorite: PropTypes.func.isRequired,
 }
 
@@ -26,4 +29,4 @@ export default connect(
     favoriteContents: getAugmentedFavoriteContents(state),
   }),
   { addToPlaylist, toggleFavorite },
-)(FavoritesScreen)
+)(provideGoToContentScreen(FavoritesScreen))
