@@ -112,3 +112,10 @@ export const getCurrentGroupContents = createSelector(
   (contentsPerGroups, groupName, favorites) =>
     getAugmentedContents(contentsPerGroups[groupName], favorites),
 )
+
+const getSelectedContentId = state => state.contents.contentId
+
+export const getSelectedAugmentedContent = createSelector(
+  [getAllAugmentedContents, getSelectedContentId],
+  (augmentedContents, contentId) => augmentedContents.find(c => c.id === contentId),
+)

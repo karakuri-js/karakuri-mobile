@@ -41,6 +41,11 @@ export const selectGroup = groupName => ({
   groupName,
 })
 
+export const selectContent = contentId => ({
+  type: types.SELECT_CONTENT,
+  contentId,
+})
+
 export const addToPlaylist = id => (dispatch, getState) => {
   const { url, username } = getState().connection
 

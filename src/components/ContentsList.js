@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import ContentRow from './ContentRow'
+import HeaderTitle from './HeaderTitle'
 import fuzzySearch from '../lib/fuzzySearch'
 import * as Colors from '../constants/colors'
 
@@ -10,17 +11,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.text,
     flex: 1,
-  },
-  header: {
-    height: 50,
-    justifyContent: 'center',
-    paddingLeft: 10,
-    backgroundColor: Colors.text,
-  },
-  headerText: {
-    color: Colors.secondaryText,
-    fontSize: 20,
-    fontWeight: 'bold',
   },
   searchContainer: {
     backgroundColor: Colors.text,
@@ -107,13 +97,7 @@ export default class ContentsList extends Component {
 
     return (
       <View style={styles.container}>
-        {!!title && (
-          <View style={styles.header} elevation={10}>
-            <Text numberOfLines={1} style={styles.headerText}>
-              {this.props.title}
-            </Text>
-          </View>
-        )}
+        {!!title && <HeaderTitle title={this.props.title} />}
         {displaySearch && (
           <View style={styles.searchContainer} elevation={10}>
             <View style={styles.searchInputContainer}>

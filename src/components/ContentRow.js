@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 1 / PixelRatio.get(),
-    backgroundColor: '#272822',
   },
   mainContainer: {
     flex: 1,
@@ -75,7 +74,7 @@ export default class ContentRow extends PureComponent {
 
   onStarPress = () => this.props.onStarPress(this.props.id)
 
-  onTitlePress = () => this.props.onTitlePress(this.props.id)
+  onTitlePress = () => this.props.onTitlePress(this.props)
 
   render() {
     const {
