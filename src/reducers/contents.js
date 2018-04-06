@@ -1,9 +1,12 @@
+import { NavigationActions } from 'react-navigation'
+
 import {
   CONTENTS_LOADED,
   SELECT_DIRECTORY,
   SELECT_GROUP,
-  SELECT_CONTENT,
 } from '../constants/actionTypes'
+
+import { CONTENT_SCREEN } from '../constants/screens'
 
 const initialState = {
   allContents: [],
@@ -32,10 +35,11 @@ export default function contents(state = initialState, action) {
         groupName: action.groupName,
       }
 
-    case SELECT_CONTENT:
+    case NavigationActions.NAVIGATE:
+      if (action.routeName !== CONTENT_SCREEN) return state
       return {
         ...state,
-        contentId: action.contentId,
+        contentId: action.params.contentId,
       }
 
     default:
