@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "precommit": "prettier --write src/**/*.js"
+    "precommit": "./.prettier.sh"
   },
   "dependencies": {
     "eslint-config-prettier": "^2.4.0",
@@ -30,6 +30,6 @@
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-react": "^7.0.1",
     "husky": "^0.13.4",
-    "prettier": "^1.6.1"
+    "prettier": "1.11.1"
   }
 }
