@@ -1,10 +1,6 @@
 import { NavigationActions } from 'react-navigation'
 
-import {
-  CONTENTS_LOADED,
-  SELECT_DIRECTORY,
-  SELECT_GROUP,
-} from '../constants/actionTypes'
+import { CONTENTS_LOADED, SELECT_DIRECTORY, SELECT_GROUP } from '../constants/actionTypes'
 
 import { CONTENT_SCREEN } from '../constants/screens'
 

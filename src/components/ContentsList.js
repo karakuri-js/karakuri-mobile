@@ -7,6 +7,8 @@ import ContentRow from './ContentRow'
 import HeaderTitle from './HeaderTitle'
 import fuzzySearch from '../lib/fuzzySearch'
 import * as Colors from '../constants/colors'
+import { addToPlaylist, toggleFavorite } from '../actions'
+import { provideGoToContentScreen } from './goToContentScreenHOC'
 
 const styles = StyleSheet.create({
   container: {
@@ -35,30 +37,27 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class ContentsList extends Component {
+export class ContentsList extends Component {
   static propTypes = {
-    addToPlaylist: PropTypes.func,
+    addToPlaylist: PropTypes.func.isRequired,
     contents: PropTypes.array,
     displaySearch: PropTypes.bool,
+    goToContentScreen: PropTypes.func.isRequired,
     hideGroups: PropTypes.bool,
-    onSelect: PropTypes.func,
     showAddToPlaylist: PropTypes.bool,
     showToggleFavorites: PropTypes.bool,
     title: PropTypes.string,
-    toggleFavorite: PropTypes.func,
+    toggleFavorite: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    addToPlaylist: PropTypes.func,
     contents: [],
     displaySearch: false,
     favorites: {},
     hideGroups: false,
-    onSelect: () => {},
     showAddToPlaylist: true,
     showToggleFavorites: true,
     title: '',
-    toggleFavorite: () => {},
   }
 
   constructor(props) {
@@ -80,7 +79,7 @@ export default class ContentsList extends Component {
       hideGroup={this.props.hideGroups}
       showStar={this.props.showAddToPlaylist}
       showPlus={this.props.showToggleFavorites}
-      onTitlePress={this.props.onSelect}
+      onTitlePress={this.props.goToContentScreen}
       onPlusPress={this.props.addToPlaylist}
       onStarPress={this.props.toggleFavorite}
     />
@@ -130,3 +129,7 @@ export default class ContentsList extends Component {
     )
   }
 }
+
+export default connect(null, { addToPlaylist, toggleFavorite })(
+  provideGoToContentScreen(ContentsList),
+)
