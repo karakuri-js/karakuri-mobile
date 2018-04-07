@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
-import { StyleSheet, Text, ToastAndroid, TouchableNativeFeedback, View } from 'react-native'
+import { Alert, StyleSheet, Text, ToastAndroid, TouchableNativeFeedback, View } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import Prompt from 'rn-prompt'
 
 import * as Colors from '../constants/colors'
 import { getSelectedAugmentedContent } from '../selectors/contents'
@@ -25,11 +26,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.divider,
-    padding: 10
+    padding: 10,
   },
   optionText: {
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 })
 
@@ -45,12 +46,29 @@ export class ReportScreen extends PureComponent {
     back: PropTypes.func.isRequired,
     content: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.state = { isOtherPromptVisible: false }
   }
 
   goBack = () => this.props.back()
 
-  report = comment => {
+  askConfirmationForReport = comment =>
+    Alert.alert(
+      `Report ${this.props.content.songName}?`,
+      comment,
+      [
+        { text: 'Cancel', onPress: () => {} }, // Do nothing
+        { text: 'OK', onPress: () => this.submitReport(comment) },
+      ],
+      { cancelable: false },
+    )
+
+  submitReport = comment => {
     fetch(`${this.props.url}/report`, {
       headers: {
         Accept: 'application/json',
@@ -66,13 +84,20 @@ export class ReportScreen extends PureComponent {
       .catch(err => {
         ToastAndroid.show(err.toString(), ToastAndroid.LONG)
       })
-    }
 
-    reportLyrics = () => this.report(LYRICS_LABEL)
-    reportVideoTrim = () => this.report(VIDEO_TRIM_LABEL)
-    reportVideoLag = () => this.report(VIDEO_LAG_LABEL)
-    reportSubtitles = () => this.report(SUBTITLES_LABEL)
-    reportOther = () => this.report(OTHER_LABEL)
+    this.goBack()
+  }
+
+  reportLyrics = () => this.askConfirmationForReport(LYRICS_LABEL)
+  reportVideoTrim = () => this.askConfirmationForReport(VIDEO_TRIM_LABEL)
+  reportVideoLag = () => this.askConfirmationForReport(VIDEO_LAG_LABEL)
+  reportSubtitles = () => this.askConfirmationForReport(SUBTITLES_LABEL)
+  reportOther = () => this.setState({ isOtherPromptVisible: true })
+  onReportOtherPromptCancel = () => this.setState({ isOtherPromptVisible: false })
+  onReportOtherPromptSubmit = comment => {
+    this.setState({ isOtherPromptVisible: false })
+    this.submitReport(comment)
+  }
 
   render() {
     const { content } = this.props
@@ -118,13 +143,23 @@ export class ReportScreen extends PureComponent {
             </View>
           </View>
         </View>
+        <Prompt
+          title="Why is this reported?"
+          placeholder="(Optional)"
+          visible={this.state.isOtherPromptVisible}
+          onCancel={this.onReportOtherPromptCancel}
+          onSubmit={this.onReportOtherPromptSubmit}
+        />
       </View>
     )
   }
 }
 
-export default connect(state => ({
-  content: getSelectedAugmentedContent(state),
-  url: state.connection.url,
-  username: state.connection.username,
-}), { back: NavigationActions.back })(ReportScreen)
+export default connect(
+  state => ({
+    content: getSelectedAugmentedContent(state),
+    url: state.connection.url,
+    username: state.connection.username,
+  }),
+  { back: NavigationActions.back },
+)(ReportScreen)
