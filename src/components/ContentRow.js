@@ -105,7 +105,7 @@ export default class ContentRow extends PureComponent {
           <TouchableNativeFeedback onPress={this.onTitlePress}>
             <View style={styles.textAndIconsContainer}>
               <View style={styles.iconsContainer}>
-                <Flag code={languageCodes[language] || 'unknown'} size={24} type="flat" />
+                <Flag code={languageCodes[language] || 'unknown'} size={24} />
               </View>
               <Text style={styles.text}>
                 {!hideGroup && `${group} - `}
