@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import Icon from 'react-native-vector-icons/Entypo'
+
 import FavoriteIcon from './FavoriteIcon'
 
 const styles = StyleSheet.create({
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  contentTextContainer: {},
+  contentTextContainer: { flex: 1 },
   contentText: {
     color: '#FFF',
   },
@@ -35,6 +37,7 @@ const PlaylistStatusBar = ({
   group,
   isFavorite,
   onPress,
+  onReportPress,
   onStarPress,
   songName,
   type,
@@ -55,6 +58,9 @@ const PlaylistStatusBar = ({
         </View>
       </View>
     </TouchableNativeFeedback>
+    <TouchableNativeFeedback onPress={onReportPress}>
+      <Icon name="warning" size={30} style={{ color: 'red' }} />
+    </TouchableNativeFeedback>
   </View>
 )
 
@@ -64,6 +70,7 @@ PlaylistStatusBar.propTypes = {
   isFavorite: PropTypes.bool.isRequired,
   onPress: PropTypes.func.isRequired,
   onStarPress: PropTypes.func.isRequired,
+  onReportPress: PropTypes.func.isRequired,
   songName: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
