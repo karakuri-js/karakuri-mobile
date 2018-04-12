@@ -44,6 +44,7 @@ export class PlaylistScreen extends PureComponent {
         <View style={styles.listContainer}>
           <ContentsList
             contents={contents}
+            isReorderable
             showAddToPlaylist={false}
             showToggleFavorites={false}
             title="My Playlist"
