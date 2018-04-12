@@ -68,6 +68,7 @@ export class ContentsList extends Component {
   constructor(props) {
     super(props)
     this.state = { textFilter: '', filteredContents: [] }
+    this.contentKeysInOrder = null
   }
 
   componentWillMount() {
@@ -77,6 +78,15 @@ export class ContentsList extends Component {
   }
 
   setTextFilter = textFilter => this.setState({ textFilter })
+
+  onReorder = keys => {
+    this.contentKeysInOrder = keys
+  }
+
+  onReorderRelease = () => {
+    if (!this.contentKeysInOrder) return
+    this.props.onReorder(this.contentKeysInOrder.map(key => (this.props.contents[key] || {}).id))
+  }
 
   renderRow = content => (
     <ContentRow
@@ -104,7 +114,12 @@ export class ContentsList extends Component {
     const foundResults = filteredContents.length !== 0
 
     const listComponent = isReorderable ? (
-      <SortableList data={filteredContents} renderRow={this.renderSortableRow} />
+      <SortableList
+        data={filteredContents}
+        renderRow={this.renderSortableRow}
+        onChangeOrder={this.onReorder}
+        onReleaseRow={this.onReorderRelease}
+      />
     ) : (
       <ListView
         keyboardShouldPersistTaps="always"

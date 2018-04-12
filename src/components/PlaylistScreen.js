@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View, ToastAndroid } from 'react-native'
 
 import { toggleFavorite, randomizePlaylist } from '../actions'
 import { getAugmentedMyPlaylistContents } from '../selectors/contents'
@@ -34,9 +34,26 @@ export class PlaylistScreen extends PureComponent {
     contents: PropTypes.array,
     randomizePlaylist: PropTypes.func,
     toggleFavorite: PropTypes.func,
+    url: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
   }
 
   static defaultProps = { contents: [], randomizePlaylist: () => {}, toggleFavorite: () => {} }
+
+  sendSortedPlaylist = contentIds => {
+    fetch(`${this.props.url}/sortPlaylist`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+      body: JSON.stringify({ contentIds, username: this.props.username }),
+    })
+      .then(response => response.json())
+      .catch(err => {
+        ToastAndroid.show(err.toString(), ToastAndroid.LONG)
+      })
+  }
 
   render() {
     const { contents } = this.props
@@ -47,6 +64,8 @@ export class PlaylistScreen extends PureComponent {
             contents={contents}
             isReorderable
             showAddToPlaylist={false}
+            showToggleFavorites={false}
+            onReorder={this.sendSortedPlaylist}
             title="My Playlist"
             toggleFavorite={this.props.toggleFavorite}
           />
@@ -63,7 +82,14 @@ export class PlaylistScreen extends PureComponent {
   }
 }
 
-export default connect(state => ({ contents: getAugmentedMyPlaylistContents(state) }), {
-  randomizePlaylist,
-  toggleFavorite,
-})(PlaylistScreen)
+export default connect(
+  state => ({
+    contents: getAugmentedMyPlaylistContents(state),
+    url: state.connection.url,
+    username: state.connection.username,
+  }),
+  {
+    randomizePlaylist,
+    toggleFavorite,
+  },
+)(PlaylistScreen)
