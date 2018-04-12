@@ -47,7 +47,9 @@ export class ContentsList extends Component {
     goToContentScreen: PropTypes.func.isRequired,
     hideGroups: PropTypes.bool,
     onReorder: PropTypes.func,
+    removeFromPlaylist: PropTypes.func,
     showAddToPlaylist: PropTypes.bool,
+    showRemoveFromPlaylist: PropTypes.bool,
     showToggleFavorites: PropTypes.bool,
     title: PropTypes.string,
     toggleFavorite: PropTypes.func.isRequired,
@@ -60,7 +62,9 @@ export class ContentsList extends Component {
     hideGroups: false,
     isReorderable: false,
     onReorder: () => {},
+    removeFromPlaylist: () => {},
     showAddToPlaylist: true,
+    showRemoveFromPlaylist: false,
     showToggleFavorites: true,
     title: '',
   }
@@ -92,9 +96,11 @@ export class ContentsList extends Component {
     <ContentRow
       {...content}
       hideGroup={this.props.hideGroups}
-      showStar={this.props.showToggleFavorites}
+      showCross={this.props.showRemoveFromPlaylist}
       showPlus={this.props.showAddToPlaylist}
+      showStar={this.props.showToggleFavorites}
       onTitlePress={this.props.goToContentScreen}
+      onCrossPress={this.props.removeFromPlaylist}
       onPlusPress={this.props.addToPlaylist}
       onStarPress={this.props.toggleFavorite}
       withHandle={this.props.isReorderable}

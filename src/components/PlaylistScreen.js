@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, StyleSheet, View, ToastAndroid } from 'react-native'
 
-import { toggleFavorite, randomizePlaylist } from '../actions'
+import { toggleFavorite, randomizePlaylist, removeFromPlaylist } from '../actions'
 import { getAugmentedMyPlaylistContents } from '../selectors/contents'
 import * as Colors from '../constants/colors'
 
@@ -33,6 +33,7 @@ export class PlaylistScreen extends PureComponent {
   static propTypes = {
     contents: PropTypes.array,
     randomizePlaylist: PropTypes.func,
+    removeFromPlaylist: PropTypes.func.isRequired,
     toggleFavorite: PropTypes.func,
     url: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
@@ -63,9 +64,11 @@ export class PlaylistScreen extends PureComponent {
           <ContentsList
             contents={contents}
             isReorderable
+            onReorder={this.sendSortedPlaylist}
+            removeFromPlaylist={this.props.removeFromPlaylist}
             showAddToPlaylist={false}
             showToggleFavorites={false}
-            onReorder={this.sendSortedPlaylist}
+            showRemoveFromPlaylist
             title="My Playlist"
             toggleFavorite={this.props.toggleFavorite}
           />
@@ -89,6 +92,7 @@ export default connect(
     username: state.connection.username,
   }),
   {
+    removeFromPlaylist,
     randomizePlaylist,
     toggleFavorite,
   },

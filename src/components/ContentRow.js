@@ -52,9 +52,11 @@ export default class ContentRow extends PureComponent {
     id: PropTypes.string.isRequired,
     isFavorite: PropTypes.bool,
     language: PropTypes.string,
+    onCrossPress: PropTypes.func,
     onPlusPress: PropTypes.func,
     onStarPress: PropTypes.func,
     onTitlePress: PropTypes.func,
+    showCross: PropTypes.bool,
     showPlus: PropTypes.bool,
     showStar: PropTypes.bool,
     songName: PropTypes.string.isRequired,
@@ -66,12 +68,16 @@ export default class ContentRow extends PureComponent {
     isFavorite: false,
     language: '',
     hideGroup: false,
+    onCrossPress: () => {},
     onPlusPress: () => {},
     onStarPress: () => {},
     onTitlePress: () => {},
     showPlus: true,
     showStar: true,
+    showCross: false,
   }
+
+  onCrossPress = () => this.props.onCrossPress(this.props.id)
 
   onPlusPress = () => this.props.onPlusPress(this.props.id)
 
@@ -85,6 +91,7 @@ export default class ContentRow extends PureComponent {
       hideGroup,
       isFavorite,
       language,
+      showCross,
       showPlus,
       showStar,
       songName,
@@ -121,6 +128,13 @@ export default class ContentRow extends PureComponent {
           <View style={styles.iconsContainer}>
             <TouchableNativeFeedback onPress={this.onPlusPress}>
               <Icon name="plus" size={30} style={{ color: Colors.accent }} />
+            </TouchableNativeFeedback>
+          </View>
+        )}
+        {showCross && (
+          <View style={styles.iconsContainer}>
+            <TouchableNativeFeedback onPress={this.onCrossPress}>
+              <Icon name="cross" size={30} style={{ color: Colors.accent }} />
             </TouchableNativeFeedback>
           </View>
         )}

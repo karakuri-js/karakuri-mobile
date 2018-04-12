@@ -123,3 +123,13 @@ export const getSelectedAugmentedContent = createSelector(
   [getAllAugmentedContents, getSelectedContentId],
   (augmentedContents, contentId) => augmentedContents.find(c => c.id === contentId),
 )
+
+export const isSelectedContentInMyPlaylist = createSelector(
+  [getSelectedContentId, getMyPlaylistContents],
+  (contentId, contents) => contents.some(({ id }) => id === contentId),
+)
+
+export const isSelectedContentPlaying = createSelector(
+  [getSelectedContentId, getPlayingContent],
+  (contentId, content) => !!content && content.id === contentId,
+)
