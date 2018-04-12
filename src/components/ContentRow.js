@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { PixelRatio, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import Flag from 'react-native-flags'
 import Icon from 'react-native-vector-icons/Entypo'
-
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import * as Colors from '../constants/colors'
 import FavoriteIcon from './FavoriteIcon'
 
@@ -59,6 +59,7 @@ export default class ContentRow extends PureComponent {
     showStar: PropTypes.bool,
     songName: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
+    withHandle: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -88,10 +89,16 @@ export default class ContentRow extends PureComponent {
       showStar,
       songName,
       type,
+      withHandle,
     } = this.props
 
     return (
       <View style={styles.row}>
+        {withHandle && (
+          <View style={styles.iconsContainer}>
+            <MaterialIcon name="drag-handle" size={30} />
+          </View>
+        )}
         {showStar && (
           <View style={styles.iconsContainer}>
             <FavoriteIcon isFavorite={isFavorite} onPress={this.onStarPress} />
