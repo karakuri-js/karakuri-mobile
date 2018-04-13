@@ -44,29 +44,33 @@ const getContentsPerDirectories = createSelector([getAllContents], contents =>
   contents.reduce((obj, content) => {
     const { dirName } = content
     const directoryContents = obj[content.dirName] || []
-    return {
-      ...obj,
-      [dirName]: directoryContents.concat(content),
-    }
+    // Optimization: while it would be cleaner not to modify the object we're given in arguments,
+    // Cloning it via Object spreading on each iteration has a really bad performance impact.
+    // And it only impacts the object we're currently building > no consequence.
+    return Object.assign(obj, { [dirName]: directoryContents.concat(content) })
   }, {}),
 )
 
 const getContentsPerGroups = createSelector([getAllContents], contents =>
   contents.reduce(
-    (obj, content) => ({
-      ...obj,
-      [content.group]: (obj[content.group] || []).concat(content),
-    }),
+    // Optimization: while it would be cleaner not to modify the object we're given in arguments,
+    // Cloning it via Object spreading on each iteration has a really bad performance impact.
+    // And it only impacts the object we're currently building > no consequence.
+    (obj, content) =>
+      Object.assign(obj, { [content.group]: (obj[content.group] || []).concat(content) }),
     {},
   ),
 )
 
 const getGroups = createSelector([getContentsPerDirectories], contentsPerDirectories =>
   Object.keys(contentsPerDirectories).reduce(
-    (directoriesObj, dirName) => ({
-      ...directoriesObj,
-      [dirName]: uniq(contentsPerDirectories[dirName].map(content => content.group)),
-    }),
+    // Optimization: while it would be cleaner not to modify the object we're given in arguments,
+    // Cloning it via Object spreading on each iteration has a really bad performance impact.
+    // And it only impacts the object we're currently building > no consequence.
+    (directoriesObj, dirName) =>
+      Object.assign(directoriesObj, {
+        [dirName]: uniq(contentsPerDirectories[dirName].map(content => content.group)),
+      }),
     {},
   ),
 )
