@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { ListView, StyleSheet, Text, TextInput, View } from 'react-native'
+import SortableList from 'react-native-sortable-list'
 
 import ContentRow from './ContentRow'
 import HeaderTitle from './HeaderTitle'
@@ -42,9 +43,13 @@ export class ContentsList extends Component {
     addToPlaylist: PropTypes.func.isRequired,
     contents: PropTypes.array,
     displaySearch: PropTypes.bool,
+    isReorderable: PropTypes.bool,
     goToContentScreen: PropTypes.func.isRequired,
     hideGroups: PropTypes.bool,
+    onReorder: PropTypes.func,
+    removeFromPlaylist: PropTypes.func,
     showAddToPlaylist: PropTypes.bool,
+    showRemoveFromPlaylist: PropTypes.bool,
     showToggleFavorites: PropTypes.bool,
     title: PropTypes.string,
     toggleFavorite: PropTypes.func.isRequired,
@@ -55,7 +60,11 @@ export class ContentsList extends Component {
     displaySearch: false,
     favorites: {},
     hideGroups: false,
+    isReorderable: false,
+    onReorder: () => {},
+    removeFromPlaylist: () => {},
     showAddToPlaylist: true,
+    showRemoveFromPlaylist: false,
     showToggleFavorites: true,
     title: '',
   }
@@ -63,6 +72,7 @@ export class ContentsList extends Component {
   constructor(props) {
     super(props)
     this.state = { textFilter: '', filteredContents: [] }
+    this.contentKeysInOrder = null
   }
 
   componentWillMount() {
@@ -73,20 +83,34 @@ export class ContentsList extends Component {
 
   setTextFilter = textFilter => this.setState({ textFilter })
 
+  onReorder = keys => {
+    this.contentKeysInOrder = keys
+  }
+
+  onReorderRelease = () => {
+    if (!this.contentKeysInOrder) return
+    this.props.onReorder(this.contentKeysInOrder.map(key => (this.props.contents[key] || {}).id))
+  }
+
   renderRow = content => (
     <ContentRow
       {...content}
       hideGroup={this.props.hideGroups}
-      showStar={this.props.showToggleFavorites}
+      showCross={this.props.showRemoveFromPlaylist}
       showPlus={this.props.showAddToPlaylist}
+      showStar={this.props.showToggleFavorites}
       onTitlePress={this.props.goToContentScreen}
+      onCrossPress={this.props.removeFromPlaylist}
       onPlusPress={this.props.addToPlaylist}
       onStarPress={this.props.toggleFavorite}
+      withHandle={this.props.isReorderable}
     />
   )
 
+  renderSortableRow = ({ data }) => this.renderRow(data)
+
   render() {
-    const { contents, displaySearch, title } = this.props
+    const { contents, displaySearch, isReorderable, title } = this.props
     const isLongEnoughFilter = this.state.textFilter.length >= 1
     let filteredContents = contents
     if (isLongEnoughFilter && displaySearch) {
@@ -94,6 +118,21 @@ export class ContentsList extends Component {
       filteredContents = result
     }
     const foundResults = filteredContents.length !== 0
+
+    const listComponent = isReorderable ? (
+      <SortableList
+        data={filteredContents}
+        renderRow={this.renderSortableRow}
+        onChangeOrder={this.onReorder}
+        onReleaseRow={this.onReorderRelease}
+      />
+    ) : (
+      <ListView
+        keyboardShouldPersistTaps="always"
+        dataSource={this.dataSource.cloneWithRows(filteredContents)}
+        renderRow={this.renderRow}
+      />
+    )
 
     return (
       <View style={styles.container}>
@@ -118,13 +157,7 @@ export class ContentsList extends Component {
             <Text style={styles.noFoundResultsText}>No results :(</Text>
           </View>
         )}
-        {foundResults && (
-          <ListView
-            keyboardShouldPersistTaps="always"
-            dataSource={this.dataSource.cloneWithRows(filteredContents)}
-            renderRow={this.renderRow}
-          />
-        )}
+        {foundResults && listComponent}
       </View>
     )
   }

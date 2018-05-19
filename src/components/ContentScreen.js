@@ -4,8 +4,12 @@ import { Button, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { addToPlaylist, toggleFavorite } from '../actions'
-import { getSelectedAugmentedContent } from '../selectors/contents'
+import { addToPlaylist, removeFromPlaylist, toggleFavorite } from '../actions'
+import {
+  getSelectedAugmentedContent,
+  isSelectedContentInMyPlaylist,
+  isSelectedContentPlaying,
+} from '../selectors/contents'
 import HeaderTitle from './HeaderTitle'
 import * as Colors from '../constants/colors'
 
@@ -33,6 +37,9 @@ export class ContentScreen extends PureComponent {
   static propTypes = {
     addToPlaylist: PropTypes.func.isRequired,
     content: PropTypes.object.isRequired,
+    isInMyPlaylist: PropTypes.bool.isRequired,
+    isPlaying: PropTypes.bool.isRequired,
+    removeFromPlaylist: PropTypes.func.isRequired,
     toggleFavorite: PropTypes.func.isRequired,
     url: PropTypes.string.isRequired,
   }
@@ -53,10 +60,11 @@ export class ContentScreen extends PureComponent {
 
   report = () => {}
   addToPlaylist = () => this.props.addToPlaylist(this.props.content.id)
+  removeFromPlaylist = () => this.props.removeFromPlaylist(this.props.content.id)
   toggleFavorite = () => this.props.toggleFavorite(this.props.content.id)
 
   render() {
-    const { content } = this.props
+    const { content, isInMyPlaylist, isPlaying } = this.props
     const { lyrics } = this.state
 
     if (!content.songName) {
@@ -72,7 +80,13 @@ export class ContentScreen extends PureComponent {
         <HeaderTitle title={content.songName} />
         <View>
           <View style={styles.buttonContainer}>
-            <Button onPress={this.addToPlaylist} title="Add to Playlist" />
+            {isPlaying ? ( // eslint-disable-line no-nested-ternary
+              <Button disabled onPress={this.addToPlaylist} title="Playing right now!" />
+            ) : isInMyPlaylist ? (
+              <Button onPress={this.removeFromPlaylist} title="Remove from Playlist" />
+            ) : (
+              <Button onPress={this.addToPlaylist} title="Add to Playlist" />
+            )}
           </View>
           <View style={styles.buttonContainer}>
             <Button
@@ -104,7 +118,9 @@ export class ContentScreen extends PureComponent {
 export default connect(
   state => ({
     content: getSelectedAugmentedContent(state),
+    isInMyPlaylist: isSelectedContentInMyPlaylist(state),
+    isPlaying: isSelectedContentPlaying(state),
     url: state.connection.url,
   }),
-  { addToPlaylist, toggleFavorite },
+  { addToPlaylist, removeFromPlaylist, toggleFavorite },
 )(ContentScreen)

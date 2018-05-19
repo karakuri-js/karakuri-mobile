@@ -63,6 +63,26 @@ export const addToPlaylist = id => (dispatch, getState) => {
     })
 }
 
+export const removeFromPlaylist = id => (dispatch, getState) => {
+  const { url, username } = getState().connection
+
+  fetch(`${url}/remove`, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'post',
+    body: JSON.stringify({ id, username }),
+  })
+    .then(response => response.json())
+    .then(({ message }) => {
+      ToastAndroid.show(message, ToastAndroid.SHORT)
+    })
+    .catch(err => {
+      ToastAndroid.show(err.toString(), ToastAndroid.LONG)
+    })
+}
+
 export const updateLocalPlaylist = ({ playingContent, playlistContents }) => ({
   type: types.PLAYLIST_UPDATE,
   playingContent,
