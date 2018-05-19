@@ -50,6 +50,11 @@ export class MainScreen extends Component {
 
   goToPlaylist = () => this.props.navigate({ routeName: screens.PLAYLIST_SCREEN })
 
+  reportPlayingContent = () =>
+    this.props.navigate({
+      routeName: screens.REPORT_SCREEN,
+      params: { contentId: this.props.playingContent.id },
+    })
   toggleFavoriteOnPlayingContent = () => this.props.toggleFavorite(this.props.playingContent.id)
 
   render() {
@@ -69,6 +74,7 @@ export class MainScreen extends Component {
             {...playingContent}
             contentsCount={playlistContentsNumber}
             onPress={this.goToPlaylist}
+            onReportPress={this.reportPlayingContent}
             onStarPress={this.toggleFavoriteOnPlayingContent}
           />
         )}

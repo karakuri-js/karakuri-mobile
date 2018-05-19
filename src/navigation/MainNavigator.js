@@ -7,6 +7,7 @@ import { flattenNavigationParamsProps } from '../lib/navigationUtils'
 import BrowseGroupsScreen from '../components/BrowseGroupsScreen'
 import BrowseSongsScreen from '../components/BrowseSongsScreen'
 import ContentScreen from '../components/ContentScreen'
+import ReportScreen from '../components/ReportScreen'
 import FavoritesScreen from '../components/FavoritesScreen'
 import HistoryScreen from '../components/HistoryScreen'
 import SearchSongsScreen from '../components/SearchSongsScreen'
@@ -47,6 +48,9 @@ const otherStackNavigatorRoutes = {
   },
   [screens.CONTENT_SCREEN]: {
     screen: flattenNavigationParamsProps(ContentScreen),
+  },
+  [screens.REPORT_SCREEN]: {
+    screen: flattenNavigationParamsProps(ReportScreen),
   },
 }
 
