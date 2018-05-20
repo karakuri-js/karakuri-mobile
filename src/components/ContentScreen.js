@@ -4,19 +4,14 @@ import { Button, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-<<<<<<< HEAD
 import { addToPlaylist, removeFromPlaylist, toggleFavorite } from '../actions'
+import * as Colors from '../constants/colors'
+import { REPORT_SCREEN } from '../constants/screens'
 import {
   getSelectedAugmentedContent,
   isSelectedContentInMyPlaylist,
   isSelectedContentPlaying,
 } from '../selectors/contents'
-=======
-import { addToPlaylist, toggleFavorite } from '../actions'
-import * as Colors from '../constants/colors'
-import { REPORT_SCREEN } from '../constants/screens'
-import { getSelectedAugmentedContent } from '../selectors/contents'
->>>>>>> Basic report screen setup
 import HeaderTitle from './HeaderTitle'
 
 const styles = StyleSheet.create({
