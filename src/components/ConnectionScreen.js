@@ -71,6 +71,7 @@ export class ConnectionScreen extends Component {
       hostname: '',
       port: '3000',
       username: '',
+      isFormDirty: false,
     }
   }
 
@@ -93,22 +94,28 @@ export class ConnectionScreen extends Component {
     hostname = hostname.trim()
     port = port.trim()
     username = username.trim()
-    if (!username) return this.setState({ message: 'Gimme an username', isLoading: false })
-    if (!hostname) return this.setState({ message: 'Gimme a hostname', isLoading: false })
-    AsyncStorage.setItem('username', username)
-    AsyncStorage.setItem('hostname', hostname)
-    AsyncStorage.setItem('port', port)
-    return this.props
-      .connectToServer({ hostname, port, username })
-      .then(() => this.props.navigation.navigate(MAIN_SCREEN))
-      .catch(() => {})
+    if (!username) return this.setState({ message: 'Gimme an username' })
+    if (!hostname) return this.setState({ message: 'Gimme a hostname' })
+
+    this.setState({ isFormDirty: false })
+
+    return Promise.all([
+      AsyncStorage.setItem('username', username),
+      AsyncStorage.setItem('hostname', hostname),
+      AsyncStorage.setItem('port', port),
+    ]).then(() =>
+      this.props
+        .connectToServer({ hostname, port, username })
+        .then(() => this.props.navigation.navigate(MAIN_SCREEN))
+        .catch(() => {}),
+    )
   }
 
-  setHostName = hostname => this.setState({ hostname })
+  setHostName = hostname => this.setState({ isFormDirty: true, hostname })
 
-  setPort = port => this.setState({ port })
+  setPort = port => this.setState({ isFormDirty: true, port })
 
-  setUserName = username => this.setState({ username })
+  setUserName = username => this.setState({ isFormDirty: true, username })
 
   render() {
     const { isLoading, errorMessage } = this.props
@@ -145,7 +152,7 @@ export class ConnectionScreen extends Component {
           />
 
           <Button
-            disabled={isLoading}
+            disabled={isLoading && !this.state.isFormDirty}
             onPress={this.connect}
             color={Colors.darkPrimary}
             title="Connect"
