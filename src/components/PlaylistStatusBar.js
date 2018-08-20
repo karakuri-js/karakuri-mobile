@@ -37,7 +37,7 @@ const PlaylistStatusBar = ({
   group,
   isFavorite,
   onPress,
-  onReportPress,
+  onInfoPress,
   onStarPress,
   songName,
   type,
@@ -58,8 +58,8 @@ const PlaylistStatusBar = ({
         </View>
       </View>
     </TouchableNativeFeedback>
-    <TouchableNativeFeedback onPress={onReportPress}>
-      <Icon name="warning" size={30} style={{ color: 'red' }} />
+    <TouchableNativeFeedback onPress={onInfoPress}>
+      <Icon name="info-with-circle" size={30} style={{ color: 'white' }} />
     </TouchableNativeFeedback>
   </View>
 )
@@ -70,7 +70,7 @@ PlaylistStatusBar.propTypes = {
   isFavorite: PropTypes.bool.isRequired,
   onPress: PropTypes.func.isRequired,
   onStarPress: PropTypes.func.isRequired,
-  onReportPress: PropTypes.func.isRequired,
+  onInfoPress: PropTypes.func.isRequired,
   songName: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
