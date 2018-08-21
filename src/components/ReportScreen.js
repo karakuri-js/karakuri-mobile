@@ -52,21 +52,12 @@ export class ReportScreen extends PureComponent {
   constructor(props) {
     super(props)
 
-    this.state = { isOtherPromptVisible: false }
+    this.state = { isPromptVisible: false, reportType: '' }
   }
 
   goBack = () => this.props.back()
 
-  askConfirmationForReport = comment =>
-    Alert.alert(
-      `Report ${this.props.content.songName}?`,
-      comment,
-      [
-        { text: 'Cancel', onPress: () => {} }, // Do nothing
-        { text: 'OK', onPress: () => this.submitReport(comment) },
-      ],
-      { cancelable: false },
-    )
+  askConfirmationForReport = reportType => this.setState({ reportType, isPromptVisible: true })
 
   submitReport = comment => {
     fetch(`${this.props.url}/report`, {
@@ -75,7 +66,11 @@ export class ReportScreen extends PureComponent {
         'Content-Type': 'application/json',
       },
       method: 'post',
-      body: JSON.stringify({ comment, id: this.props.content.id, username: this.props.username }),
+      body: JSON.stringify({
+        comment: this.state.reportType.concat(comment ? ` - ${comment}` : ''),
+        id: this.props.content.id,
+        username: this.props.username,
+      }),
     })
       .then(response => response.json())
       .then(({ message }) => {
@@ -92,10 +87,10 @@ export class ReportScreen extends PureComponent {
   reportVideoTrim = () => this.askConfirmationForReport(VIDEO_TRIM_LABEL)
   reportVideoLag = () => this.askConfirmationForReport(VIDEO_LAG_LABEL)
   reportSubtitles = () => this.askConfirmationForReport(SUBTITLES_LABEL)
-  reportOther = () => this.setState({ isOtherPromptVisible: true })
-  onReportOtherPromptCancel = () => this.setState({ isOtherPromptVisible: false })
-  onReportOtherPromptSubmit = comment => {
-    this.setState({ isOtherPromptVisible: false })
+  reportOther = () => this.askConfirmationForReport(OTHER_LABEL)
+  onPromptCancel = () => this.setState({ isPromptVisible: false })
+  onPromptSubmit = comment => {
+    this.setState({ isPromptVisible: false })
     this.submitReport(comment)
   }
 
@@ -146,9 +141,9 @@ export class ReportScreen extends PureComponent {
         <Prompt
           title="Why is this reported?"
           placeholder="(Optional)"
-          visible={this.state.isOtherPromptVisible}
-          onCancel={this.onReportOtherPromptCancel}
-          onSubmit={this.onReportOtherPromptSubmit}
+          visible={this.state.isPromptVisible}
+          onCancel={this.onPromptCancel}
+          onSubmit={this.onPromptSubmit}
         />
       </View>
     )
